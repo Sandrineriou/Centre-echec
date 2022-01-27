@@ -20,8 +20,10 @@ class Players:
 
     def get_players(self):
         
-        player = self.actor.id_person, self.actor.lastname, self.actor.firstname, self.actor.ranking
-        
+        if self.actor.id_person < 9 :
+            player = self.actor.id_person, self.actor.lastname, self.actor.firstname, self.actor.ranking
+        else:
+            return None
        
         return print(player)
         

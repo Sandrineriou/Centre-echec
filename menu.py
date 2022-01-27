@@ -41,9 +41,23 @@ actor9.add_actor()
 
 player1 = Players(actor1)
 player2 = Players(actor2)
+player3 = Players(actor3)
+player4 = Players(actor4)
+player5 = Players(actor5)
+player6 = Players(actor6)
+player7 = Players(actor7)
+player8 = Players(actor8)
+player9 = Players(actor9)
 
 player1.get_players()
 player2.get_players()
+player3.get_players()
+player4.get_players()
+player5.get_players()
+player6.get_players()
+player7.get_players()
+player8.get_players()
+player9.get_players()
 
 
 
