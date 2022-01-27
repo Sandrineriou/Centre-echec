@@ -16,14 +16,17 @@ class Tournament:
         """Initialise le nom du tournoi, le lieu, le temps de jeu,
         
         les dates et heures et de début, 
-        les dates et heures de suspension de tournoi, les dates et heures de repises du tournoi,
-        les dates et heures de fin de tournoi,
-         et les tours"""
+        les dates et heures de suspension de tournoi, les dates et heures de repises du tournoi, # à mettre plus bas pas en systématique
+        les dates et heures de fin de tournoi, # voir supra mettre plus bas
+         et les tours""" # pareil plus bas
         
         self.name = name
         self.place = place
         self.startdate = startdate
         self.controller_time = controller_time
+        
+    
+    
     
     def new_tournament(self):
         """Créer le nouveau tournoi"""
@@ -44,14 +47,8 @@ class Tournament:
         pass
         """inscrire le nom du manager du tournoi"""
 
-    def add_manager(self):
-        """Ajoute le responsable du tournoi"""
-        pass
 
-    def add_player(self):
-        """Ajoute une liste de 8 joueurs pour le tournoi"""
-        pass
-    
+
     def start_tournament(self, starttime):
         """Démarre un tournoi"""
         self.starttime = starttime
@@ -90,7 +87,3 @@ class Tournament:
         """ Invite à saisir les remarques générales du manager à la fin du tournoi"""
         pass
 
-
-
-tournoi1 = Tournament("cerise", "crest", "14/01/2022", "bullet")    
-tournoi1.new_tournament()
