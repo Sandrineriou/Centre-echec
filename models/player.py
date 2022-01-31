@@ -3,74 +3,44 @@
 
 
 
+
 from models.actor import Actor
+from models.functions import get_ranking, get_lastname
 
 
 
-
-class Players: 
-    """Joueur d'un tournoi."""
+class Player: 
+    """Joueurs d'un tournoi."""
          
-    def __init__(self, actor):
-        """Initialise les données de la personne et le classement du joueur."""
-        self.actor = actor
-       
-        
-       
-
-    def get_players(self):
-        
-        if self.actor.id_person < 9 :
-            player = self.actor.id_person, self.actor.lastname, self.actor.firstname, self.actor.ranking
-        else:
-            return None
-       
-        return print(player)
-        
-       
-       
-
-            
-        
-            
+    def __init__(self, players=[]):
+        """Initialise une liste d'acteurs."""
+        self.players = players
     
-   
-       
-
-            
-            
+    def add_actors(self, actor):
+        """Ajoute les données des acteurs dans une liste"""
+        actor = {
+            "id_person": actor.id_person,
+            "lastname": actor.lastname,
+            "firstname": actor.firstname,
+            "ranking": actor.ranking
+        }
+        self.players.append(actor)
         
-       
+    def return_players(self):
+        """Retourne une liste de joueurs pour le tournoi"""
+      
+        return print([actor for actor in self.players], end='\n\n')
 
+    def sorted_list(self, players_game=[]):
+        self.players_game = players_game
+        players_game = sorted(self.players, key=get_ranking, reverse=True)
+        print(players_game, end='\n\n')
         
+        return players_game
 
-        
-            
-                
-           
-
-        
-        
-        
-
-       
-        
-     
-
-       
-    
-
-   
     
 
 
-       
-
-        
-
-    
-
-    
     def won_player(self): # via match ?
         """gagne le match."""
         pass
@@ -92,7 +62,7 @@ class Players:
 
 
 
-class Ranking(Players): # à voir au fonctionnement si nécessaire un telle classe
+class Ranking(Player): # à voir au fonctionnement si nécessaire un telle classe
     """Classement d'un joueur."""
 
     def __init__(self, startranking, score, endranking):

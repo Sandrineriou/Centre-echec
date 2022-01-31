@@ -40,7 +40,7 @@ class Tournament:
 
         
               
-        print(new_tournoi)
+        print(new_tournoi, end='\n\n')
         return None
         
         """et ajoute à la liste des tournois"""

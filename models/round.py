@@ -2,25 +2,25 @@
 
 
 
+from models.tournament import Tournament
 
 
 class Round:
     """ Tour d'un tournoi"""
 
-    def __init__(self, tournament, name, startdate, starttime, enddate, endtime, player):
-        """ Initalise le nom, la date et l'heure du tour"""
-        self.tournament = self.name.Tournament() # est accroché à un tournoi
-        self.name = name #un round
-        self.startdate = startdate
-        self.starttime = starttime
-        self.enddate = enddate
-        self.endtime = endtime
-        self.player = player.Player()
-       
-    def start_round(self):
-        """Affiche date et heure de départ du tour"""
-        pass
+    def __init__(self, name_round, startdate, tournament, players_game=[]):
+        """Initialise le nom du tournoi, le nom du tour et la liste de joueur"""
 
+        self.name_round = name_round
+        self.startdate = startdate
+        self.tournament = tournament
+        self.players_game = players_game
+        
+    def create_first_round(self):
+        
+        round= [self.name_round, self.startdate, self.tournament, self.players_game]
+        return print(round, end='\n\n')
+   
        
     def end_round(self):
         """Affiche date et heure de fin du tour"""

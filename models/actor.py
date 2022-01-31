@@ -17,15 +17,6 @@ class Actor():
         self.gender = gender
         self.ranking = ranking
 
-    def add_actor(self):
-        """Ajoute les données d'un joueur"""
-        data = {
-            "id_person":self.id_person,
-            "lastname" : self.lastname,
-            "firstname" : self.firstname,
-            "birthdate" : self.birthdate,
-            "gender" : self.gender,
-            "ranking" : self.ranking
-        }
+    
         
-        return print(data)
+   

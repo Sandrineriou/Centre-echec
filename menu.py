@@ -5,19 +5,17 @@
 
 from models.tournament import Tournament
 from models.actor import Actor
-from models.player import Players
-
+from models.player import Player
+from models.round import Round
+from models.pairplayer import PairPlayers
+from models.game import Game
 
 
 """Création d'un nouveau tournoi."""
-tournoi = Tournament("cerise", "crest", "14/01/2022", "bullet")
-tournoi.new_tournament() 
+tournament = Tournament("cerise", "crest", "14/01/2022", "bullet")
+tournament.new_tournament() 
 
-
-
-
-
-""" Ajouter joueurs."""
+""" Ajouter 8 joueurs."""
 
 actor1 = Actor(1, "dupont", "paul", "03/05/1945", "T", 28)
 actor2 = Actor(2, "dupont", "pierre", "03/05/1945", "T", 28)
@@ -27,37 +25,37 @@ actor5 = Actor(5, "minz", "aurélie", "13/12/1956", "F", 1355)
 actor6 = Actor(6, "zing", "edouard", "23/12/1985", "H", 1124)
 actor7 = Actor(7, "vindiu", "shiva", "17/03/2000", "F", 1278)
 actor8 = Actor(8,"papou", "doudou", "21/11/1970", "H", 875)
-actor9 = Actor(9, "waou", "elise", "21/11/1995", "F", 975)
 
-actor1.add_actor()
-actor2.add_actor()
-actor3.add_actor()
-actor4.add_actor()
-actor5.add_actor()
-actor6.add_actor()
-actor7.add_actor()
-actor8.add_actor()
-actor9.add_actor()
 
-player1 = Players(actor1)
-player2 = Players(actor2)
-player3 = Players(actor3)
-player4 = Players(actor4)
-player5 = Players(actor5)
-player6 = Players(actor6)
-player7 = Players(actor7)
-player8 = Players(actor8)
-player9 = Players(actor9)
+players = Player()
 
-player1.get_players()
-player2.get_players()
-player3.get_players()
-player4.get_players()
-player5.get_players()
-player6.get_players()
-player7.get_players()
-player8.get_players()
-player9.get_players()
+
+player1 = Player()
+player2 = Player()
+player3 = Player()
+player4 = Player()
+player5 = Player()
+player6 = Player()
+player7 = Player()
+player8 = Player()
+
+
+player1.add_actors(actor1)
+player2.add_actors(actor2)
+player3.add_actors(actor3)
+player4.add_actors(actor4)
+player5.add_actors(actor5)
+player6.add_actors(actor6)
+player7.add_actors(actor7)
+player8.add_actors(actor8)
+
+
+players.return_players()
+
+players.game = Player()
+players_game = (players.sorted_list())
+
+
 
 
 
@@ -66,12 +64,23 @@ player9.get_players()
 
 
 """L'ordinateur génère des paires de joueurs pour le premier tour."""
-pass
+# création du premier tour :
+round = Round("Round 1", "22/02/22", tournament.name, players_game)
 
-"""Lorsque le tour est terminé, entrer les résultats"""
-pass
+round.create_first_round()
 
-"""Répétez les étapes 3 et 4 pour les tours suivants, jusqu'à ce que tous les tours soient joués et que le tournoi soit terminé"""
-pass
+players_game = PairPlayers(players.sorted_list())
+players_game.create_pairs_round1()
+
+
+
+
+
+
+
+
+
+
+
 
 
