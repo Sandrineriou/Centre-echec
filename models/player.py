@@ -4,43 +4,38 @@
 
 
 
-from models.actor import Actor
-from models.functions import get_ranking, get_lastname
+
+
 
 
 
 class Player: 
     """Joueurs d'un tournoi."""
          
-    def __init__(self, players=[]):
-        """Initialise une liste d'acteurs."""
-        self.players = players
+    def __init__(self, id_person, lastname, firstname, birthdate, gender, ranking):
+        """Initialise les données de la personne et le classement du joueur."""
+        self.id_person = id_person
+        self.lastname = lastname
+        self.firstname = firstname
+        self.birthdate = birthdate
+        self.gender = gender
+        self.ranking = ranking
+        self.score = 0
     
-    def add_actors(self, actor):
-        """Ajoute les données des acteurs dans une liste"""
-        actor = {
-            "id_person": actor.id_person,
-            "lastname": actor.lastname,
-            "firstname": actor.firstname,
-            "ranking": actor.ranking
+   
+        
+    def add_player(self):
+        player = {
+            "id_person": self.id_person,
+            "lastname": self.lastname,
+            "firstname": self.firstname,
+            "birthdate": self.birthdate,
+            "gender": self.gender,
+            "ranking": self.ranking,
+            "score" :self.score
         }
-        self.players.append(actor)
-        
-    def return_players(self):
-        """Retourne une liste de joueurs pour le tournoi"""
-      
-        return print([actor for actor in self.players], end='\n\n')
-
-    def sorted_list(self, players_game=[]):
-        self.players_game = players_game
-        players_game = sorted(self.players, key=get_ranking, reverse=True)
-        print(players_game, end='\n\n')
-        
-        return players_game
-
+        return player
     
-
-
     def won_player(self): # via match ?
         """gagne le match."""
         pass
@@ -49,9 +44,9 @@ class Player:
         """Partie Nulle."""
         pass
     
-    def score_tournoi_player(self): # pas là via match
+    def score_tournoi_player(self): 
         """Totalise le nombre de point gagné lors d'un tournoi."""
-        pass
+        
         
     def ranking_player(self): # pas demandé entrée manuelle : voir la classe Classement qui suit
         """Met à jour le nombre total de point acquis au tournoi avec les points déjà cumulés du joueur."""
