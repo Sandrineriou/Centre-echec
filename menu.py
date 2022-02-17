@@ -157,5 +157,107 @@ tournoi.total_score_dict_players(round_2.build_list_dict_matchs())
 tournoi.sorted_score_list()
 tournoi.create_pairs_players_next()
 
+"Tour 3."
 
+round_3 = Round(tournoi.round[2], tournoi.create_pairs_players_next())
+round_3.get_matches()
+round_3.create_round()
 
+match1 = Match(round_3.name_round, round_2.match[0], tournoi.create_pairs_players_next()[0])
+match1.create_match()
+
+match2 = Match(round_3.name_round, round_2.match[1], tournoi.create_pairs_players_next()[1])
+match2.create_match()
+
+match3 = Match(round_3.name_round, round_2.match[2], tournoi.create_pairs_players_next()[2])
+match3.create_match()
+
+match4 = Match(round_3.name_round, round_2.match[3], tournoi.create_pairs_players_next()[3])
+match4.create_match()
+
+round_3.start_round()
+round_3.end_round()
+
+match1.enter_score_match()
+match1.show_data_match()
+
+match2.enter_score_match()
+match2.show_data_match()
+
+match3.enter_score_match()
+match3.show_data_match()
+
+match4.enter_score_match()
+match4.show_data_match()
+
+round_3.create_new_list_matchs()
+round_3.store_matchs_round(match1.list_data_match())
+round_3.store_matchs_round(match2.list_data_match())
+round_3.store_matchs_round(match3.list_data_match())
+round_3.store_matchs_round(match4.list_data_match())
+
+round_3.show_matchs_round()
+
+tournoi.store_rounds_tournament(round_3.list_data_round()) 
+tournoi.show_rounds_tournament()
+
+"""Ordinateur génère des paires selon le modèle Suisse, Tour3."""
+round_3.create_new_list_scores()
+round_3.add_scores_matchs_round()
+round_3.build_values_dict_match()
+
+tournoi.total_score_dict_players(round_3.build_list_dict_matchs())
+tournoi.sorted_score_list()
+tournoi.create_pairs_players_next()
+
+"Tour 4."
+
+round_4 = Round(tournoi.round[3], tournoi.create_pairs_players_next())
+round_4.get_matches()
+round_4.create_round()
+
+match1 = Match(round_4.name_round, round_2.match[0], tournoi.create_pairs_players_next()[0])
+match1.create_match()
+
+match2 = Match(round_4.name_round, round_2.match[1], tournoi.create_pairs_players_next()[1])
+match2.create_match()
+
+match3 = Match(round_4.name_round, round_2.match[2], tournoi.create_pairs_players_next()[2])
+match3.create_match()
+
+match4 = Match(round_4.name_round, round_2.match[3], tournoi.create_pairs_players_next()[3])
+match4.create_match()
+
+round_4.start_round()
+round_4.end_round()
+
+match1.enter_score_match()
+match1.show_data_match()
+
+match2.enter_score_match()
+match2.show_data_match()
+
+match3.enter_score_match()
+match3.show_data_match()
+
+match4.enter_score_match()
+match4.show_data_match()
+
+round_4.create_new_list_matchs()
+round_4.store_matchs_round(match1.list_data_match())
+round_4.store_matchs_round(match2.list_data_match())
+round_4.store_matchs_round(match3.list_data_match())
+round_4.store_matchs_round(match4.list_data_match())
+
+round_4.show_matchs_round()
+
+tournoi.store_rounds_tournament(round_4.list_data_round()) 
+tournoi.show_rounds_tournament()
+
+round_4.create_new_list_scores()
+round_4.add_scores_matchs_round()
+round_4.build_values_dict_match()
+
+tournoi.total_score_dict_players(round_4.build_list_dict_matchs())
+
+"""fin"""

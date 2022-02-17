@@ -1,7 +1,7 @@
 """ Tournoi."""
 
 import datetime
-from models.functions import get_ranking, get_score
+
 from models.player import Player
 from models.round import Round
 from models.match import Match
