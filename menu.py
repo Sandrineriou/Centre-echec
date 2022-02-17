@@ -11,7 +11,9 @@ from models.match import Match
 
 
 """Création d'un nouveau tournoi."""
-tournoi = Tournament("cerise", "crest", "14/01/2022", "bullet")
+tournoi = Tournament("cerise", "crest", "bullet")
+
+tournoi.get_rounds()
 tournoi.new_tournament()
 
 player1 = Player(1, "dupont", "paul", "03/05/1945", "T", 28)
@@ -42,39 +44,40 @@ tournoi.create_first_pairs_players()
 
 
 """tour 1"""
-round_1 = Round("Round_1", tournoi.startdate, tournoi.create_first_pairs_players())
-round_1.create_first_round()
 
-match1 = Match('Match_1', tournoi.create_first_pairs_players()[0])
+
+round_1 = Round(tournoi.round[0], tournoi.create_first_pairs_players())
+round_1.get_matches()
+round_1.create_round()
+
+match1 = Match(round_1.name_round, round_1.match[0], tournoi.create_first_pairs_players()[0])
 match1.create_match()
 
-match2 = Match('Match_2', tournoi.create_first_pairs_players()[1])
+match2 = Match(round_1.name_round, round_1.match[1], tournoi.create_first_pairs_players()[1])
 match2.create_match()
 
-match3 = Match('Match_3', tournoi.create_first_pairs_players()[2])
+match3 = Match(round_1.name_round, round_1.match[2], tournoi.create_first_pairs_players()[2])
 match3.create_match()
 
-match4 = Match('Match_4', tournoi.create_first_pairs_players()[3])
+match4 = Match(round_1.name_round, round_1.match[3], tournoi.create_first_pairs_players()[3])
 match4.create_match()
 
 round_1.start_round()
 round_1.end_round()
 
 match1.enter_score_match()
-match1.add_data_match()
-
+match1.show_data_match()
 
 match2.enter_score_match()
-match2.add_data_match()
-
+match2.show_data_match()
 
 match3.enter_score_match()
-match3.add_data_match()
-
+match3.show_data_match()
 
 match4.enter_score_match()
-match4.add_data_match()
+match4.show_data_match()
 
+round_1.create_new_list_matchs()
 round_1.store_matchs_round(match1.list_data_match())
 round_1.store_matchs_round(match2.list_data_match())
 round_1.store_matchs_round(match3.list_data_match())
@@ -85,18 +88,74 @@ round_1.show_matchs_round()
 tournoi.store_rounds_tournament(round_1.list_data_round()) 
 tournoi.show_rounds_tournament()
 
-
 """Ordinateur génère des paires selon le modèle Suisse, Tour2."""
-
+round_1.create_new_list_scores()
+round_1.add_scores_matchs_round()
 round_1.build_values_dict_match()
+round_1.build_list_dict_matchs()
 
 
 
+tournoi.total_score_dict_players(round_1.build_list_dict_matchs())
 
+tournoi.sorted_score_list()
+tournoi.create_pairs_players_next()
 
 
 """Tour 2."""
+round_2 = Round(tournoi.round[1], tournoi.create_pairs_players_next())
+round_2.get_matches()
+round_2.create_round()
 
+match1 = Match(round_2.name_round, round_2.match[0], tournoi.create_pairs_players_next()[0])
+match1.create_match()
+
+match2 = Match(round_2.name_round, round_2.match[1], tournoi.create_pairs_players_next()[1])
+match2.create_match()
+
+match3 = Match(round_2.name_round, round_2.match[2], tournoi.create_pairs_players_next()[2])
+match3.create_match()
+
+match4 = Match(round_2.name_round, round_2.match[3], tournoi.create_pairs_players_next()[3])
+match4.create_match()
+
+round_2.start_round()
+round_2.end_round()
+
+match1.enter_score_match()
+match1.show_data_match()
+
+match2.enter_score_match()
+match2.show_data_match()
+
+match3.enter_score_match()
+match3.show_data_match()
+
+match4.enter_score_match()
+match4.show_data_match()
+
+round_2.create_new_list_matchs()
+round_2.store_matchs_round(match1.list_data_match())
+round_2.store_matchs_round(match2.list_data_match())
+round_2.store_matchs_round(match3.list_data_match())
+round_2.store_matchs_round(match4.list_data_match())
+
+round_2.show_matchs_round()
+
+tournoi.store_rounds_tournament(round_2.list_data_round()) 
+tournoi.show_rounds_tournament()
+
+
+
+
+"""Ordinateur génère des paires selon le modèle Suisse, Tour2."""
+round_2.create_new_list_scores()
+round_2.add_scores_matchs_round()
+round_2.build_values_dict_match()
+
+tournoi.total_score_dict_players(round_2.build_list_dict_matchs())
+tournoi.sorted_score_list()
+tournoi.create_pairs_players_next()
 
 
 

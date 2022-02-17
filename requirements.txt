@@ -1,1 +1,4 @@
+DateTime==4.3
+pytz==2021.3
 tinydb==4.6.1
+zope.interface==5.4.0

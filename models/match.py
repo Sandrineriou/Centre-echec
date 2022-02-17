@@ -10,27 +10,29 @@ NULL_POINT = 0.50
 class Match ():
     """Déroulement d'un match dans un tour."""
     
-    def __init__(self, name_match, pair_players=[], data_match=tuple(), list_match=[]):
+    def __init__(self,round, name_match, pair_players=[], data_match=tuple(), list_matchs=[]):
         """Initialise le nom du match, la paire de joueurs."""
+        self.round = round
         self.name_match = name_match
         self.pair_players = pair_players
         self.data_match = data_match
-        self.list_match = list_match
-        
-        
+        self.list_matchs = list_matchs
+
         
     def create_match(self): 
-        """Assigne à un match la paire de joueur qui s'affronte."""
+        """Assigne une paire de joueur au match."""
         
         self.player1 = [element for element in self.pair_players[0]]
         self.player2 = [element for element in self.pair_players[1]]
-        return print(f"{self.name_match} : {self.player1},{self.player2}", end='\n\n')
+        return print(f"{self.round} - {self.name_match} : {self.player1},{self.player2}", end='\n\n')
     
     def enter_score_match(self):
-        """Saisie du score de chaque joueur de la paire."""
+        """Saisie du score de chaque joueur de la paire, par match."""
         
         print(f"{self.name_match} : {self.player1},{self.player2}")
         draw = input("Match Nul ? (o/n) :")
+        while draw not in ["o", "n"]:
+            draw = input("Match Nul ? (o/n) :")
         if draw == 'o':
             self.player1[2] = self.player2[2] = float(NULL_POINT)
         elif draw =='n':
@@ -41,7 +43,6 @@ class Match ():
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_1 : ")
-            
             print(f"{self.player2}")
             while True :
                 try:
@@ -49,18 +50,20 @@ class Match ():
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_2 : ")
-        else:
-            return input("Match Nul ? (o/n) :")
-                     
-    def add_data_match(self):
+               
+    def show_data_match(self):
         """Affiche les données du match fini sous forme de tuple."""
         self.data_match = (self.player1, self.player2)
         return print(self.data_match, end='\n\n')
 
     def list_data_match(self):
-        """Retourne une liste des résultat 'match'."""
+        """Retourne une liste des résultats par match."""
+        
         self.list_match = [element for element in self.data_match]
-        return self.list_match
+        return tuple(self.list_match)
+
+   
+
     
     
 
