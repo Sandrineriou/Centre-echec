@@ -54,7 +54,7 @@ class Match ():
     def show_data_match(self):
         """Affiche les données du match fini sous forme de tuple."""
         self.data_match = (self.player1, self.player2)
-        return print(self.data_match, end='\n\n')
+        return print(tuple(self.data_match), end='\n\n')
 
     def list_data_match(self):
         """Retourne une liste des résultats par match."""

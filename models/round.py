@@ -59,7 +59,7 @@ class Round:
         """Ajoute les résultats des matchs d'un round dans une liste."""
         return self.matchs_round.append(matchs)
 
-    def show_matchs_round(self):# à re faire 
+    def show_matchs_round(self):
         """Affiche tous les matchs d'un round : données de joueurs et score."""
         return print(self.matchs_round)
        
@@ -112,10 +112,8 @@ class Round:
         return self.identifier_sorted
         
    
-
     
-
-
+        
 
        
         

@@ -3,30 +3,31 @@
 
 
 
+from tinydb import TinyDB, Query, where
 
-
-
+db = TinyDB('db.json')
+players_table = db.table('players')
+Gamer = Query()
 
 
 
 class Player: 
     """Joueurs d'un tournoi."""
          
-    def __init__(self, id_person, lastname, firstname, birthdate, gender, ranking):
+    def __init__(self, lastname, firstname, birthdate, gender, ranking, score):
         """Initialise les données de la personne et le classement du joueur."""
-        self.id_person = id_person
+        #j'ai enlevé id_person car redondant avec l'id de tinydb
         self.lastname = lastname
         self.firstname = firstname
         self.birthdate = birthdate
         self.gender = gender
         self.ranking = ranking
         self.score = 0
-    
-   
-        
+          
+    # j'utilise cetteméthode pour sérialisé : il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non.
     def add_player(self):
-        player = {
-            "id_person": self.id_person,
+        """Sérialise les données du joueur sous forme d'un dictionnaire"""
+        self.player = {
             "lastname": self.lastname,
             "firstname": self.firstname,
             "birthdate": self.birthdate,
@@ -34,6 +35,49 @@ class Player:
             "ranking": self.ranking,
             "score" :self.score
         }
+        return self.player
+    
+    def saving_data_player(self):
+        """Sauvegarde les instances créées du joueur dans la base tinydb."""
+        players_table.insert(self.player)
+    
+    def show_player(self):
+        """Affiche les instances de tous les joueurs sauvegardés dans la base tinydb"""
+        self.player= players_table.all()
+    
+    # il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non. car j'utilise add_player()
+    def serialize_player(self):
+        """Sérialize les instances joueur une fois saisie à la création d'un joueur"""
+        player_serialized = {
+            "id_person": player.name,
+            "lastname": player.lastname,
+            "firstname": player.firstname,
+            "birthdate": player.birthdate,
+            "gender": player.gender,
+            "ranking": player.ranking,
+            "score" :player.score
+        }
+        return player_serialized
+            
+    def deserialize_player(self):
+        """Déserialize les instances sérialisées et les transforme en instances utilisables"""
+        id_person = player_serialized['id_person']
+        lastname = player_serialized['lastname']
+        firstname = player_serialized['firstname']
+        birthdate = player_serialized['birthdate']
+        gender = player_serialized['gender']
+        ranking = player_serialized['ranking']
+        score = player_serialized['score']
+        
+        player = Player(
+            id_person = id_person,
+            lastname = lastname,
+            firstname = firstname,
+            birthdate = birthdate,
+            gender = gender,
+            ranking = ranking,
+            score = score
+        )
         return player
     
     def won_player(self): # via match ?

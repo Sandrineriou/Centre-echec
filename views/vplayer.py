@@ -8,7 +8,7 @@ def prompt_for_manager(self):
         """Prompt for the player's family_name"""
         lastname = input("Saisir le nom de famille du joueur: ")
         if not lastname:
-            return print("Le Nom de famille est obligatoire")
+            print("Le Nom de famille est obligatoire")
         lastname = input("Saisir le nom de famille du joueur: ")
         
         return lastname

@@ -38,7 +38,7 @@ tournoi.build_list_players(player8.add_player())
 
 tournoi.return_list_players()
 
-"""Ordinateur génère des paires selon le modèle Suisse"""
+"""Ordinateur génère des paires selon le modèle Suisse, Tour 1."""
 tournoi.sorted_ranking_list()
 tournoi.create_first_pairs_players()
 
@@ -84,6 +84,7 @@ round_1.store_matchs_round(match3.list_data_match())
 round_1.store_matchs_round(match4.list_data_match())
 
 round_1.show_matchs_round()
+
 
 tournoi.store_rounds_tournament(round_1.list_data_round()) 
 tournoi.show_rounds_tournament()
@@ -142,20 +143,28 @@ round_2.store_matchs_round(match4.list_data_match())
 
 round_2.show_matchs_round()
 
+
 tournoi.store_rounds_tournament(round_2.list_data_round()) 
 tournoi.show_rounds_tournament()
 
 
 
 
-"""Ordinateur génère des paires selon le modèle Suisse, Tour2."""
+"""Ordinateur génère des paires selon le modèle Suisse, Tour3."""
+
 round_2.create_new_list_scores()
 round_2.add_scores_matchs_round()
 round_2.build_values_dict_match()
 
+
+
 tournoi.total_score_dict_players(round_2.build_list_dict_matchs())
 tournoi.sorted_score_list()
+
 tournoi.create_pairs_players_next()
+
+
+
 
 "Tour 3."
 
@@ -201,7 +210,7 @@ round_3.show_matchs_round()
 tournoi.store_rounds_tournament(round_3.list_data_round()) 
 tournoi.show_rounds_tournament()
 
-"""Ordinateur génère des paires selon le modèle Suisse, Tour3."""
+"""Ordinateur génère des paires selon le modèle Suisse, Tour4."""
 round_3.create_new_list_scores()
 round_3.add_scores_matchs_round()
 round_3.build_values_dict_match()
