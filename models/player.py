@@ -25,9 +25,9 @@ class Player:
         self.score = 0
           
     # j'utilise cetteméthode pour sérialisé : il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non.
-    def add_player(self):
+    def serialize_player(self):
         """Sérialise les données du joueur sous forme d'un dictionnaire"""
-        self.player = {
+        self.player= {
             "lastname": self.lastname,
             "firstname": self.firstname,
             "birthdate": self.birthdate,
@@ -45,19 +45,7 @@ class Player:
         """Affiche les instances de tous les joueurs sauvegardés dans la base tinydb"""
         self.player= players_table.all()
     
-    # il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non. car j'utilise add_player()
-    def serialize_player(self):
-        """Sérialize les instances joueur une fois saisie à la création d'un joueur"""
-        player_serialized = {
-            "id_person": player.name,
-            "lastname": player.lastname,
-            "firstname": player.firstname,
-            "birthdate": player.birthdate,
-            "gender": player.gender,
-            "ranking": player.ranking,
-            "score" :player.score
-        }
-        return player_serialized
+   
             
     def deserialize_player(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables"""

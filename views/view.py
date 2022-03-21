@@ -85,7 +85,7 @@ class ViewTournament:
 class ViewPlayer:
     
     def player_view(self):
-        """Annonce la saisie des données d'un joueur."""
+        """Annonce la saisie pour créer un joueur."""
         
         print("\033[4m Création d'un nouveau joueur \033[0m")
     
@@ -96,7 +96,7 @@ class ViewPlayer:
         return input("Saisir le prénom du joueur: ")
        
     def prompt_birthdate_view(self):
-        return input("Saisir la date de naissance du joueur: ")
+        return input("Saisir la date de naissance du joueur(jj/mm/aaaa): ")
         
     def prompt_gender_view(self):
         return input(
@@ -106,5 +106,8 @@ class ViewPlayer:
     def prompt_ranking_view(self):
         return input("Saisir le classement du joueur: ")
        
-        
-        
+    def prompt_next_add_player(self):
+        """Annonce un choix entre continuer à créer un joueur."""
+        return input("Souhaitez-vous ajouter un autre joueur (O/N): ")
+       
+    

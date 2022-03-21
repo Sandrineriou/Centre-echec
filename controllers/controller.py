@@ -41,6 +41,7 @@ class MainMenus:
             elif self.niveau1 == '2':
                 ViewPlayer.player_view(self)
                 ControlPlayer.add_player(self)
+                ControlPlayer.next_add_player(self)
             elif self.niveau1 == '3':
                 pass
             elif self.niveau1 == '4':
@@ -98,6 +99,7 @@ class MainMenus:
 
     
 class ControlTournament:
+    """Controlleur qui entre en interaction avec le module Tournoi, et la class Vue spécifique au tournoi"""
 
     def __init__(self, tournament):
         self.tournament = tournament
@@ -156,7 +158,7 @@ class ControlTournament:
     
     
 class ControlPlayer:
-    """Controlleur qui entre en interaction avec le module player"""
+    """Controlleur qui entre en interaction avec le module player et la Vue PLayer"""
 
     def __init__(self, player):
         self.player = player
@@ -195,11 +197,11 @@ class ControlPlayer:
                 break
         
         self.birthdate = ViewPlayer.prompt_birthdate_view(self)
-        while self.birthdate is None:
-            ViewPlayer.prompt_birthdate_view(self)
-            if self.birthdate == '':
-                print("Veuillez saisir une date de naissance")
-                ViewPlayer.prompt_birthdate_view(self)
+        while True:
+            dateformatter = "jj/mm/aaaa"
+            if self.birthdate is not format(dateformatter):
+                print("veuillez appliquer le format date : jj/mm/aaaa")
+                self.birthdate = ViewPlayer.prompt_birthdate_view(self)
                 break
                 
         self.gender = ViewPlayer.prompt_gender_view(self).upper()
@@ -212,13 +214,24 @@ class ControlPlayer:
                 
         self.ranking = int(ViewPlayer.prompt_ranking_view(self))
         while True :
-            try : 
-                self.ranking = int(ViewPlayer.prompt_ranking_view(self))
+            if self.ranking == int:
                 break
-            except ValueError:
-                print("oops : le rang est un chiffre ")
+            else:
+                print("Ooops : le rang demandé est un chiffre ")
+                self.ranking = int(ViewPlayer.prompt_ranking_view(self))
                 
         self.score = 0
         
-        Player.add_player(self)
+        Player.serialize_player(self)
         Player.saving_data_player(self)
+    
+    def next_add_player(self):
+        """Choix entre continuer à créer un joueur sinon revenir au menu précédent."""
+        output = ViewPlayer.next_add_player().upper()
+        while True:
+            if output == 'O':
+                ControlPlayer.add_player()
+            else:
+                return self.openmainscreen()
+                
+            
