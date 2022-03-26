@@ -50,54 +50,36 @@ class Tournament:
             self.rounds_tournament.append(f"Round_{i}")
         return self.rounds_tournament    
     
-    # il se peut qu'avec le base tiny cette méthode saute : à voir aprés écriture complète de tous les paramètres de la base
-    def new_tournament(self):
-        """Créer un nouveau tournoi"""
-        
-        new_tournament = {
-            "name_tournament": self.name_tournament,
-            "place": self.place,
-            "startdate": self.startdate,
-            "controller_time": self.controller_time,# choix entre bullet <=1 min et blitz < 5 min coup rapide < 30 minutes
-            "number_rounds": self.n_rounds,
-            "list_rounds" : self.rounds_tournament,
-            "players_list": self.players_list,
-            "Détail des matches" : self.list_dict_matchs
-        }
-        return  pprint(new_tournament, end='\n\n')
-        
     def serialize_tournament(self):
         """Sérialize les instances tournoi une fois saisie à la création d'un tournoi."""
         self.tournament_serialized = {}
         self.tournament_serialized = {
-            "Nom du Tournoi": self.name_tournament,
+            "Nom_tournoi": self.name_tournament,
             "Lieu": self.place,
-            "Date de debut": self.startdate,
-            "Date de fin" : self.enddate,
-            "Gestion du temps": self.controller_time,# choix entre bullet <=1 min et blitz < 5 min coup rapide < 30 minutes
-            "Nombre de Tours": self.n_rounds,
-            "Liste des joueurs": self.players_list,
-            "Detail des Tours" : self.rounds_tournament,
-            "Detail des matchs" : self.list_dict_matchs,
+            "Date_debut": self.startdate,
+            "Date_fin" : self.enddate,
+            "Type": self.controller_time,# choix entre bullet <=1 min et blitz < 5 min coup rapide < 30 minutes
+            "Nombre_tours": self.n_rounds,
+            "Liste_joueurs": self.players_list,
+            "Detail_tours" : self.rounds_tournament,
+            "Detail_matchs" : self.list_dict_matchs,
             "Commentaire": self.comment
         }
-        return pprint(self.tournament_serialized)
+        return pprint(self.tournament_serialized, end='\n\n')
 
     def deserialize_tournament(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables."""
-        name_tournament = self.tournament_serialized['Nom du Tournoi']
+        name_tournament = self.tournament_serialized['Nom_tournoi']
         place = self.tournament_serialized['Lieu']
-        startdate = self.tournament_serialized['Date de debut']
-        enddate = self.tournament_serialized['Date de fin']
-        controller_time = self.tournament_serialized['Gestion du temps']
-        number_rounds = self.tournament_serialized['Nombre de Tours']
-        players_list = self.tournament_serialized['Liste des joueurs']
-        rounds_tournament = self.tournament_serialized['Détail des Tours']
-        list_dict_matchs = self.tournament_serialized['Détail des matchs']
+        startdate = self.tournament_serialized['Date_debut']
+        enddate = self.tournament_serialized['Date_fin']
+        controller_time = self.tournament_serialized['Type']
+        number_rounds = self.tournament_serialized['Nombre_tours']
+        players_list = self.tournament_serialized['Liste_joueurs']
+        rounds_tournament = self.tournament_serialized['Detail_tours']
+        list_dict_matchs = self.tournament_serialized['Detail_matchs']
         comment = self.tournament_serialized['Commentaire']
-        
-        
-        
+              
         tournament = Tournament(
             name_tournament = name_tournament,
             place = place,
@@ -111,8 +93,7 @@ class Tournament:
             comment = comment
         )
         return tournament
-        
-    
+ 
  
     def build_list_players(self, player_serialised):
         self.players_list.append(player_serialised)

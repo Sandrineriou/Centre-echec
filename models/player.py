@@ -3,12 +3,6 @@
 
 
 
-
-
-
-
-
-
 class Player: 
     """Joueurs d'un tournoi."""
          
@@ -37,7 +31,7 @@ class Player:
       
     def deserialize_player(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables"""
-        id_person = self.player_serialized['id_person']
+        
         lastname = self.player_serialized['lastname']
         firstname = self.player_serialized['firstname']
         birthdate = self.player_serialized['birthdate']
@@ -46,7 +40,6 @@ class Player:
         score = self.player_serialized['score']
         
         self.player_deserialised = Player(
-            id_person = id_person,
             lastname = lastname,
             firstname = firstname,
             birthdate = birthdate,
@@ -56,26 +49,12 @@ class Player:
         )
         return self.player_deserialised
     
-    def won_player(self): # via match ?
-        """gagne le match."""
-        pass
-
-    def draw_player(self): #via match 
-        """Partie Nulle."""
-        pass
-    
-    def score_tournoi_player(self): 
-        """Totalise le nombre de point gagné lors d'un tournoi."""
-        
-        
-    def ranking_player(self): # pas demandé entrée manuelle : voir la classe Classement qui suit
-        """Met à jour le nombre total de point acquis au tournoi avec les points déjà cumulés du joueur."""
-        pass
+   
 
 
 
-
-class Ranking(Player): # à voir au fonctionnement si nécessaire un telle classe
+# à voir au fonctionnement si nécessaire un telle classe
+class Ranking(Player): 
     """Classement d'un joueur."""
 
     def __init__(self, startranking, score, endranking):

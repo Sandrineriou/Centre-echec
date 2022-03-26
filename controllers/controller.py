@@ -11,7 +11,7 @@ players_table = db.table('players')
 
 
 
-from views.view import ViewMenu, ViewTournament, ViewPlayer
+from views.view import ViewMenu, ViewReport, ViewTournament, ViewPlayer
 from models.tournament import Tournament
 from models.player import Player
 from models.database import DataPlayer, DataTournament
@@ -82,7 +82,13 @@ class MainMenus:
                 ViewTournament.tournament_view(self)
                 ControlTournament.add_tournament(self)
                 return ViewMenu.gamemenu()
-            elif self.niveau2 == '3' :
+            elif self.niveau2 == '3':
+                """Ajoute les joueurs dans la 'player_list'."""
+                pass
+            elif self.niveau2 == '4':
+                """Démarre le tournoi"""
+                pass
+            elif self.niveau2 == '5' :
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
                 ControlTournament.add_comment(self) #à reprendre pas possible de l'intégrer dans la sauvegarde
                 pass
@@ -102,13 +108,13 @@ class MainMenus:
                 output = input("Souhaitez_vous réellement quitter GTE? (O/N)").upper()
                 if output == 'O':
                     break
-                else: 
-                    pass
             if self.niveau2 == 'R':
                 return self.openmainscreen()
             elif self.niveau2 == '1':
                 """Interface de recherche d'un joueur."""
-                pass
+                ControlPlayer.show_player_control(self)
+                self.niveau2 = ViewMenu.gamermenu().upper()
+
             elif self.niveau2 == '2':
                 """Démarre la création d'un joueur, l'enregistrement dans la base des données saisies."""
                 ViewPlayer.add_player_view(self)
@@ -117,10 +123,10 @@ class MainMenus:
                 
             elif self.niveau2 == '3' :
                 """Propose de supprimer un joueur de la base."""
-                ViewPlayer.delete_player_view(self)
+                
                 ControlPlayer.delete_player_view_control(self)
-                ControlPlayer.delete_player(self)
-                pass
+                ControlPlayer.delete_player_control(self)
+                
                 
             elif self.niveau2 == '4' :
                 """Propose de modifier les données d'un joueur (notamment en cas d'erreur de saisie)."""
@@ -161,14 +167,16 @@ class MainMenus:
             elif self.niveau2 == '3' :
                 """Edite rapport joueurs tournoi par ordre alpha."""
                 ControlReport.show_all_players(self)
-                pass
+                ControlReport.previous_menu_control(self)
+                
             elif self.niveau2 == '4' :
                 """Edite rapport joueurs tournoi par classement."""
                 pass
             elif self.niveau2 == '5' :
                 """Edite rapport tous les tournois."""
-                
-                pass
+                ControlReport.show_all_tournaments(self)
+                ControlReport.previous_menu_control(self)
+                              
             elif self.niveau2 == '6' :
                 """Edite rapport tous les tours d'un tournoi."""
                 pass
@@ -192,7 +200,7 @@ class ControlTournament:
         sérialise les données et les enregistre dans tinydb.
             
         """  
-        self. name_tournament_control()
+        self.name_tournament_control()
         self.place_control() 
         self.controller_time_control()
         self.startdate_tournament_control()
@@ -262,12 +270,27 @@ class ControlPlayer:
     def __init__(self, player):
         self.player = player
   
+    """Action de recherche."""
+    def show_player_control(self):
+        """Recherche un joueur par son nom ou son identifiant (si plusieurs personnes avec le même nom)."""
+        ViewPlayer.search_player_view(self)
+        
+        self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
+        self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
+        result = DataPlayer.search_player(self)
+        for element in result:
+            print(element)
+        input('Continuer (toucher une touche): ')
+                
+        
+    """Ajouter un joueur."""
     def add_player(self):
         """Regroupe toutes les méthodes permettant l'ajout des attributs du joueur,
 
         sérialise les données et les enregistre dans tinydb.
             
         """
+        ControlPlayer.search_player(self)
         ControlPlayer.lastname_control(self)
         ControlPlayer.firstname_control(self)
         ControlPlayer.birthdate_control(self)
@@ -340,21 +363,29 @@ class ControlPlayer:
                 ControlPlayer.add_player(self)
                 output = ViewPlayer.prompt_next_add_player(self).upper()
             else:             
-                return MainMenus.gamer(self)
-                
-    def delete_player(self):
-        """Regroupe toutes les méthodes permettant la suppression des données d'un joueur."""
-    pass
-
+                return self.gamer()
+   
+    """Supprimer un joueur"""
+    def delete_player_control(self):
+        """Supprime les données d'un joueur."""
+       
+        ControlPlayer.show_player_control(self)
+        DataPlayer.delete_player(self)
+        return self.gamer()
+  
     def delete_player_view_control(self):
         """Contrôle la cohérence de saisie du choix de l'utilisateur à supprimer un joueur dans la base."""
+        
         output = ViewPlayer.delete_player_view(self).upper()
         while True:
             if output == 'O':
-                ControlPlayer.delete_player(self)
+                ControlPlayer.delete_player_control(self)
+                break
+            elif output == 'N':
+                return self.gamer()
+            else :
                 output = ViewPlayer.delete_player_view(self).upper()
-            else:
-                return MainMenus.gamer(self)
+            
 
     def modify_player_view_control(self):
         """Contrôle la cohérence de saisie du choix de l'utilisateur
@@ -368,14 +399,29 @@ class ControlReport:
     
     
 
-    def show_all_tournaments():
+    def show_all_tournaments(self):
         """Récupére toutes les données en lien avec les tournois."""
+     
+        while True:       
+            element = DataTournament.all_tournaments(self)
+            for el in element:
+                print(el)
+            break
        
-        DataTournament.show_tournament()
-            
+
     def show_all_players(self):
         while True :
             DataPlayer.all_players(self)
             DataPlayer.sorted_all_players_alpha(self)
             break
-        return MainMenus.report(self)
+       
+    
+    def previous_menu_control(self):
+        """Controle la cohérence de saisie pour revenir au menu précédent"""
+        
+        while True:
+            ouput = ViewReport.previous_menu().upper()
+            if ouput == 'R':
+                return self.report()
+            else:
+                ouput = ViewReport.previous_menu().upper()

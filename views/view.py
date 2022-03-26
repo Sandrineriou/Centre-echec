@@ -1,5 +1,5 @@
 """View 
-Vues de toutes les propositions de choix proposées dans l'application.
+Vues de toutes les choix proposées dans l'application.
 """
 
 
@@ -39,7 +39,9 @@ class ViewMenu :
             "\033[4m Gérer un tournoi \033[0m: \n"
             "1/ Reprendre un tournoi suspendu : Taper \033[1m 1 \033[0m \n"
             "2/ Créer un tournoi : Taper \033[1m 2 \033[0m \n"
-            "3/ Ajouter un commentaire sur un tournoi : Taper \033[1m 3 \033[0m \n"
+            "3/ Inscrire les joueurs au tournoi : Taper \033[1m 3 \033[0m \n"
+            "4/ Démarrer le tournoi : Taper \033[1m 3 \033[0m \n"
+            "5/ Ajouter un commentaire sur un tournoi : Taper \033[1m 5 \033[0m \n"
             "\n"
             "\033[4m Taper votre choix \033[0m: "
         )
@@ -90,6 +92,7 @@ class ViewMenu :
             )
 
 class ViewTournament:
+    """Affiche les différents 'inputs' nécessaire à la gestion de données sur un tournoi."""
 
     def tournament_view(self):
         """Annonce la saisie des données du Tournoi."""
@@ -111,6 +114,11 @@ class ViewTournament:
         )
         
 class ViewPlayer:
+    """Affiche les différents 'inputs' nécessaire à la gestion de données sur un joueur."""
+    
+    def search_player_view(self):
+        """Affiche le type de recherche."""
+        print("\033[4m Recherche d'un joueur par ses nom et prénom' \033[0m")
     
     def add_player_view(self):
         """Annonce la saisie pour créer un joueur."""
@@ -139,7 +147,7 @@ class ViewPlayer:
         return input("Souhaitez-vous ajouter un autre joueur (O/N): ")
 
     def delete_player_view(self):
-        """Choix de suppreison à confirmer."""
+        """Choix de suppression à confirmer."""
         return input(
             "Souhaitez_vous vraiment supprimer les données d'un joueur \n"
             "car une fois supprimer vous ne pourrez plus récupérer les informations \n"
@@ -163,5 +171,10 @@ class ViewPlayer:
             "\n"
             "\033[4m Taper votre choix \033[0m: "
             )
-        
+
+
+class ViewReport:
+    """Affiche les différents 'inputs' nécessaire à la gestion de données pour afficher les reports."""
     
+    def previous_menu():
+        return input("\n\n Taper 'R' pour revenir au menu précédent: ")
