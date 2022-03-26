@@ -24,7 +24,7 @@ class DataPlayer:
     """
     db = TinyDB('db.json')
     players_table = db.table('players')
-    Gamer = Query()
+    
     
     def saving_data_player(self):
         """Sauvegarde les instances créées du joueur dans la base tinydb."""
@@ -36,7 +36,7 @@ class DataPlayer:
     
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
-        players_table.search(where('lastname') == self.lastname)
+        return players_table.search(where('lastname') == self.lastname)
         
     
     def all_players(self):
@@ -55,10 +55,15 @@ class DataPlayer:
 
     def delete_player(self):
         """Supprime 1 joueur recherché"""
-        Gamer = Query()
-        players_table.remove((Gamer.lastname == self.lastname) and (Gamer.firstname == self.firstname))
+        User = Query()
+        players_table.remove((User.lastname == self.lastname) and (User.firstname == self.firstname))
+
+    def update_ranking_player(self):
+        User = Query()
+        players_table.update({'ranking':self.new_ranking}, User.lastname == self.lastname)
 
     
+
     
 
 class DataTournament:
@@ -78,4 +83,3 @@ class DataTournament:
         return tournaments_table.all()
        
         
-    
