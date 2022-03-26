@@ -3,18 +3,16 @@
 
 
 
-from tinydb import TinyDB, Query, where
 
-db = TinyDB('db.json')
-players_table = db.table('players')
-Gamer = Query()
+
+
 
 
 
 class Player: 
     """Joueurs d'un tournoi."""
          
-    def __init__(self, lastname, firstname, birthdate, gender, ranking, score):
+    def __init__(self, lastname, firstname, birthdate, gender, ranking=int, score=0):
         """Initialise les données de la personne et le classement du joueur."""
         #j'ai enlevé id_person car redondant avec l'id de tinydb
         self.lastname = lastname
@@ -22,12 +20,12 @@ class Player:
         self.birthdate = birthdate
         self.gender = gender
         self.ranking = ranking
-        self.score = 0
+        self.score = score
           
     # j'utilise cetteméthode pour sérialisé : il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non.
     def serialize_player(self):
         """Sérialise les données du joueur sous forme d'un dictionnaire"""
-        self.player= {
+        self.player_serialized= {
             "lastname": self.lastname,
             "firstname": self.firstname,
             "birthdate": self.birthdate,
@@ -35,29 +33,19 @@ class Player:
             "ranking": self.ranking,
             "score" :self.score
         }
-        return self.player
-    
-    def saving_data_player(self):
-        """Sauvegarde les instances créées du joueur dans la base tinydb."""
-        players_table.insert(self.player)
-    
-    def show_player(self):
-        """Affiche les instances de tous les joueurs sauvegardés dans la base tinydb"""
-        self.player= players_table.all()
-    
-   
-            
+        return self.player_serialized
+      
     def deserialize_player(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables"""
-        id_person = player_serialized['id_person']
-        lastname = player_serialized['lastname']
-        firstname = player_serialized['firstname']
-        birthdate = player_serialized['birthdate']
-        gender = player_serialized['gender']
-        ranking = player_serialized['ranking']
-        score = player_serialized['score']
+        id_person = self.player_serialized['id_person']
+        lastname = self.player_serialized['lastname']
+        firstname = self.player_serialized['firstname']
+        birthdate = self.player_serialized['birthdate']
+        gender = self.player_serialized['gender']
+        ranking = self.player_serialized['ranking']
+        score = self.player_serialized['score']
         
-        player = Player(
+        self.player_deserialised = Player(
             id_person = id_person,
             lastname = lastname,
             firstname = firstname,
@@ -66,7 +54,7 @@ class Player:
             ranking = ranking,
             score = score
         )
-        return player
+        return self.player_deserialised
     
     def won_player(self): # via match ?
         """gagne le match."""
@@ -83,8 +71,6 @@ class Player:
     def ranking_player(self): # pas demandé entrée manuelle : voir la classe Classement qui suit
         """Met à jour le nombre total de point acquis au tournoi avec les points déjà cumulés du joueur."""
         pass
-
-
 
 
 

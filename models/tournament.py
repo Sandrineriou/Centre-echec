@@ -3,10 +3,8 @@
 import datetime
 from pprint import pprint
 
-from tinydb import TinyDB, Query, where
 
-db = TinyDB('db.json')
-tournaments_table = db.table('tournaments')
+
 
 
 from models.player import Player
@@ -87,23 +85,23 @@ class Tournament:
 
     def deserialize_tournament(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables."""
-        name_tournament = tournament_serialized['Nom du Tournoi']
-        place = tournament_serialized['Lieu']
-        startdate = tournament_serialized['Date de début']
-        enddate = tournament_serialized['Date de fin']
-        controller_time = tournament_serialized['Gestion du temps']
-        number_rounds = tournament_serialized['Nombre de Tours']
-        players_list = tournament_serialized['Liste des joueurs']
-        rounds_tournament = tournament_serialized['Détail des Tours']
-        list_dict_matchs = tournament_serialized['Détail des matchs']
-        comment = tournament_serialized['Commentaire']
+        name_tournament = self.tournament_serialized['Nom du Tournoi']
+        place = self.tournament_serialized['Lieu']
+        startdate = self.tournament_serialized['Date de debut']
+        enddate = self.tournament_serialized['Date de fin']
+        controller_time = self.tournament_serialized['Gestion du temps']
+        number_rounds = self.tournament_serialized['Nombre de Tours']
+        players_list = self.tournament_serialized['Liste des joueurs']
+        rounds_tournament = self.tournament_serialized['Détail des Tours']
+        list_dict_matchs = self.tournament_serialized['Détail des matchs']
+        comment = self.tournament_serialized['Commentaire']
         
         
         
         tournament = Tournament(
             name_tournament = name_tournament,
             place = place,
-            stardate = stardate,
+            stardate = startdate,
             enddate = enddate,
             controller_time = controller_time,
             number_rounds = number_rounds,
@@ -114,16 +112,10 @@ class Tournament:
         )
         return tournament
         
-    def saving_data_tournament(self):
-        """Sauvegarde les instances créées dans la base tinydb."""
-        tournaments_table.insert(self.tournament_serialized)
-        
-    def show_tournament(self):
-        """Affiche les instances du tournoi sauvegardé"""
-        self.tournament_serialized = tournaments_table.all()
+    
  
-    def build_list_players(self, player):
-        self.players_list.append(player)
+    def build_list_players(self, player_serialised):
+        self.players_list.append(player_serialised)
         return self.players_list
 
     def return_list_players(self):
@@ -134,8 +126,8 @@ class Tournament:
         self.ranking_sorted = sorted(self.players_list, key=lambda x:x['ranking'], reverse=True)
         print(self.ranking_sorted, end='\n\n')
         self.half_list = [tuple(
-            [[element['id_person'],element['lastname'], element['score']] for element in self.ranking_sorted[0:4]]), 
-            tuple([[element['id_person'],element['lastname'], element['score']] for element in self.ranking_sorted[4:8]])
+            [[element['lastname'],element['firstname'], element['score']] for element in self.ranking_sorted[0:4]]), 
+            tuple([[element['lastname'],element['firstname'], element['score']] for element in self.ranking_sorted[4:8]])
         ]
         return self.half_list
      
@@ -182,7 +174,7 @@ class Tournament:
         a = sorted(self.increased_score_players, key=lambda y: y['ranking'], reverse=True)
         self.score_list = sorted(a, key=lambda x: x['score'], reverse=True)
         print(self.score_list)
-        self.return_score_list = [[element['id_person'],element['lastname'], element['score']] for element in self.score_list]
+        self.return_score_list = [[element['lastname'],element['firstname'], element['score']] for element in self.score_list]
         return print(self.return_score_list, end='\n\n')
     
     def create_pairs_players_next(self):

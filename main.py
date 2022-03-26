@@ -1,7 +1,11 @@
 """Déroulement de base du tournoi."""
 
-from views.view import ViewMenu, ViewTournament
-from controllers.controller import MainMenus, ControlTournament
+
+
+
+from views.view import ViewMenu, ViewTournament, ViewPlayer
+from controllers.controller import MainMenus, ControlTournament, ControlPlayer
+
 
 def main():
     

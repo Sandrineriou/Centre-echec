@@ -1,11 +1,14 @@
-"""Fonctions en lien avec les différents menus proposés par le controller"""
-import datetime
+"""View 
+Vues de toutes les propositions de choix proposées dans l'application.
+"""
+
 
 
 class ViewMenu :
 
 
     def homemenu():
+        """Affiche les actions disponibles en première interface, niveau principal"""
         return input(
             " \n"
             "Bienvenue sur GTE, Gestionnaire de Tournoi d'Echec \n\n"
@@ -25,6 +28,7 @@ class ViewMenu :
         )
 
     def gamemenu():
+        """Affiche les actions disponibles si choix 1(tournoi) est sélectionné au niveau principal."""
         return input(
             "\n"
             "\033[1m Menu du Jeu \033[0m: \n\n"
@@ -40,9 +44,10 @@ class ViewMenu :
             "\033[4m Taper votre choix \033[0m: "
         )
     
-    def playermenu():
+    def gamermenu():
+        """Affiche les actions disponibles si choix 2 (joueur) est sélectionné au niveau principal."""
         #voir si choix d'un menu multiple nécessaire 
-        input(
+        return input(
             "\n"
             "\033[1m Menu du Joueur \033[0m: \n\n"
             "----------------------------------- \n" 
@@ -50,16 +55,39 @@ class ViewMenu :
             "Quitter l'application : Taper \033[1m Q \033[0m \n"
             "----------------------------------- \n"  
             "\033[4m Gérer un joueur \033[0m: \n"
-            "1/ Rechercher un joueur et affiche ses données : Taper \033[1m 1 \033[0m \n"
-            "2/ Créer un joueur : ")
-        pass
+            "1/ Rechercher un joueur : Taper \033[1m 1 \033[0m \n"
+            "2/ Créer un joueur : Taper \033[1m 2 \033[0m \n"
+            "3/ Supprimer un joueur : Taper \033[1m 3 \033[0m \n"
+            "4/ Modifier les données d'un joueur : Taper \033[1m 4 \033[0m \n"
+            "5/ Mettre à jour le rang un joueur : Taper \033[1m 5 \033[0m \n"
+            "\n"
+            "\033[4m Taper votre choix \033[0m: "
+            )
         
-    
-    def update_ranking_view(self):
+ 
+    def update_ranking_view():
         pass
 
-    def report_view(self):
-        pass
+    def report_view():
+        """Affiche les actions disponibles si choix 4(rapport) est sélectionné au niveau principal."""
+        return input(
+            "\n"
+            "\033[1m Menu des rapports \033[0m: \n\n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m \n"
+            "Quitter l'application : Taper \033[1m Q \033[0m \n"
+            "----------------------------------- \n"  
+            "\033[4m Sélectionner votre rapport \033[0m: \n"
+            "1/ Liste de tous les acteurs par ordre alphabétique: Taper \033[1m 1 \033[0m \n"
+            "2/ Liste de tous les acteurs par classement: Taper \033[1m 2 \033[0m \n"
+            "3/ Liste de tous les joueurs d'un tournoi par ordre alphabétique: Taper \033[1m 3 \033[0m \n"
+            "4/ Liste de tous les joueurs d'un tournoi par classement : Taper \033[1m 4 \033[0m \n"
+            "5/ Liste de tous les tournois : Taper \033[1m 5 \033[0m \n"
+            "6/ Liste de tous les tours d'un tournoi: Taper \033[1m 6 \033[0m \n"
+            "7/ Liste de tous les matchs d'un tournoi : Taper \033[1m 7 \033[0m \n"
+            "\n"
+            "\033[4m Taper votre choix \033[0m: "
+            )
 
 class ViewTournament:
 
@@ -84,7 +112,7 @@ class ViewTournament:
         
 class ViewPlayer:
     
-    def player_view(self):
+    def add_player_view(self):
         """Annonce la saisie pour créer un joueur."""
         
         print("\033[4m Création d'un nouveau joueur \033[0m")
@@ -109,5 +137,31 @@ class ViewPlayer:
     def prompt_next_add_player(self):
         """Annonce un choix entre continuer à créer un joueur."""
         return input("Souhaitez-vous ajouter un autre joueur (O/N): ")
-       
+
+    def delete_player_view(self):
+        """Choix de suppreison à confirmer."""
+        return input(
+            "Souhaitez_vous vraiment supprimer les données d'un joueur \n"
+            "car une fois supprimer vous ne pourrez plus récupérer les informations \n"
+            "\n"
+            "\033[4m Taper votre choix(O/N): \033[0m: "
+            )
+    def modify_data_player_view(self):
+        return input(
+             "\n"
+            "\033[1m Modifier les données d'un joueur \033[0m: \n\n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m \n"
+            "Quitter l'application : Taper \033[1m Q \033[0m \n"
+            "----------------------------------- \n" 
+            "Que souhaitez-vous modifier? \n"
+            "1/ Nom: Taper \033[1m 1 \033[0m \n"
+            "2/ Prénom : Taper \033[1m 2 \033[0m \n"
+            "3/ date de naissance : Taper \033[1m 3 \033[0m \n"
+            "4/ rang : Taper \033[1m 4 \033[0m \n"
+            "5/ score : Taper \033[1m 5 \033[0m \n"
+            "\n"
+            "\033[4m Taper votre choix \033[0m: "
+            )
+        
     
