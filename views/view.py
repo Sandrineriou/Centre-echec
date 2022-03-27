@@ -7,7 +7,7 @@ Vues de toutes les choix proposées dans l'application.
 class ViewMenu :
 
 
-    def homemenu():
+    def homemenu(self):
         """Affiche les actions disponibles en première interface, niveau principal"""
         return input(
             " \n"
@@ -27,7 +27,7 @@ class ViewMenu :
            
         )
 
-    def gamemenu():
+    def gamemenu(self):
         """Affiche les actions disponibles si choix 1(tournoi) est sélectionné au niveau principal."""
         return input(
             "\n"
@@ -46,7 +46,7 @@ class ViewMenu :
             "\033[4m Taper votre choix \033[0m: "
         )
     
-    def personmenu():
+    def personmenu(self):
         """Affiche les actions disponibles si choix 2 (joueur) est sélectionné au niveau principal."""
         #voir si choix d'un menu multiple nécessaire 
         return input(
@@ -67,10 +67,10 @@ class ViewMenu :
             )
         
  
-    def update_ranking_view():
+    def update_ranking_view(self):
         pass
 
-    def report_view():
+    def report_view(self):
         """Affiche les actions disponibles si choix 4(rapport) est sélectionné au niveau principal."""
         return input(
             "\n"
@@ -125,8 +125,12 @@ class ViewPlayer:
         
         print("\033[4m Création d'un nouveau joueur \033[0m")
     
+    def prompt_add_player_view(self):
+        """Affiche le choix de continuer la création du joueur recherché."""
+        return input("\n Souhaitez-vous créer le joueur (O/N) :")
+
     def prompt_lastname_view(self):
-        return input("Saisir le nom de famille du joueur: ")
+        return input("\n Saisir le nom de famille du joueur: ")
  
     def prompt_firstname_view(self):
         return input("Saisir le prénom du joueur: ")
@@ -144,7 +148,7 @@ class ViewPlayer:
        
     def prompt_next_add_player(self):
         """Annonce un choix entre continuer à créer un joueur."""
-        return input("Souhaitez-vous ajouter un autre joueur (O/N): ")
+        return input("\n Souhaitez-vous ajouter un autre joueur (O/N): ")
 
     def delete_player_view(self):
         """Choix de suppression à confirmer."""

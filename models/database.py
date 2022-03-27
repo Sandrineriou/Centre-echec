@@ -37,9 +37,8 @@ class DataPlayer:
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
         return players_table.search(where('lastname') == self.lastname)
-        
     
-    def all_players(self):
+    def search_all_players(self):
         """Affiche tous les joueurs de la base."""
         print('\n'f"Il y a {len(players_table)} joueurs incrits dans la base."'\n')
         self.all = players_table.all()
@@ -56,7 +55,7 @@ class DataPlayer:
     def delete_player(self):
         """Supprime 1 joueur recherché"""
         User = Query()
-        players_table.remove((User.lastname == self.lastname) and (User.firstname == self.firstname))
+        return players_table.remove((User.lastname == self.lastname) and (User.firstname == self.firstname))
 
     def update_ranking_player(self):
         User = Query()

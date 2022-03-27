@@ -34,7 +34,7 @@ class MainMenus:
         Gère les choix de l'Utilisateur.
             
         """
-        self.niveau1 = ViewMenu.homemenu().upper()
+        self.niveau1 = ViewMenu.homemenu(self).upper()
         while True:
             if self.niveau1 == "Q":
                 """Propose de quitter l'application."""
@@ -56,13 +56,13 @@ class MainMenus:
                 """Affiche un menu pour l'édition de rapports."""
                 return self.report()
             else:
-                self.niveau1 = ViewMenu.homemenu().upper()
+                self.niveau1 = ViewMenu.homemenu(self).upper()
 
     def game(self):
         """Afffiche le menu du Jeu(tournoi) si choix 1 est sélectionné au niveau principal,
         et gère les choix de l'utilisateur sur les données d'un tournoi.
         """
-        self.niveau2 = ViewMenu.gamemenu().upper()
+        self.niveau2 = ViewMenu.gamemenu(self).upper()
         while True:
             if self.niveau2 == "Q":
                 """Propose de quitter l'application."""
@@ -81,7 +81,7 @@ class MainMenus:
                 """Démarre la création d'un tournoi."""
                 ViewTournament.tournament_view(self)
                 ControlTournament.add_tournament(self)
-                return ViewMenu.gamemenu()
+                return ViewMenu.gamemenu(self)
             elif self.niveau2 == '3':
                 """Ajoute les joueurs dans la 'player_list'."""
                 pass
@@ -92,9 +92,9 @@ class MainMenus:
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
                 ControlTournament.add_comment(self) #à reprendre pas possible de l'intégrer dans la sauvegarde
                 pass
-                return ViewMenu.gamemenu()
+                return ViewMenu.gamemenu(self)
             else:
-               self.niveau2 = ViewMenu.gamemenu().upper()
+               self.niveau2 = ViewMenu.gamemenu(self).upper()
             
     #pas sure de garder cette méthode : en attente    
     def person(self):
@@ -102,32 +102,32 @@ class MainMenus:
         et gère les choix de l'utilisateur sur les données d'un joueur.
         """
         
-        self.niveau2 = ViewMenu.personmenu().upper()
+        self.niveau2 = ViewMenu.personmenu(self).upper()
         while True:
             if self.niveau2 == "Q":
                 output = input("Souhaitez_vous réellement quitter GTE? (O/N)").upper()
                 if output == 'O':
                     break
                 else :
-                    self.niveau2 = ViewMenu.personmenu().upper()
+                    self.niveau2 = ViewMenu.personmenu(self).upper()
             if self.niveau2 == 'R':
                 return self.openmainscreen()
+                
             elif self.niveau2 == '1':
                 """Interface de recherche d'un joueur."""
                 ControlPlayer.show_player_control(self)
-                
-
-
+                self.niveau2 = ViewMenu.personmenu(self).upper()
+ 
             elif self.niveau2 == '2':
                 """Démarre la création d'un joueur, l'enregistrement dans la base des données saisies."""
                 ViewPlayer.add_player_view(self)
-                ControlPlayer.add_player(self)
+                ControlPlayer.add_player_control(self)
                 ControlPlayer.next_add_player(self)
                 
             elif self.niveau2 == '3' :
                 """Propose de supprimer un joueur de la base."""
                 ControlPlayer.delete_player_view_control(self)
-                ControlPlayer.delete_player_control(self)
+                self.niveau2 = ViewMenu.personmenu(self).upper()
                 
             elif self.niveau2 == '4' :
                 """Propose de modifier les données d'un joueur (notamment en cas d'erreur de saisie)."""
@@ -138,7 +138,7 @@ class MainMenus:
                 ControlPlayer.new_ranking_player_control(self)
             
             else:
-                self.niveau2 = ViewMenu.personmenu().upper()
+                self.niveau2 = ViewMenu.personmenu(self).upper()
 
 
     def participant(self):
@@ -149,24 +149,22 @@ class MainMenus:
         """Affiche le menu des rapports, si choix 4 est sélectionné au niveau principal
         et gère les choix de l'utilisateur sur le rapport sélectionné.
         """
-        self.niveau2 = ViewMenu.report_view().upper()
+        self.niveau2 = ViewMenu.report_view(self).upper()
         while True:
             if self.niveau2 == "Q":
                 """Propose de quitter l'application."""
                 output = input("Souhaitez_vous réellement quitter GTE? (O/N)").upper()
                 if output == 'O':
                     break
-                else: 
-                    while True :
-                        break
+                
             if self.niveau2 == 'R':
                 """Affiche le menu précédent."""
                 return self.openmainscreen()
             elif self.niveau2 == '1':
                 """Edite rapport joueurs par ordre alpha."""
                 ControlReport.show_all_players(self)
-                
-
+                self.niveau2 = ViewMenu.report_view(self).upper()
+    
             elif self.niveau2 == '2':
                 """Edite rapport joueurs par classements."""
                
@@ -189,7 +187,7 @@ class MainMenus:
                 """Edite rapport tous les matchs d'un tournoi.."""
                 pass
             else:
-                self.niveau2 = ViewMenu.report_view().upper()
+                self.niveau2 = ViewMenu.report_view(self).upper()
         
 
     
@@ -280,34 +278,47 @@ class ControlPlayer:
     """Méthodes de recherche d'un joueur."""
     def show_player_control(self):
         """Recherche un joueur par son nom ou son identifiant (si plusieurs personnes avec le même nom)."""
-        while True :
-            ViewPlayer.search_player_view(self)
-            self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
-            self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
+        
+        
+        
+        ViewPlayer.search_player_view(self)
+        self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
+        self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
+        print('\n')
+        result = DataPlayer.search_player(self)
+        for element in result:
+            print(element)
             print('\n')
-            result = DataPlayer.search_player(self)
-            for element in result:
-                print(element)
-                print('\n')
-            input('Continuer (toucher une touche): ')
-            return self.person()
+        input('Continuer (toucher une touche): ')
+    
+            
         
     """Méthodes d'ajout d'un joueur."""
-    def add_player(self):
+    def add_player_control(self):
         """Regroupe toutes les méthodes permettant l'ajout des attributs du joueur,
 
         sérialise les données et les enregistre dans tinydb.
             
         """
-        ControlPlayer.search_player(self)
-        ControlPlayer.lastname_control(self)
-        ControlPlayer.firstname_control(self)
-        ControlPlayer.birthdate_control(self)
-        ControlPlayer.gender_control(self)
-        ControlPlayer.ranking_control(self)
-        self.score = 0
-        Player.serialize_player(self)
-        DataPlayer.saving_data_player(self)
+        ControlPlayer.show_player_control(self)
+        
+        output = ViewPlayer.prompt_add_player_view(self).upper()
+        while True:
+            
+            if output == 'O':
+                ControlPlayer.lastname_control(self)
+                ControlPlayer.firstname_control(self)
+                ControlPlayer.birthdate_control(self)
+                ControlPlayer.gender_control(self)
+                ControlPlayer.ranking_control(self)
+                self.score = 0
+                Player.serialize_player(self)
+                DataPlayer.saving_data_player(self)
+                break
+            else:
+                return self.person()
+
+    
 
     def lastname_control(self):
         """Contrôle la cohérence de saisie du nom de famille du joueur."""
@@ -369,7 +380,7 @@ class ControlPlayer:
         output = ViewPlayer.prompt_next_add_player(self).upper()
         while True:
             if output == 'O':
-                ControlPlayer.add_player(self)
+                ControlPlayer.add_player_control(self)
                 output = ViewPlayer.prompt_next_add_player(self).upper()
             else:             
                 return self.person()
@@ -378,23 +389,24 @@ class ControlPlayer:
     """Méthodes de suppression d'un joueur"""
     def delete_player_control(self):
         """Supprime les données d'un joueur."""
-       
+        
         ControlPlayer.show_player_control(self)
         DataPlayer.delete_player(self)
-        return self.person()
+            
+        
   
     def delete_player_view_control(self):
         """Contrôle la cohérence de saisie du choix de l'utilisateur à supprimer un joueur dans la base."""
         
-        output = ViewPlayer.delete_player_view(self).upper()
+        
         while True:
+            output = ViewPlayer.delete_player_view(self).upper()
             if output == 'O':
                 ControlPlayer.delete_player_control(self)
                 break
-            elif output == 'N':
+            else: 
                 return self.person()
-            else :
-                output = ViewPlayer.delete_player_view(self).upper()
+        
             
     
     """Méthodes de modification de données d'un joueur"""
@@ -457,12 +469,9 @@ class ControlReport:
 
     def show_all_players(self):
         while True :
-            DataPlayer.all_players(self)
+            DataPlayer.search_all_players(self)
             DataPlayer.sorted_all_players_alpha(self)
-            
-        
             input('\n Continuer: toucher une touche :')
-            while True:
-                return MainMenus.report(self)
+            break
     
    
