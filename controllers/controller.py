@@ -81,18 +81,27 @@ class MainMenus:
                 """Démarre la création d'un tournoi."""
                 ViewTournament.tournament_view(self)
                 ControlTournament.add_tournament(self)
-                return ViewMenu.gamemenu(self)
+                self.niveau2 = ViewMenu.gamemenu(self).upper()
             elif self.niveau2 == '3':
-                """Ajoute les joueurs dans la 'player_list'."""
+                """Ajoute les joueurs dans la 'player_list'."""#voir si affiche la liste des joueurs inscrits plutot
                 pass
             elif self.niveau2 == '4':
                 """Démarre le tournoi"""
                 pass
             elif self.niveau2 == '5' :
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
-                ControlTournament.add_comment(self) #à reprendre pas possible de l'intégrer dans la sauvegarde
+                #à reprendre pas possible de l'intégrer dans la sauvegarde
                 pass
-                return ViewMenu.gamemenu(self)
+                
+            elif self.niveau2 == '6':
+                ControlTournament.show_tournament_control(self)
+                self.niveau2 = ViewMenu.gamemenu(self).upper()
+            
+            elif self.niveau2 == '100':
+                """Efface la base de données 'tournaments_table'(pas afficher dans ViewPlayer, donnée cachée)."""
+                ControlTournament.truncate_tournaments_table_control(self)
+                self.niveau2 = ViewMenu.gamemenu(self).upper()
+
             else:
                self.niveau2 = ViewMenu.gamemenu(self).upper()
             
@@ -109,7 +118,7 @@ class MainMenus:
                 if output == 'O':
                     break
                 else :
-                    self.niveau2 = ViewMenu.personmenu(self).upper()
+                    pass
             if self.niveau2 == 'R':
                 return self.openmainscreen()
                 
@@ -136,14 +145,36 @@ class MainMenus:
             elif self.niveau2 == '5' :
                 """Propose de mettre à jour le rang d'un joueur, à tout moment."""
                 ControlPlayer.new_ranking_player_control(self)
-            
+
+            elif self.niveau2 == '100':
+                """Efface la base de données 'players_table'(pas afficher dans ViewPlayer, donnée cachée)."""
+                ControlPlayer.truncate_players_table_control(self)
+                self.niveau2 = ViewMenu.personmenu(self).upper()
+
             else:
                 self.niveau2 = ViewMenu.personmenu(self).upper()
 
 
     def participant(self):
-        
-        pass
+        """Affiche le menu du joueur si choix 3 est sélectionné au niveau principal
+        et gère les choix de l'utilisateur sur les données d'un participant.
+        """
+        self.niveau2 = ViewMenu.participant_view(self).upper()
+        while True:
+            if self.niveau2 == "Q":
+                """Propose de quitter l'application."""
+                output = input("Souhaitez_vous réellement quitter GTE? (O/N)").upper()
+                if output == 'O':
+                    break
+                else :
+                    pass
+            if self.niveau2 == 'R':
+                """Affiche le menu précédent."""
+                return self.openmainscreen()
+            elif self.niveau2 == '1':
+                """Inscrit un joueur au tournoi choisi."""
+               
+    
 
     def report(self):
         """Affiche le menu des rapports, si choix 4 est sélectionné au niveau principal
@@ -156,6 +187,8 @@ class MainMenus:
                 output = input("Souhaitez_vous réellement quitter GTE? (O/N)").upper()
                 if output == 'O':
                     break
+                else:
+                    pass
                 
             if self.niveau2 == 'R':
                 """Affiche le menu précédent."""
@@ -178,8 +211,7 @@ class MainMenus:
             elif self.niveau2 == '5' :
                 """Edite rapport tous les tournois."""
                 ControlReport.show_all_tournaments(self)
-                
-                              
+ 
             elif self.niveau2 == '6' :
                 """Edite rapport tous les tours d'un tournoi."""
                 pass
@@ -192,32 +224,31 @@ class MainMenus:
 
     
 class ControlTournament:
-    """Controlleur qui entre en interaction avec le module Tournoi, et la class Vue spécifique au tournoi"""
+    """Contrôleur qui entre en interaction avec le module Tournoi, et la class Vue spécifique au tournoi"""
 
     def __init__(self, tournament):
         self.tournament = tournament
     
-    
     def add_tournament(self):
         """Regroupe toutes les méthodes permettant l'ajout des attributs d'un tournoi à sa création,
-
         sérialise les données et les enregistre dans tinydb.
-            
         """  
-        self.name_tournament_control()
-        self.place_control() 
-        self.controller_time_control()
-        self.startdate_tournament_control()
+
+        ControlTournament.name_tournament_control(self)
+        ControlTournament.place_control(self) 
+        ControlTournament.controller_time_control(self)
+        ControlTournament.startdate_tournament_control(self)
         self.enddate = None
         self.n_rounds = NUMBER_ROUNDS
         self.players_list = []
         self.rounds_tournament = []
         self.list_dict_matchs = []
+        self.comment = None
                 
         Tournament.get_rounds(self)
         Tournament.serialize_tournament(self)
-        Tournament.saving_data_tournament(self)
-        Tournament.show_tournament(self)
+        DataTournament.saving_data_tournament(self)
+        
 
         
     def name_tournament_control(self):
@@ -240,6 +271,7 @@ class ControlTournament:
                 ViewTournament.prompt_place_tournament_view(self)
             else :
                 break
+
     def controller_time_control(self):
         """Contrôle la cohérence de saisie du choix de gestion du temps du tournoi."""            
         self.controller_time = ViewTournament.prompt_controller_time_view(self)
@@ -259,17 +291,44 @@ class ControlTournament:
     
     def startdate_tournament_control(self):
         """Contrôle la cohérence de saisie de la date de début du tournoi."""
-        self.startdate = datetime.datetime.now().strftime("%d/%m/%Y")
+        self.startdate = datetime.now().strftime("%d/%m/%Y")
 
-    def add_comment(self):
+    def add_comment_tournament_control(self):
         """Permet au gestionnaire de saisir un commentaire sur un tournoi"""
-        Tournament.prompt_for_comment(self)
-        Tournament.saving_data_tournament(self)
         pass
+        
+    
+    """Méthodes de recherche d'un tournoi."""
+    
+    def show_tournament_control(self):
+        """Recherche d'un tournoi par son nom."""
+        ViewTournament.search_name_tournament_view(self)
+        self.name_tournament = input("Nom du tournoi: ").upper()
+        print('\n')
+        result = DataTournament.search_name_tournament(self)
+        for element in result:
+            print(element)
+            print('\n')
+        input('Continuer (toucher une touche): ')
+    
+    """Méthode de suppression."""
+    def truncate_tournaments_table_control(self):
+        """Contrôle de cohérence de saisie du choix de l'utilisateur à effacer la totalité de la table 'Tournaments'."""  
+
+        output = ViewTournament.truncate_tournaments_table_view(self).upper()
+        while True :
+            if output == 'R':
+                return self.game()
+            elif output == 'O':
+                DataTournament.truncate_tournaments_table(self)
+                print("La Table 'Tournaments' a été effacée.")
+                break
+            else:
+                return self.game()
    
 
 class ControlPlayer:
-    """Controlleur qui entre en interaction avec le module player et la Vue PLayer"""
+    """Contrôleur qui entre en interaction avec les modules Player, database."""
 
     def __init__(self, player):
         self.player = player
@@ -277,9 +336,7 @@ class ControlPlayer:
     
     """Méthodes de recherche d'un joueur."""
     def show_player_control(self):
-        """Recherche un joueur par son nom ou son identifiant (si plusieurs personnes avec le même nom)."""
-        
-        
+        """Recherche un joueur par son nom et son prénom et affiche l'ensemble des données."""
         
         ViewPlayer.search_player_view(self)
         self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
@@ -292,16 +349,14 @@ class ControlPlayer:
         input('Continuer (toucher une touche): ')
     
             
-        
     """Méthodes d'ajout d'un joueur."""
+
     def add_player_control(self):
         """Regroupe toutes les méthodes permettant l'ajout des attributs du joueur,
-
         sérialise les données et les enregistre dans tinydb.
-            
         """
+
         ControlPlayer.show_player_control(self)
-        
         output = ViewPlayer.prompt_add_player_view(self).upper()
         while True:
             
@@ -317,8 +372,6 @@ class ControlPlayer:
                 break
             else:
                 return self.person()
-
-    
 
     def lastname_control(self):
         """Contrôle la cohérence de saisie du nom de famille du joueur."""
@@ -387,18 +440,16 @@ class ControlPlayer:
    
     
     """Méthodes de suppression d'un joueur"""
+
     def delete_player_control(self):
         """Supprime les données d'un joueur."""
         
         ControlPlayer.show_player_control(self)
         DataPlayer.delete_player(self)
-            
-        
   
     def delete_player_view_control(self):
         """Contrôle la cohérence de saisie du choix de l'utilisateur à supprimer un joueur dans la base."""
-        
-        
+ 
         while True:
             output = ViewPlayer.delete_player_view(self).upper()
             if output == 'O':
@@ -407,7 +458,20 @@ class ControlPlayer:
             else: 
                 return self.person()
         
-            
+    def truncate_players_table_control(self):
+        """Contrôle de cohérence de saisie du choix de l'utilisateur à effacer la totalité de la table 'Players'."""  
+
+        output = ViewPlayer.truncate_players_table_view(self).upper()
+        while True :
+            if output == 'R':
+                return self.person()
+            elif output == 'O':
+                DataPlayer.truncate_players_table(self)
+                print("La Table 'Players' a été effacée.")
+                break
+            else:
+                output=ViewPlayer.truncate_players_table_view(self).upper()
+
     
     """Méthodes de modification de données d'un joueur"""
 
@@ -424,10 +488,10 @@ class ControlPlayer:
                 self.output = ViewPlayer.modify_data_player_view(self).upper()
     
     def modify_ranking_player_view_control(self):
-
+        """Contrôle la cohérence de saisie du choix de l'utilisateur,
+        à modifier le classement du joeur dans la base.
+        """
         ViewPlayer.modify_ranking_player_view(self)
-        
-        
         while True :
             try:
                 self.new_ranking = int(ViewPlayer.new_ranking_player_view(self))
@@ -440,23 +504,22 @@ class ControlPlayer:
         """Recherche le joueur et affiche son rang actuel, propose de donner son nouveau rang et met à jour la base."""
         
         ControlPlayer.show_player_control(self)
-        
         ControlPlayer.modify_ranking_player_view_control(self)
         DataPlayer.update_ranking_player(self)
         print(DataPlayer.search_lastname_player(self))
         input('Continuer (toucher une touche): ')
         return self.person()
+               
 
 
+class Participant:
+    """Contrôleur qui entre en intéraction avec les modules tournament, player et database."""
 
-                
 
 
 class ControlReport:
-    """Controlleur qui entre en interaction avec le module database ???? et la vue ???"""
+    """Contrôleur qui entre en interaction avec le module database."""
     
-    
-
     def show_all_tournaments(self):
         """Récupére toutes les données en lien avec les tournois."""
      
@@ -466,7 +529,6 @@ class ControlReport:
                 print(el)
             break
        
-
     def show_all_players(self):
         while True :
             DataPlayer.search_all_players(self)

@@ -20,8 +20,8 @@ class Tournament:
     """Tournoi."""
     
     
-    def __init__(self, name_tournament, place, controller_time,startdate=datetime.datetime.now().strftime("%d/%m/%Y"), 
-                n_rounds=NUMBER_ROUNDS, players_list=[], rounds_tournament=[], list_dict_matchs=[], comment=None):
+    def __init__(self, name_tournament, place, controller_time, startdate=datetime.datetime.now().strftime("%d/%m/%Y"), 
+                n_rounds=NUMBER_ROUNDS, players_list=[], rounds_tournament=[], list_dict_matchs=[]):
          
         """Initialise le nom du tournoi, le lieu, le tye de temps de jeu, la date de début, le nombre de tour,
         
@@ -40,10 +40,11 @@ class Tournament:
         self.n_rounds = n_rounds
         self.rounds_tournament = rounds_tournament
         self.list_dict_matchs = list_dict_matchs
-        self.comment = comment
+        self.comment = None
             
     def get_rounds(self):
         """Créer la liste des rounds à venir"""
+
         self.rounds_tournament = [] 
         i = 1
         for i in range (1,NUMBER_ROUNDS+1):
@@ -52,6 +53,7 @@ class Tournament:
     
     def serialize_tournament(self):
         """Sérialize les instances tournoi une fois saisie à la création d'un tournoi."""
+
         self.tournament_serialized = {}
         self.tournament_serialized = {
             "Nom_tournoi": self.name_tournament,
@@ -63,12 +65,13 @@ class Tournament:
             "Liste_joueurs": self.players_list,
             "Detail_tours" : self.rounds_tournament,
             "Detail_matchs" : self.list_dict_matchs,
-            "Commentaire": self.comment
+            "Commentaires": self.comment
         }
-        return pprint(self.tournament_serialized, end='\n\n')
+        return (self.tournament_serialized)
 
     def deserialize_tournament(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables."""
+
         name_tournament = self.tournament_serialized['Nom_tournoi']
         place = self.tournament_serialized['Lieu']
         startdate = self.tournament_serialized['Date_debut']
@@ -78,7 +81,8 @@ class Tournament:
         players_list = self.tournament_serialized['Liste_joueurs']
         rounds_tournament = self.tournament_serialized['Detail_tours']
         list_dict_matchs = self.tournament_serialized['Detail_matchs']
-        comment = self.tournament_serialized['Commentaire']
+        comment = self.tournament_serialized['Commentaires']
+        
               
         tournament = Tournament(
             name_tournament = name_tournament,
@@ -103,7 +107,10 @@ class Tournament:
         return print(self.players_list, end='\n\n')
 
     def sorted_ranking_list(self):
-        """Trie la liste des joueurs par leur rang, et affiche une liste avec une liste des rangs supérieurs et une liste des rangs inférieurs"""
+        """Trie la liste des joueurs par leur rang, et affiche une liste avec 
+        une liste des rangs supérieurs et une liste des rangs inférieurs.
+        """
+
         self.ranking_sorted = sorted(self.players_list, key=lambda x:x['ranking'], reverse=True)
         print(self.ranking_sorted, end='\n\n')
         self.half_list = [tuple(
@@ -113,7 +120,8 @@ class Tournament:
         return self.half_list
      
     def create_first_pairs_players(self):
-        """Affiche une liste des 4 paires pour le rounds 1"""
+        """Affiche une liste des 4 paires pour le rounds 1."""
+
         self.first_pairs_players = []
         j=0
         while j < NUMBER_ROUNDS :
@@ -123,12 +131,15 @@ class Tournament:
         return self.first_pairs_players
     
     def store_rounds_tournament(self, data_round):
-        """Ajoute les instances d'un round au tournoi concerné"""
+        """Ajoute les instances d'un round au tournoi concerné."""
+
         self.rounds_tournament.append(data_round)
         return self.rounds_tournament
 
     def show_rounds_tournament(self):
-        """Affiche tous les rounds d'un tournoi données, et les instances attachées à chaque round"""
+        """Affiche tous les rounds d'un tournoi données,
+        et les instances attachées à chaque round.
+        """
         return print(self.rounds_tournament, end='\n\n')
     
     def store_list_dict_matchs(self, other):# à supprimer semble faire doublon voir modif total score avec other

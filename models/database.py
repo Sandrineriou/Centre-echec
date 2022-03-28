@@ -32,7 +32,7 @@ class DataPlayer:
     
     def search_player(self):
         """Affiche le joueur de la base portant le nom et prénom saisie"""
-        return(players_table.search((where('lastname') == self.lastname)and(where('firstname') == self.firstname)))
+        return players_table.search((where('lastname') == self.lastname)and(where('firstname') == self.firstname))
     
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
@@ -57,9 +57,13 @@ class DataPlayer:
         User = Query()
         return players_table.remove((User.lastname == self.lastname) and (User.firstname == self.firstname))
 
+    def truncate_players_table(self):
+        """Efface toutes les données de la table 'Player(mise à zéro)."""
+        return players_table.truncate()
+    
     def update_ranking_player(self):
         User = Query()
-        players_table.update({'ranking':self.new_ranking}, User.lastname == self.lastname)
+        return players_table.update({'ranking':self.new_ranking}, User.lastname == self.lastname)
 
     
 
@@ -71,7 +75,9 @@ class DataTournament:
     créer, éditer, modifier, supprimer
     les données d'un tournoi.
     """    
-   
+    db = TinyDB('db.json')
+    tournaments_table = db.table('tournaments')
+
     def saving_data_tournament(self):
         """Sauvegarde les instances créées dans la base tinydb."""
         tournaments_table.insert(self.tournament_serialized)
@@ -80,5 +86,11 @@ class DataTournament:
         """Affiche tous les tournois inscrits dans la base."""
         print('\n'f"Il y a {len(tournaments_table)} tournois incrits dans la base."'\n')
         return tournaments_table.all()
-       
-        
+    
+    def search_name_tournament(self):
+        """Affiche les informations en lien avec le nom du tournoi."""
+        return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
+
+    def truncate_tournaments_table(self):
+        """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
+        return tournaments_table.truncate()

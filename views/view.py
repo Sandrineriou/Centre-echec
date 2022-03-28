@@ -42,6 +42,7 @@ class ViewMenu :
             "3/ Inscrire les joueurs au tournoi : Taper \033[1m 3 \033[0m \n"
             "4/ Démarrer le tournoi : Taper \033[1m 3 \033[0m \n"
             "5/ Ajouter un commentaire sur un tournoi : Taper \033[1m 5 \033[0m \n"
+            "6/ Afficher les données d'un tournoi choisi : Taper \033[1m 6 \033[0m \n"
             "\n"
             "\033[4m Taper votre choix \033[0m: "
         )
@@ -67,8 +68,21 @@ class ViewMenu :
             )
         
  
-    def update_ranking_view(self):
-        pass
+    def participant_view(self):
+        """Affiche les actions disponibles si choix 3(participant) est sélectionné au niveau principal."""
+        return input(
+              "\n"
+            "\033[1m Menu du Participant \033[0m: \n\n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m \n"
+            "Quitter l'application : Taper \033[1m Q \033[0m \n"
+            "----------------------------------- \n"  
+            "\033[4m Gérer un participant \033[0m: \n"
+            "1/ Inscrire un joueur au tournoi: Taper \033[1m 1 \033[0m \n"
+            ""
+            "\n"
+            "\033[4m Taper votre choix \033[0m: "
+            )
 
     def report_view(self):
         """Affiche les actions disponibles si choix 4(rapport) est sélectionné au niveau principal."""
@@ -105,14 +119,28 @@ class ViewTournament:
     def prompt_place_tournament_view(self):
         return input("Nom de la Ville: ")
         
-   
     def prompt_controller_time_view(self):
         return input(
         "Choix des règles de temps :\n" 
         "Bullet: Taper \033[1m 1 \033[0m \n" "Blitz: Taper \033[1m 2 \033[0m \n" "ou " "Coup rapide : Taper \033[1m 3 \033[0m \n"
         "\033[4m Taper votre choix \033[0m: "
         )
-        
+    def search_name_tournament_view(self):
+        """Affiche le type de recherche sur le tournoi."""
+        print("\n \033[4m Recherche d'un tournoi par son nom' \033[0m \n")
+
+    def truncate_tournaments_table_view(self):
+        """Message de vigilance avant suppression de la table 'Tournaments' dans sa totalité."""
+        return input(
+            "\n------------ATTENTION------------\n"
+            "\n \033[4m Si vous continuez, la table 'tournaments_table' sera définitevement effacée.\033[0m \n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m \n"
+            "----------------------------------- \n" 
+            "\n\n Pour continuer : Taper 'O'\033[0m \n\n"
+            "Votre choix: "
+        )
+
 class ViewPlayer:
     """Affiche les différents 'inputs' nécessaire à la gestion de données sur un joueur."""
     
@@ -158,6 +186,19 @@ class ViewPlayer:
             "\n"
             "\033[4m Taper votre choix(O/N): \033[0m: "
             )
+
+    def truncate_players_table_view(self):
+        """Message de vigilance avant suppression de la table player dans sa totalité."""
+        return input(
+            "\n------------ATTENTION------------\n"
+            "\n \033[4m Si vous continuez, la table 'players_table' sera définitevement effacée.\033[0m \n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m \n"
+            "----------------------------------- \n" 
+            "\n\n Pour continuer : Taper 'O'\033[0m \n\n"
+            "Votre choix: "
+        )
+
     def modify_data_player_view(self):
         """Choix pour modifier soit le nom, prénom, date de naissance ou genre du joueur."""
         return input(
@@ -168,7 +209,7 @@ class ViewPlayer:
             "----------------------------------- \n" 
             "\n\n \033[1m En construction, A bientôt\033[0m \n\n"
             "Taper R"
-            )
+        )
     def modify_ranking_player_view(self):
         """Affiche l'action"""
         print("\n \033[4m Modification du rang \033[0m \n")
