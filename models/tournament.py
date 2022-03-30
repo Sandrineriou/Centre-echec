@@ -99,8 +99,9 @@ class Tournament:
         return tournament
  
  
-    def build_list_players(self, player_serialised):
-        self.players_list.append(player_serialised)
+    def build_list_players(self):
+        
+        self.players_list.append()
         return self.players_list
 
     def return_list_players(self):

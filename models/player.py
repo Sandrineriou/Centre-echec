@@ -19,7 +19,7 @@ class Player:
     # j'utilise cetteméthode pour sérialisé : il est possible que cetteméthode soit obsolète après intégration de TinyDB : voir à la fin pour la supprimer ou non.
     def serialize_player(self):
         """Sérialise les données du joueur sous forme d'un dictionnaire"""
-        self.player_serialized= {
+        self.player_serialized = {
             "lastname": self.lastname,
             "firstname": self.firstname,
             "birthdate": self.birthdate,
@@ -39,7 +39,7 @@ class Player:
         ranking = self.player_serialized['ranking']
         score = self.player_serialized['score']
         
-        self.player_deserialised = Player(
+        self.player_deserialized = Player(
             lastname = lastname,
             firstname = firstname,
             birthdate = birthdate,
@@ -47,7 +47,7 @@ class Player:
             ranking = ranking,
             score = score
         )
-        return self.player_deserialised
+        return self.player_deserialized
     
    
 

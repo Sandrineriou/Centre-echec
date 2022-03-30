@@ -40,7 +40,7 @@ class ViewMenu :
             "1/ Reprendre un tournoi suspendu : Taper \033[1m 1 \033[0m \n"
             "2/ Créer un tournoi : Taper \033[1m 2 \033[0m \n"
             "3/ Inscrire les joueurs au tournoi : Taper \033[1m 3 \033[0m \n"
-            "4/ Démarrer le tournoi : Taper \033[1m 3 \033[0m \n"
+            "4/ Démarrer le tournoi : Taper \033[1m 4 \033[0m \n"
             "5/ Ajouter un commentaire sur un tournoi : Taper \033[1m 5 \033[0m \n"
             "6/ Afficher les données d'un tournoi choisi : Taper \033[1m 6 \033[0m \n"
             "\n"
@@ -78,7 +78,7 @@ class ViewMenu :
             "Quitter l'application : Taper \033[1m Q \033[0m \n"
             "----------------------------------- \n"  
             "\033[4m Gérer un participant \033[0m: \n"
-            "1/ Inscrire un joueur au tournoi: Taper \033[1m 1 \033[0m \n"
+            "1/ Supprimer un participant du tournoi: Taper \033[1m 1 \033[0m \n"
             ""
             "\n"
             "\033[4m Taper votre choix \033[0m: "
@@ -125,10 +125,15 @@ class ViewTournament:
         "Bullet: Taper \033[1m 1 \033[0m \n" "Blitz: Taper \033[1m 2 \033[0m \n" "ou " "Coup rapide : Taper \033[1m 3 \033[0m \n"
         "\033[4m Taper votre choix \033[0m: "
         )
+        
     def search_name_tournament_view(self):
         """Affiche le type de recherche sur le tournoi."""
         print("\n \033[4m Recherche d'un tournoi par son nom' \033[0m \n")
 
+    def prompt_next_participant_view(self):
+        """Annonce un choix entre continuer à intéger un participant."""
+        return input("\n Souhaitez-vous ajouter un autre participant au tournoi (O/N): ")
+    
     def truncate_tournaments_table_view(self):
         """Message de vigilance avant suppression de la table 'Tournaments' dans sa totalité."""
         return input(
@@ -218,7 +223,19 @@ class ViewPlayer:
         return input("\n Saisir le nouveau classement du joueur :")
 
 
+class ViewParticipant:
+    """Affiche les différents 'inputs' nécessaires à la gestion d'un participant."""
+
+    def delete_participant_view(self):
+        """Choix de suppression à confirmer."""
+        return input(
+            "Souhaitez_vous vraiment supprimer un participant \n"
+            "car une fois supprimer vous ne pourrez plus récupérer ces informations dans la liste des joueurs \n"
+            "\n"
+            "\033[4m Taper votre choix(O/N): \033[0m: "
+            )
+
 class ViewReport:
-    """Affiche les différents 'inputs' nécessaire à la gestion de données pour afficher les reports."""
+    """Affiche les différents 'inputs' nécessaires à la gestion de données pour afficher les reports."""
     
   

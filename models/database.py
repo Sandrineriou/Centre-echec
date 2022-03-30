@@ -37,20 +37,22 @@ class DataPlayer:
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
         return players_table.search(where('lastname') == self.lastname)
+
     
     def search_all_players(self):
         """Affiche tous les joueurs de la base."""
         print('\n'f"Il y a {len(players_table)} joueurs incrits dans la base."'\n')
         self.all = players_table.all()
         return self.all
+        
 
     def sorted_all_players_alpha(self):
         """Affiche tous les joueurs de la base par ordre alphabétique(nom)"""
         self.alpha_sorted = sorted(self.all, key=lambda x: x['lastname'])
         for element in self.alpha_sorted:
-            print("Joueur: ", element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
+            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
                 element['gender'], "classement: ", element['ranking']
-             )
+            )
 
     def delete_player(self):
         """Supprime 1 joueur recherché"""
@@ -82,14 +84,28 @@ class DataTournament:
         """Sauvegarde les instances créées dans la base tinydb."""
         tournaments_table.insert(self.tournament_serialized)
  
-    def all_tournaments(self):
+    def search_all_tournaments(self):
         """Affiche tous les tournois inscrits dans la base."""
         print('\n'f"Il y a {len(tournaments_table)} tournois incrits dans la base."'\n')
-        return tournaments_table.all()
+        self.all = tournaments_table.all()
+        return self.all
+    
+    
     
     def search_name_tournament(self):
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
+
+    
+    
+    def update_players_tournament(self):
+        User = Query()
+        print(tournaments_table.update({'Liste_joueurs':self.players_list}, User.Nom_tournoi == self.name_tournament))
+
+
+
+
+
 
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
