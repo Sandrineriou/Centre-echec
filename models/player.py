@@ -32,21 +32,16 @@ class Player:
     def deserialize_player(self):
         """Déserialize les instances sérialisées et les transforme en instances utilisables"""
         
-        lastname = self.player_serialized['lastname']
-        firstname = self.player_serialized['firstname']
-        birthdate = self.player_serialized['birthdate']
-        gender = self.player_serialized['gender']
-        ranking = self.player_serialized['ranking']
-        score = self.player_serialized['score']
+       
         
-        self.player_deserialized = Player(
-            lastname = lastname,
-            firstname = firstname,
-            birthdate = birthdate,
-            gender = gender,
-            ranking = ranking,
-            score = score
-        )
+        self.player_deserialized = {
+            "lastname": self.lastname,
+            "firstname": self.firstname,
+            "birthdate": self.birthdate,
+            "gender": self.gender,
+            "ranking": self.ranking,
+            "score" :self.score
+        }
         return self.player_deserialized
     
    

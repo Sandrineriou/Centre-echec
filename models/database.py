@@ -63,7 +63,7 @@ class DataPlayer:
         """Efface toutes les données de la table 'Player(mise à zéro)."""
         return players_table.truncate()
     
-    def update_ranking_player(self):
+    def update_ranking_player(self):# modifier pour mettre l'ID en recherche plutot que le nom ou sinon rajouter le prénom
         User = Query()
         return players_table.update({'ranking':self.new_ranking}, User.lastname == self.lastname)
 
@@ -96,17 +96,13 @@ class DataTournament:
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
-    
-    
-    def update_players_tournament(self):
+   
+
+    def update_players_list_tournament(self):
         User = Query()
-        print(tournaments_table.update({'Liste_joueurs':self.players_list}, User.Nom_tournoi == self.name_tournament))
+        print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
 
-
-
-
-
-
+    
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
         return tournaments_table.truncate()

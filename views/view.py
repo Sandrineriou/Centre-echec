@@ -227,13 +227,15 @@ class ViewParticipant:
     """Affiche les différents 'inputs' nécessaires à la gestion d'un participant."""
 
     def delete_participant_view(self):
-        """Choix de suppression à confirmer."""
+        """Choix de suppression d'un participant à confirmer."""
         return input(
             "Souhaitez_vous vraiment supprimer un participant \n"
             "car une fois supprimer vous ne pourrez plus récupérer ces informations dans la liste des joueurs \n"
             "\n"
             "\033[4m Taper votre choix(O/N): \033[0m: "
             )
+
+  
 
 class ViewReport:
     """Affiche les différents 'inputs' nécessaires à la gestion de données pour afficher les reports."""

@@ -51,7 +51,7 @@ class MainMenus:
                 return self.person()
             elif self.niveau1 == '3':
                 """Affiche le menu pour gérer un participant à un tournoi"""
-                pass
+                return self.participant()
             elif self.niveau1 == '4':
                 """Affiche un menu pour l'édition de rapports."""
                 return self.report()
@@ -176,7 +176,8 @@ class MainMenus:
                 return self.openmainscreen()
             elif self.niveau2 == '1':
                 """Supprime un participant de la liste des joueurs d'un tournoi, avant son démarrage."""
-               
+                Participant.delete_list_players(self)
+                self.niveau2 = ViewMenu.participant_view(self).upper()
     
 
     def report(self):
@@ -564,8 +565,8 @@ class ControlPlayer:
         
         ControlPlayer.show_player_control(self)
         ControlPlayer.modify_ranking_player_view_control(self)
-        DataPlayer.update_ranking_player(self)
-        print(DataPlayer.search_lastname_player(self))
+        DataPlayer.update_ranking_player(self)# à modifier car 2 dupont dont 2 changements de classement
+        print(DataPlayer.search_lastname_player(self))#à modifier car pareil pour le retour va retourner les 2 dupont
         input('Continuer (toucher une touche): ')
         return self.person()
   
@@ -575,12 +576,32 @@ class Participant:
 
     def delete_participant_control(self):
         """Supprime un participant de la liste des joueurs d'un tournoi, avant son début."""
-        ControlPlayer.show_player_control(self)
-        output = ViewParticipant.delete_participant_view(self).upper()
-        while True:
-            if output == 'O':
-                pass
+        ViewTournament.search_name_tournament_view(self)
+        self.name_tournament = input("Nom du tournoi: ").upper()
+        DataTournament.get_list_players_tournament(self)
+        input('Continuer (toucher une touche): ')
+        
+    def delete_list_players(self):
+        """Vide la liste de joueurs d'un tournoi donné."""
+        
 
+        self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
+        while True:
+            result = DataTournament.search_name_tournament(self)
+            
+            for element in result:
+                self.players_list = element['Liste_joueurs']
+                print(self.players_list)
+                if self.players_list == []:
+                    print('La liste de joueurs du tournoi est déjà vide')
+                    break
+                else:
+                    self.players_list.clear()
+                    DataTournament.update_players_list_tournament(self)
+                    print("La liste des joueurs du tournoi vient d'être effacer")
+                    break
+            input('Continuer (toucher une touche): ')
+            break
 
 
 class ControlReport:
@@ -610,9 +631,13 @@ class ControlReport:
         while True:
             result = DataTournament.search_name_tournament(self)
             for element in result:
-                list = element['Liste_joueurs'] 
-                for data in list:
-                    print(data)
+                plist = element['Liste_joueurs'] 
+                if plist == []:
+                    print("Il n'y a pas de participants inscrits dans la liste des joueurs du tournoi.")
+                    break
+                else:
+                    for data in plist:
+                        print(data)
             print('\n')
             input('\n Continuer: toucher une touche :')
             break
