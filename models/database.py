@@ -90,18 +90,16 @@ class DataTournament:
         self.all = tournaments_table.all()
         return self.all
     
-    
-    
     def search_name_tournament(self):
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
-   
-
     def update_players_list_tournament(self):
         User = Query()
         print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
-
+    
+    
+    
     
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
