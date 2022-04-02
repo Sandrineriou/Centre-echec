@@ -160,11 +160,8 @@ class ViewParticipant:
             "Taper son numéro affiché ci_dessus, avant ses informations \n"
             "\n"
             "\033[4m Taper le numéro choisi: \033[0m: "
-            )
-    
+            )  
 
-
-    
 
 class ViewPlayer:
     """Affiche les différents 'inputs' nécessaire à la gestion de données sur un joueur."""
@@ -196,6 +193,7 @@ class ViewPlayer:
             "Saisir le genre du joueur : \n"
             "genres : H(homme), F(femme), T(trans) : "
             )
+
     def prompt_ranking_view(self):
         return input("Saisir le classement du joueur: ")
        
@@ -235,6 +233,7 @@ class ViewPlayer:
             "\n\n \033[1m En construction, A bientôt\033[0m \n\n"
             "Taper R"
         )
+
     def modify_ranking_player_view(self):
         """Affiche l'action"""
         print("\n \033[4m Modification du rang \033[0m \n")
@@ -242,15 +241,7 @@ class ViewPlayer:
     def new_ranking_player_view(self):
         return input("Saisir le nouveau classement du joueur :")
 
-    def none_player_database_view(self):
-        return input(
-            "\n \033[4m LE JOUEUR RECHERCHE N'EST PAS DANS LA BASE DE DONNEES \033[0m \n"
-            "Que souhaitez_vous faire ?\n"
-            "1/ Créer le Joueur : Taper \033[1m 1 \033[0m \n"
-            "2/ Rechercher à nouveau : Taper \033[1m 2 \033[0m \n"
-            "3/ Sortir de ce labyrinthe !! : Taper \033[1m 3 \033[0m \n"
-            "Votre choix: "
-        )
+   
 
 class ViewReport:
     """Affiche les différents 'inputs' nécessaires à la gestion de données pour afficher les reports."""

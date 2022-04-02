@@ -85,7 +85,6 @@ class MainMenus:
             elif self.niveau2 == '3':
                 """Ajoute les joueurs dans la 'player_list'."""#voir si affiche la liste des joueurs inscrits plutot
                 ControlTournament.build_list_players_control(self)
-                ControlParticipant.next_participant_tournament(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '4':
@@ -134,7 +133,7 @@ class MainMenus:
                 """Démarre la création d'un joueur, l'enregistrement dans la base des données saisies."""
                 ViewPlayer.add_player_view(self)
                 ControlPlayer.add_player_control(self)
-                ControlPlayer.next_add_player(self)
+                self.niveau2 = ViewMenu.personmenu(self).upper()
                 
             elif self.niveau2 == '3' :
                 """Propose de supprimer un joueur de la base."""
@@ -332,11 +331,18 @@ class ControlTournament:
         """Intègre les participantsà la liste de joueurs au tournoi sélectionné."""
         ControlTournament.search_list_players_tournament_control(self)
         player = ControlParticipant.search_participant_control(self)
-        
-        self.players_list.append(player)
-        print(self.players_list)
-        DataTournament.update_players_list_tournament(self)
-        input('\n Continuer (toucher une touche): ')
+        while True:
+            if player == None:
+                print("\n Veuillez vérifier les données à saisir\n")
+                input('Continuer (toucher une touche): ')
+                break
+            else:
+                self.players_list.append(player)
+                print(self.players_list)
+                DataTournament.update_players_list_tournament(self)
+                input('\n Continuer (toucher une touche): ')
+                ControlParticipant.next_participant_tournament(self)
+            break
 
     
 
@@ -378,12 +384,13 @@ class ControlParticipant:
     def search_participant_control(self):
         """Retourne les données du joueur."""
         ViewPlayer.search_player_view(self)
-        self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
-        self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
+        self.lastname = ControlPlayer.lastname_control(self)
+        self.firstname = ControlPlayer.firstname_control(self)
         print('\n')
         while True:
             if DataPlayer.search_player(self) == []:
-                ControlParticipant.none_player_control(self)
+                print("\nLa personne n'est pas incrite dans la base de données."
+                    "Veuillez créer ce joueur avant de continuer \n")
                 break
             else:
                 for element in DataPlayer.search_player(self):
@@ -397,22 +404,7 @@ class ControlParticipant:
             input('\n Continuer (toucher une touche): \n')
             break
         
-    def none_player_control(self):
-        """Affiche une suite à donner quand le participant recherché n'est pas dans la base de données."""
-        
-        output = ViewPlayer.none_player_database_view(self).upper()
-        while True:
-            if output == '1':
-                return ControlPlayer.add_player_control(self)
-            elif output == '2':
-                return ControlParticipant.search_participant_control(self)
-            elif output == '3':
-                return MainMenus.game(self)
-            else:
-                output = ViewPlayer.none_player_database_view(self).upper()
-
-            break
- 
+     
     def next_participant_tournament(self):
         """Choix entre continuer à intégrer un participant dans la liste des joueurs d'un tournoi ou revenir au menu précédent."""
         
@@ -481,16 +473,23 @@ class ControlPlayer:
         """Recherche un joueur par son nom et son prénom et affiche l'ensemble des données."""
         
         ViewPlayer.search_player_view(self)
-        self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
-        self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
+        self.lastname = ControlPlayer.lastname_control(self)
+        self.firstname = ControlPlayer.firstname_control(self)
         print('\n')
         result = DataPlayer.search_player(self)
-        for element in result:
-            print(f"{element.doc_id} : {element}")
-            return element
-        input('Continuer (toucher une touche): ')
+        while True:
+            if result == []:
+                print("la personne recherchée n'est pas dans la base de données.")
+                input('\n Continuer (toucher une touche): ')
+                break
+            else:
+                for element in result:
+                    print(f"{element.doc_id} : {element}")
+                    return element
+            input('Continuer (toucher une touche): ')
+            break
     
-    
+        
     """Méthodes d'ajout d'un joueur."""
 
     def add_player_control(self):
@@ -501,7 +500,6 @@ class ControlPlayer:
         ControlPlayer.show_player_control(self)
         output = ViewPlayer.prompt_add_player_view(self).upper()
         while True:
-            
             if output == 'O':
                 ControlPlayer.lastname_control(self)
                 ControlPlayer.firstname_control(self)
@@ -511,9 +509,12 @@ class ControlPlayer:
                 self.score = 0
                 Player.serialize_player(self)
                 DataPlayer.saving_data_player(self)
-                break
+                ControlPlayer.next_add_player(self)
             else:
-                return self.person()
+               break
+            
+            
+            
 
     def lastname_control(self):
         """Contrôle la cohérence de saisie du nom de famille du joueur."""
@@ -578,7 +579,7 @@ class ControlPlayer:
                 ControlPlayer.add_player_control(self)
                 output = ViewPlayer.prompt_next_add_player(self).upper()
             else:             
-                return self.person()
+                break
    
     
     """Méthodes de suppression d'un joueur"""
@@ -649,8 +650,8 @@ class ControlPlayer:
 
         ControlPlayer.modify_ranking_player_view_control(self)
        
-        DataPlayer.update_ranking_player(self)# à modifier car 2 dupont dont 2 changements de classement
-        print(DataPlayer.search_player(self))#à modifier car pareil pour le retour va retourner les 2 dupont
+        DataPlayer.update_ranking_player(self)
+        print(DataPlayer.search_player(self))
         input('Continuer (toucher une touche): ')
         
   
