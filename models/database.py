@@ -34,6 +34,15 @@ class DataPlayer:
         """Affiche le joueur de la base portant le nom et prénom saisie"""
         return players_table.search((where('lastname') == self.lastname)and(where('firstname') == self.firstname))
     
+    def get_id_player(self):
+        """Retourne le numéro d'identifiant du joueur rehcerché."""
+       
+        
+        for element in DataPlayer.search_player(self):
+            self.num_id = element.doc_id
+            return self.num_id
+        
+
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
         return players_table.search(where('lastname') == self.lastname)
@@ -64,10 +73,11 @@ class DataPlayer:
         return players_table.truncate()
     
     def update_ranking_player(self):# modifier pour mettre l'ID en recherche plutot que le nom ou sinon rajouter le prénom
-        User = Query()
-        return players_table.update({'ranking':self.new_ranking}, User.lastname == self.lastname)
+        
+        return players_table.update({'ranking':self.new_ranking}, doc_ids=[DataPlayer.get_id_player(self)])
 
-    
+
+
 
     
 

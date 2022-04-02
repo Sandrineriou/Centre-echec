@@ -171,7 +171,7 @@ class ViewPlayer:
     
     def search_player_view(self):
         """Affiche le type de recherche."""
-        print("\n \033[4m Recherche d'un joueur par ses nom et prénom' \033[0m \n")
+        print("\n \033[4m Recherche d'un joueur par nom et prénom: \033[0m")
     
     def add_player_view(self):
         """Annonce la saisie pour créer un joueur."""
@@ -240,7 +240,7 @@ class ViewPlayer:
         print("\n \033[4m Modification du rang \033[0m \n")
 
     def new_ranking_player_view(self):
-        return input("\n Saisir le nouveau classement du joueur :")
+        return input("Saisir le nouveau classement du joueur :")
 
     def none_player_database_view(self):
         return input(
@@ -248,7 +248,8 @@ class ViewPlayer:
             "Que souhaitez_vous faire ?\n"
             "1/ Créer le Joueur : Taper \033[1m 1 \033[0m \n"
             "2/ Rechercher à nouveau : Taper \033[1m 2 \033[0m \n"
-             "Votre choix: "
+            "3/ Sortir de ce labyrinthe !! : Taper \033[1m 3 \033[0m \n"
+            "Votre choix: "
         )
 
 class ViewReport:

@@ -148,6 +148,7 @@ class MainMenus:
             elif self.niveau2 == '5' :
                 """Propose de mettre à jour le rang d'un joueur, à tout moment."""
                 ControlPlayer.new_ranking_player_control(self)
+                self.niveau2 = ViewMenu.personmenu(self).upper()
 
             elif self.niveau2 == '100':
                 """Efface la base de données 'players_table'(pas afficher dans ViewPlayer, donnée cachée)."""
@@ -173,11 +174,17 @@ class MainMenus:
                     self.niveau2 = ViewMenu.participant_view(self).upper()
             if self.niveau2 == 'R':
                 """Affiche le menu précédent."""
-                return self.openmainscreen()
+                return self.openmainscreen() 
             elif self.niveau2 == '1':
                 """Supprime un participant de la liste des joueurs d'un tournoi, avant son démarrage."""
                 ControlParticipant.delete_participant_control(self)
-                self.niveau2 = ViewMenu.participant_view(self).upper()
+                return self.openmainscreen()
+            else:
+                while True :
+                    print("\n Vous n'avez pas choisi le bon !! recommencer...\n")
+                    self.niveau2 = ViewMenu.participant_view(self).upper()
+                
+                    break
     
 
     def report(self):
@@ -308,16 +315,18 @@ class ControlTournament:
         self.name_tounament = ControlTournament.name_tournament_control(self)
         result = DataTournament.search_name_tournament(self)
         while True :
-            if result == "":
-                self.name_tounament = ControlTournament.name_tournament_control(self)
-                result = DataTournament.search_name_tournament(self)
+            if result == []:
+                print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
+                input('\n Continuer: toucher une touche :')
+                return ControlTournament.search_list_players_tournament_control(self)
             else :
-                while True:
-                    for element in result:
-                        self.players_list = element['Liste_joueurs']
-                        for element in self.players_list :
-                            print(element)
-                        return self.players_list
+                
+                for element in result:
+                    self.players_list = element['Liste_joueurs']
+                    for element in self.players_list :
+                        print(element)
+                    return self.players_list
+            break
      
     def build_list_players_control(self):
         """Intègre les participantsà la liste de joueurs au tournoi sélectionné."""
@@ -372,18 +381,21 @@ class ControlParticipant:
         self.lastname = ViewPlayer.prompt_lastname_view(self).upper()
         self.firstname = ViewPlayer.prompt_firstname_view(self).upper()
         print('\n')
-        if DataPlayer.search_player(self) == []:
-            ControlParticipant.none_player_control(self)
-        else:
-            for element in DataPlayer.search_player(self):
-                print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
-                    element['gender'], "Classement: ", element['ranking'], "Score =", element['score'])
-                output = ViewParticipant.add_participant_view(self).upper()
-                if output == 'O':
-                    return element
-                else: 
-                    return ControlParticipant.search_participant_control(self)
+        while True:
+            if DataPlayer.search_player(self) == []:
+                ControlParticipant.none_player_control(self)
+                break
+            else:
+                for element in DataPlayer.search_player(self):
+                    print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
+                        element['gender'], "Classement: ", element['ranking'], "Score =", element['score'])
+                    output = ViewParticipant.add_participant_view(self).upper()
+                    if output == 'O':
+                        return element
+                    else: 
+                        return ControlParticipant.search_participant_control(self)
             input('\n Continuer (toucher une touche): \n')
+            break
         
     def none_player_control(self):
         """Affiche une suite à donner quand le participant recherché n'est pas dans la base de données."""
@@ -392,28 +404,32 @@ class ControlParticipant:
         while True:
             if output == '1':
                 return ControlPlayer.add_player_control(self)
-               
-        
             elif output == '2':
                 return ControlParticipant.search_participant_control(self)
-            
-   
-        
-        
+            elif output == '3':
+                return MainMenus.game(self)
+            else:
+                output = ViewPlayer.none_player_database_view(self).upper()
+
+            break
+ 
     def next_participant_tournament(self):
         """Choix entre continuer à intégrer un participant dans la liste des joueurs d'un tournoi ou revenir au menu précédent."""
+        
         output = ViewTournament.prompt_next_participant_view(self).upper()
         while True:
             if output == 'O':
                 ControlTournament.build_list_players_control(self)
                 output = ViewPlayer.prompt_next_add_player(self).upper()
             else:             
-                return self.game()
+                break
+            break
 
-
+    
 
     def delete_participant_control(self):
         """Retire un participant de la liste des joueurs du tournoi sélectionné."""
+        
         self.players_list = ControlTournament.search_list_players_tournament_control(self)
         print("\n liste des participants déjà inscrits:\n")
         x = 0
@@ -425,13 +441,10 @@ class ControlParticipant:
             if int(output) < len(self.players_list):
                 self.players_list.pop(int(output))
                 DataTournament.update_players_list_tournament(self)
-                
             else:
                 print("vous n'avez pas inscrit le bon numéro")
                 break
-
             input('\n Continuer (toucher une touche): ')
-
             break
         
     def delete_list_players(self):
@@ -461,8 +474,9 @@ class ControlPlayer:
     def __init__(self, player):
         self.player = player
   
-    
+
     """Méthodes de recherche d'un joueur."""
+
     def show_player_control(self):
         """Recherche un joueur par son nom et son prénom et affiche l'ensemble des données."""
         
@@ -473,7 +487,7 @@ class ControlPlayer:
         result = DataPlayer.search_player(self)
         for element in result:
             print(f"{element.doc_id} : {element}")
-            print('\n')
+            return element
         input('Continuer (toucher une touche): ')
     
     
@@ -617,7 +631,7 @@ class ControlPlayer:
     
     def modify_ranking_player_view_control(self):
         """Contrôle la cohérence de saisie du choix de l'utilisateur,
-        à modifier le classement du joeur dans la base.
+        à modifier le classement du joueur dans la base.
         """
         ViewPlayer.modify_ranking_player_view(self)
         while True :
@@ -632,11 +646,13 @@ class ControlPlayer:
         """Recherche le joueur et affiche son rang actuel, propose de donner son nouveau rang et met à jour la base."""
         
         ControlPlayer.show_player_control(self)
+
         ControlPlayer.modify_ranking_player_view_control(self)
+       
         DataPlayer.update_ranking_player(self)# à modifier car 2 dupont dont 2 changements de classement
-        print(DataPlayer.search_lastname_player(self))#à modifier car pareil pour le retour va retourner les 2 dupont
+        print(DataPlayer.search_player(self))#à modifier car pareil pour le retour va retourner les 2 dupont
         input('Continuer (toucher une touche): ')
-        return self.person()
+        
   
 
 
@@ -678,6 +694,7 @@ class ControlReport:
                         print("Il n'y a pas de participants inscrits dans la liste des joueurs du tournoi.")
                         break
                     else:
+                        print('\n'f"Il y a {len(plist)} joueurs incrits dans la liste des joueurs."'\n')
                         for data in plist:
                             print(data)
                     print('\n')
