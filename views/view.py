@@ -79,6 +79,7 @@ class ViewMenu :
             "----------------------------------- \n"  
             "\033[4m Gérer un participant \033[0m: \n"
             "1/ Supprimer un participant du tournoi: Taper \033[1m 1 \033[0m \n"
+            "2/ Modifier le rang en cours de tournoi, d'un participant inscrit : Taper \033[1m 2 \033[0m \n"
             ""
             "\n"
             "\033[4m Taper votre choix \033[0m: "
@@ -161,7 +162,22 @@ class ViewParticipant:
             "\n"
             "\033[4m Taper le numéro choisi: \033[0m: "
             )  
+    def modify_ranking_participant_view(self):
+        """Affiche l'action"""
+        print("\n \033[4m Modification du rang du participant dans dans la liste des joueurs \033[0m \n")
 
+    def select_participant_view(self):
+        """Choix du participant à sélectionner."""
+        return input(
+            "\n Pour choisir le participant souhaité : \n"
+            "Taper son numéro affiché ci_dessus, devant ses informations \n"
+            "\n"
+            "\033[4m Taper le numéro choisi: \033[0m: "
+            )  
+            
+    def new_ranking_participant_view(self):
+        """Invite à saisir le nouveau rang du participant."""
+        return input("Saisir le nouveau classement du participant :")
 
 class ViewPlayer:
     """Affiche les différents 'inputs' nécessaire à la gestion de données sur un joueur."""
@@ -236,9 +252,10 @@ class ViewPlayer:
 
     def modify_ranking_player_view(self):
         """Affiche l'action"""
-        print("\n \033[4m Modification du rang \033[0m \n")
+        print("\n \033[4m Modification du rang du joueur dans la base de données \033[0m \n")
 
     def new_ranking_player_view(self):
+        """Invite à saisir le nouveau rang du joueur."""
         return input("Saisir le nouveau classement du joueur :")
 
    
