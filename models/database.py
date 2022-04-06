@@ -9,6 +9,7 @@ from models.tournament import Tournament
 
 
 
+
 db = TinyDB('db.json')
 players_table = db.table('players')
 tournaments_table = db.table('tournaments')
@@ -77,10 +78,6 @@ class DataPlayer:
         return players_table.update({'ranking':self.new_ranking}, doc_ids=[DataPlayer.get_id_player(self)])
 
 
-
-
-    
-
 class DataTournament:
     """Classe qui gère les opérations de la base en lien avec le tournoi :
     toutes requêtes nécessaires et disponibles pour 
@@ -100,17 +97,21 @@ class DataTournament:
         self.all = tournaments_table.all()
         return self.all
     
-    def search_name_tournament(self):
+    def search_by_name_tournament(self):
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
+
+    def search_list_players_tournament(self):
+        """Affiche la liste des joueurs enregistrée dans le tournoi sélectionné."""
 
     def update_players_list_tournament(self):
         User = Query()
         print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
     
-    
-    
-    
+    def update_rounds_tournament(self):
+        User = Query()
+        print(tournaments_table.update({'Detail_tours': self.round_serialized}, User.Nom_tournoi == self.name_tournament))
+
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
         return tournaments_table.truncate()

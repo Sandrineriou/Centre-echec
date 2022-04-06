@@ -147,6 +147,14 @@ class ViewTournament:
             "Votre choix: "
         )
 
+
+class ViewRound:
+    """Affiche les différents 'inputs' ou annonces nécessaires à la gestion de données sur un round."""
+
+    def round1_view(self):
+        """Annonce les éléments du round1 à venir."""
+        print("\n \033[4m Eléments du Round1 à venir: \033[0m \n")
+
 class ViewParticipant:
     """Affiche les différents 'inputs' nécessaires à la gestion d'un participant."""
 
@@ -179,8 +187,9 @@ class ViewParticipant:
         """Invite à saisir le nouveau rang du participant."""
         return input("Saisir le nouveau classement du participant :")
 
+
 class ViewPlayer:
-    """Affiche les différents 'inputs' nécessaire à la gestion de données sur un joueur."""
+    """Affiche les différents 'inputs' nécessaires à la gestion de données sur un joueur."""
     
     def search_player_view(self):
         """Affiche le type de recherche."""
@@ -258,8 +267,7 @@ class ViewPlayer:
         """Invite à saisir le nouveau rang du joueur."""
         return input("Saisir le nouveau classement du joueur :")
 
-   
-
+  
 class ViewReport:
     """Affiche les différents 'inputs' nécessaires à la gestion de données pour afficher les reports."""
     

@@ -12,9 +12,10 @@ players_table = db.table('players')
 
 
 
-from views.view import ViewMenu, ViewReport, ViewTournament, ViewPlayer, ViewParticipant
+from views.view import ViewMenu, ViewReport, ViewRound, ViewTournament, ViewPlayer, ViewParticipant
 from models.tournament import Tournament
 from models.player import Player
+from models.round import Round
 from models.database import DataPlayer, DataTournament
 import models.database
 
@@ -79,17 +80,24 @@ class MainMenus:
                 """Redémarre un tournoi suspendu."""
                 pass
             elif self.niveau2 == '2':
-                """Démarre la création d'un tournoi."""
+                """Enregistre les données du tournoi."""
                 ViewTournament.tournament_view(self)
                 ControlTournament.add_tournament(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
+
             elif self.niveau2 == '3':
                 """Ajoute les joueurs dans la 'player_list'."""#voir si affiche la liste des joueurs inscrits plutot
                 ControlTournament.build_list_players_control(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '4':
-                """Démarre le tournoi"""
+                """Démarre le tournoi :
+                Génère les premières paires de joueurs, selon, le modèle Suisse qui s'affronteront au Tour1,
+                à partir de la liste joueurs du tournoi sélectionné
+                et les affiche.
+                """
+                ControlTournament.build_first_pairs_players_control(self)
+                
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
             elif self.niveau2 == '5' :
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
@@ -234,7 +242,9 @@ class MainMenus:
  
             elif self.niveau2 == '6' :
                 """Edite rapport tous les tours d'un tournoi."""
-                pass
+                ControlReport.show_all_rounds_tournament_control(self)
+                self.niveau2 = ViewMenu.report_view(self).upper()
+                
             elif self.niveau2 == '7' :
                 """Edite rapport tous les matchs d'un tournoi.."""
                 pass
@@ -246,9 +256,12 @@ class MainMenus:
 class ControlTournament:
     """Contrôleur qui entre en interaction avec le module Tournoi, et la class Vue spécifique au tournoi"""
 
+    
     def __init__(self, tournament):
         self.tournament = tournament
     
+    """Méthodes pour la création et l'enregistrement des données d'un tournoi."""
+
     def add_tournament(self):
         """Regroupe toutes les méthodes permettant l'ajout des attributs d'un tournoi à sa création,
         sérialise les données et les enregistre dans tinydb.
@@ -277,7 +290,8 @@ class ControlTournament:
                 print("Veuillez saisir un nom de tournoi")
                 self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
             else :
-                break
+                return self.name_tournament
+            break
     
     def place_control(self):
         """Controle la cohérence de saisie du nom du lieu du tournoi."""
@@ -315,11 +329,13 @@ class ControlTournament:
         pass
         
   
-    """Méthodes pour construction de la liste des participants avant démarrage du tournoi."""   
+    """Méthodes pour construction de la liste des participants avant démarrage du tournoi,
+    et la préparation des premières paires pour démarrer le round 1.
+    """   
     
     def search_list_players_tournament_control(self):
         self.name_tounament = ControlTournament.name_tournament_control(self)
-        result = DataTournament.search_name_tournament(self)
+        result = DataTournament.search_by_name_tournament(self)
         while True :
             if result == []:
                 print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
@@ -355,25 +371,55 @@ class ControlTournament:
                         DataTournament.update_players_list_tournament(self)
                         input('\n Continuer (toucher une touche): ')
                         break
-                        
-                   
 
+    def build_first_pairs_players_control(self):
+        """A partir de la liste des joueurs, crée la liste des premières paires de joueurs qui vont s'affronter au Round1."""
+        self.players_list = ControlTournament.return_list_players_tournament_control(self)
+        Tournament.sorted_ranking_list(self)
+        self.pairs_players = Tournament.create_first_pairs_players(self)
+        print("\n Liste des premières rencontres pour le Round 1:\n")
+        for element in self.pairs_players:
+            print(element)
+        input('\n Continuer (toucher une touche): ')
+        return element
+        
 
-
-    
-    """Méthodes de recherche d'un tournoi."""
+   
+    """Méthodes de recherche."""
     
     def show_tournament_control(self):
         """Recherche d'un tournoi par son nom."""
         ViewTournament.search_name_tournament_view(self)
         self.name_tournament = input("Nom du tournoi: ").upper()
         print('\n')
-        result = DataTournament.search_name_tournament(self)
+        result = DataTournament.search_by_name_tournament(self)
         for element in result:
-            print(f"{element.doc_id} : {element}")            
+            print(element)            
             print('\n')
+            for key, value in element.items():
+                print(f"\033[1m {key}: \033[0m", value)   
         input('Continuer (toucher une touche): ')
 
+    def return_list_players_tournament_control(self):
+        """Retourne la liste des joueurs enregistrer pour un tournoi donné."""
+        
+        ControlTournament.name_tournament_control(self)
+        result = DataTournament.search_by_name_tournament(self)
+        while True:
+            if result == []:
+                print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
+            else :
+                for element in result:
+                    plist = element['Liste_joueurs'] 
+                    if plist == []:
+                        print("Il n'y a pas de participants inscrits dans la liste des joueurs du tournoi.")
+                        break
+                    else:
+                        return(plist)
+            print('\n')
+            input('\n Continuer: toucher une touche :')          
+            break  
+        
     
     """Méthode de suppression."""
     def truncate_tournaments_table_control(self):
@@ -389,6 +435,50 @@ class ControlTournament:
                 break
             else:
                 return self.game()
+
+class ControlRound:
+    """Contrôleur qui entre en interaction avec le module 'round", et la class Vue spécifique au tour."""
+
+    def create_round1_control(self):
+        """Crée les attributs du round concerné,
+        enregistre ces élements dans une liste de tours, 
+        et sauvegarde ces élements dans la liste "Détails des tours"" du tournoi sélectionné.
+        """
+        ViewRound.round1_view(self)
+        self.name_round = ControlRound.return_name_round1_control(self)
+        
+        self.startdatetime = None
+        self.enddatetime = None
+        self.matchs_round = []
+        self.data_round = []
+        self.values_list = []
+        self.list_dict_matchs = []
+
+       
+        Round.serialize_round(self)
+        DataTournament.update_rounds_tournament(self)
+        input('\n Continuer (toucher une touche): \n')
+
+
+    def return_name_round1_control(self):
+        """Cherche le nom du Tour, dans la liste des tours du tournoi sélectionné,
+        et retourne ses données.
+        """
+        result = DataTournament.search_by_name_tournament(self)
+        for element in result:
+            return(element['Detail_tours'][0])
+        print('\n')
+        input('\n Continuer: toucher une touche :')  
+
+    def return_pairs_players_round1_control(self):
+        """Retourne la liste de paires des joueurs du round1."""
+
+    
+    def get_matchs_control(self):#pass ?
+        """Crée le nombre des matches à venir dans le round en cours."""
+
+        pass
+
 
 
 class ControlParticipant:
@@ -453,13 +543,7 @@ class ControlParticipant:
                 
             input('\n Continuer (toucher une touche): ')
             
-       
-                 
-            
-        
-                  
-
-
+    
     """Méthodes de modification."""
     #Méthode de modif rang en attente : à intégrer à chaque fin de round avant tri par classement
     def new_ranking_participant_control(self):# mis en attente car modificaiotn rang à tout moment veut dire à toutes les étapes du touirnoi donc sur chaque liste
@@ -513,7 +597,7 @@ class ControlParticipant:
         
         self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
         while True:
-            result = DataTournament.search_name_tournament(self)
+            result = DataTournament.search_by_name_tournament(self)
             for element in result:
                 self.players_list = element['Liste_joueurs']
                 print(self.players_list)
@@ -561,9 +645,6 @@ class ControlPlayer:
             break   
         
       
-    
-    
-        
     """Méthodes d'ajout d'un joueur."""
 
     def add_player_control(self):
@@ -586,10 +667,7 @@ class ControlPlayer:
                 ControlPlayer.next_add_player(self)
             else:
                break
-            
-            
-            
-
+       
     def lastname_control(self):
         """Contrôle la cohérence de saisie du nom de famille du joueur."""
         
@@ -728,9 +806,6 @@ class ControlPlayer:
         print(DataPlayer.search_player(self))
         input('Continuer (toucher une touche): ')
         
-  
-
-
 
 
 class ControlReport:
@@ -757,7 +832,7 @@ class ControlReport:
     
     def show_all_sorted_alpha_participants(self):
         self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
-        result = DataTournament.search_name_tournament(self)
+        result = DataTournament.search_by_name_tournament(self)
         while True:
             if result == []:
                 print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
@@ -776,7 +851,27 @@ class ControlReport:
                     input('\n Continuer: toucher une touche :')  
             break  
         
-        
+    def show_all_rounds_tournament_control(self):
+        self.name_tournament = ControlTournament.name_tournament_control(self)
+        result = DataTournament.search_by_name_tournament(self)
+        while True:
+            if result == []:
+                print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
+                input('\n Continuer: toucher une touche :')
+            else :
+                for element in result:
+                    rlist = element['Detail_tours'] 
+                    if rlist == []:
+                        print("Il n'y a pas encore de tours du tournoi.")
+                        break
+                    else:
+                        print('\n'f"Il y a {len(rlist)} tours dans ce tournoi."'\n')
+                        print(rlist)
+                        for data in rlist:
+                            print(data)
+                    print('\n')
+                    input('\n Continuer: toucher une touche :')  
+            break  
             
       
             

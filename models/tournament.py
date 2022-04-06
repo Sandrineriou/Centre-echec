@@ -108,15 +108,15 @@ class Tournament:
         return print(self.players_list, end='\n\n')
 
     def sorted_ranking_list(self):
-        """Trie la liste des joueurs par leur rang, et affiche une liste avec 
-        une liste des rangs supérieurs et une liste des rangs inférieurs.
+        """Trie la liste des joueurs par leur rang, 
+        affiche une liste avec une liste des rangs supérieurs et une liste des rangs inférieurs.
         """
 
         self.ranking_sorted = sorted(self.players_list, key=lambda x:x['ranking'], reverse=True)
         print(self.ranking_sorted, end='\n\n')
         self.half_list = [tuple(
-            [[element['lastname'],element['firstname'], element['score']] for element in self.ranking_sorted[0:4]]), 
-            tuple([[element['lastname'],element['firstname'], element['score']] for element in self.ranking_sorted[4:8]])
+            [[element['lastname'],element['firstname'], element['ranking'],element['score']] for element in self.ranking_sorted[0:4]]), 
+            tuple([[element['lastname'],element['firstname'], element['ranking'], element['score']] for element in self.ranking_sorted[4:8]])
         ]
         return self.half_list
      

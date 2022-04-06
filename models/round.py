@@ -24,13 +24,30 @@ class Round:
         self.values_list = values_list
         self.list_dict_matchs = list_dict_matchs
     
+    def serialize_round(self):
+        """Sérialize les instances round une fois saisie à la création d'un round."""
+        
+        self.round_serialized = {}
+        self.round_serialized = {
+            "Round_nom": self.name_round,
+            "Round_paires": self.pairs_players,
+            "Round_debut": self.startdatetime,
+            "Round_fin": self.enddatetime,
+            "Round_matches": self.matchs_round,
+            "Round_info": self.data_round,
+            "Round_scores": self.values_list,
+            "Round_par_match:": self.list_dict_matchs,
+        }
+        return self.round_serialized
+    
     def get_matches(self):
         """Crée le nombre de matchs contenus dans un round."""
         self.match = []
         i = 1
         for i in range (1,len(self.pairs_players)+1):
             self.match.append(f"Match{i}")
-        print(self.match)     
+        print(self.match)
+        return self.match     
             
     def create_round(self):
         """Affiche les attributs du round."""
@@ -39,7 +56,7 @@ class Round:
         return print(round, end='\n\n')
    
     def start_round(self):
-        """Affiche heure de début du tour."""
+        """Affiche date et heure de début du tour."""
         
         self.startdatetime = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
         return print(f"heure de début du tour {self.name_round} : {self.startdatetime}")
@@ -51,7 +68,7 @@ class Round:
         return print(f"Date et heure de fin du tour {self.name_round}: {self.enddatetime}", end='\n\n')
 
     def create_new_list_matchs(self):
-        """Crée une lsite vide pour recevoir les matchs d'un round."""
+        """Crée une liste vide pour recevoir les matchs d'un round."""
         self.matchs_round = []
         return self.matchs_round
     
