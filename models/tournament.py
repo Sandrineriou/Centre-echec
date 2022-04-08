@@ -143,15 +143,6 @@ class Tournament:
         """
         return print(self.rounds_tournament, end='\n\n')
     
-    def store_list_dict_matchs(self, other):# à supprimer semble faire doublon voir modif total score avec other
-        """Ajoute la liste de dictionnaire créer après les matchs"""
-        self.list_dict_matchs.append(other)
-        return print(self.list_dict_matchs, end='\n\n')
-    
-    def show_list_dict_matchs(self):# à supprimer semble faire doublon voir modif total score avec other
-        self.dict_players_matchs = self.list_dict_matchs[0]
-        return print(self.dict_players_matchs, end='\n\n')
-
     def total_score_dict_players(self, other): 
         """Remplace le score initial du joueur par le score cumulé des matchs et créer une nouvelle liste de joueurs pour le tour suivant."""
         self.increased_score_players = []
@@ -186,18 +177,8 @@ class Tournament:
     
     def end_tournament(self, enddate, endtime):
         """Termine le tournoi"""
-        self.enddate = enddate
-        self.endtime = endtime
-        pass
+        self.enddate = datetime.datetime.now().strftime("%d/%m/%Y")
         
-    def prompt_for_classement(self):
-        """ Mise à jour par le manager du tournoi des classements de chaque jour
         
-        affiche par joueur le nombre total de points gagné lors du tournoi"""
-        pass
-        
-    def prompt_for_comment(self):
-        """ Invite à saisir les remarques générales du manager à la fin du tournoi"""
-        return input("Saisir votre commentaire sur le tournoi :")
-        
+  
 
