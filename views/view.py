@@ -153,7 +153,7 @@ class ViewRound:
 
     def round1_view(self):
         """Annonce les éléments du round1 à venir."""
-        print("\n \033[4m Eléments du Round1 à venir: \033[0m \n")
+        print("\n \033[4m Eléments du Round 1 à venir: \033[0m \n")
 
 class ViewParticipant:
     """Affiche les différents 'inputs' nécessaires à la gestion d'un participant."""

@@ -96,7 +96,7 @@ class MainMenus:
                 à partir de la liste joueurs du tournoi sélectionné
                 et les affiche.
                 """
-                ControlTournament.build_first_pairs_players_control(self)
+                ControlRound.create_round1_control(self)
                 
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
             elif self.niveau2 == '5' :
@@ -446,7 +446,7 @@ class ControlRound:
         """
         ViewRound.round1_view(self)
         self.name_round = ControlRound.return_name_round1_control(self)
-        
+        self.pairs_players = ControlTournament.build_first_pairs_players_control(self)
         self.startdatetime = None
         self.enddatetime = None
         self.matchs_round = []
@@ -456,7 +456,7 @@ class ControlRound:
 
        
         Round.serialize_round(self)
-        DataTournament.update_rounds_tournament(self)
+        DataTournament.update_rounds_tournament(self)# probleme : écrase les autres données au lieu de de se sauvegarder dans la première positio de la liste : pb de dico ??
         input('\n Continuer (toucher une touche): \n')
 
 
@@ -464,9 +464,10 @@ class ControlRound:
         """Cherche le nom du Tour, dans la liste des tours du tournoi sélectionné,
         et retourne ses données.
         """
+        self.name_tournament = ControlTournament.name_tournament_control(self)
         result = DataTournament.search_by_name_tournament(self)
         for element in result:
-            return(element['Detail_tours'][0])
+            return(element['Detail_tours'])
         print('\n')
         input('\n Continuer: toucher une touche :')  
 
@@ -811,18 +812,8 @@ class ControlPlayer:
 class ControlReport:
     """Contrôleur qui entre en interaction avec le module database."""
     
-    def show_all_tournaments(self):
-        """Récupére toutes les données en lien avec les tournois."""
-     
-        while True:   
-            DataTournament.search_all_tournaments(self)
-            for element in self.all:
-                print(f"{element.doc_id} : {element}")
-                print('\n')
-                input('\n Continuer: toucher une touche :')
-            break
-    
     def show_all_sorted_alpha_players(self):
+        """Affiche tous les joueurs, par ordre alphabétique, inscrits dans la base de données."""
     
         while True:
             DataPlayer.search_all_players(self)
@@ -831,6 +822,8 @@ class ControlReport:
             break
     
     def show_all_sorted_alpha_participants(self):
+        """Affiche tous les participant au tournoi, par ordre alphabétique, inscrits dans la liste dses joueurs du tournoi concerné."""
+        
         self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
         result = DataTournament.search_by_name_tournament(self)
         while True:
@@ -851,7 +844,23 @@ class ControlReport:
                     input('\n Continuer: toucher une touche :')  
             break  
         
+    def show_all_tournaments(self):
+        """Affiche tous les tournois inscrits dans la base de données."""
+     
+        while True:   
+            DataTournament.search_all_tournaments(self)
+            for element in self.all:
+                print(f"{element.doc_id} : {element}")
+                for key, value in element.items():
+                    print(f"\033[4m{key} :\033[0m", value)
+                    
+                print('\n')
+                input('\n Continuer: toucher une touche :')
+            break
+        
     def show_all_rounds_tournament_control(self):
+        """Affiche tous les tours d'un tournoi sélectionné."""
+
         self.name_tournament = ControlTournament.name_tournament_control(self)
         result = DataTournament.search_by_name_tournament(self)
         while True:

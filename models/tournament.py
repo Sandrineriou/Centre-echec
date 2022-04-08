@@ -123,13 +123,13 @@ class Tournament:
     def create_first_pairs_players(self):
         """Affiche une liste des 4 paires pour le rounds 1."""
 
-        self.first_pairs_players = []
+        self.pairs_players = []
         j=0
         while j < NUMBER_ROUNDS :
             element = (self.half_list[0][j],self.half_list[1][j])
-            self.first_pairs_players.append(tuple(element))
+            self.pairs_players.append(tuple(element))
             j += 1
-        return self.first_pairs_players
+        return self.pairs_players
     
     def store_rounds_tournament(self, data_round):
         """Ajoute les instances d'un round au tournoi concerné."""

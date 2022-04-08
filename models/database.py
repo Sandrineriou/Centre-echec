@@ -13,8 +13,6 @@ from models.tournament import Tournament
 db = TinyDB('db.json')
 players_table = db.table('players')
 tournaments_table = db.table('tournaments')
-rounds_table = db.table('rounds')
-matchs_table = db.table('matchs')
 
 
 class DataPlayer:
