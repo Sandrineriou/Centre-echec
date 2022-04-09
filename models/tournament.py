@@ -43,9 +43,9 @@ class Tournament:
         self.comment = None
             
     def get_rounds(self):
-        """Créer la liste des rounds à venir"""
+        """Créer la liste des dictionnaire de rounds à venir"""
 
-        self.rounds_tournament = [] 
+        self.rounds_tournament = [{}] 
         i = 1
         for i in range (1,NUMBER_ROUNDS+1):
             self.rounds_tournament.append(f"Round_{i}")

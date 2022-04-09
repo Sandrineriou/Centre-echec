@@ -52,14 +52,14 @@ class Round:
     def create_round(self):
         """Affiche les attributs du round."""
         
-        round= {"name_round": self.name_round, "list paires joueurs": self.pairs_players, "list matchs": self.match}
+        round = {"name_round": self.name_round, "list paires joueurs": self.pairs_players, "list matchs": self.match}
         return print(round, end='\n\n')
    
     def start_round(self):
         """Affiche date et heure de début du tour."""
         
         self.startdatetime = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
-        return print(f"heure de début du tour {self.name_round} : {self.startdatetime}")
+        return print(f"Date et heure de début du tour {self.name_round} : {self.startdatetime}")
        
     def end_round(self):
         """Affiche date et heure de fin du tour."""
@@ -81,8 +81,8 @@ class Round:
         return print(self.matchs_round)
        
         
-    def list_data_round(self):
-        """Rassemble les informations d'un round dans une liste.""" #rajouter les dates et heures 
+    def list_data_round(self):# ne faut_il pas mettre cela dans un dico ?
+        """Rassemble les informations d'un round dans une liste.""" 
         self.data_round = [self.name_round, self.startdatetime, self.enddatetime, self.matchs_round]
         return self.data_round
 

@@ -273,8 +273,8 @@ class ControlTournament:
         self.enddate = None
         self.n_rounds = NUMBER_ROUNDS
         self.players_list = []
-        self.rounds_tournament = []
-        self.list_dict_matchs = []
+        self.rounds_tournament = [] # voir si possible de modifier et mettre à jour via la table round à créer / créer une méthode pour cela
+        self.list_dict_matchs = [] # voir si nécessaire de garder cela ??
         self.comment = None
                 
         Tournament.get_rounds(self)
@@ -439,7 +439,7 @@ class ControlTournament:
 class ControlRound:
     """Contrôleur qui entre en interaction avec le module 'round", et la class Vue spécifique au tour."""
 
-    def create_round1_control(self):
+    def create_round1_control(self): # à revoir : créer une table pour round
         """Crée les attributs du round concerné,
         enregistre ces élements dans une liste de tours, 
         et sauvegarde ces élements dans la liste "Détails des tours"" du tournoi sélectionné.
@@ -449,14 +449,16 @@ class ControlRound:
         self.pairs_players = ControlTournament.build_first_pairs_players_control(self)
         self.startdatetime = None
         self.enddatetime = None
-        self.matchs_round = []
+        self.matchs_round = [] # créer une méthode qui retourne les élément d'une table à créer
         self.data_round = []
         self.values_list = []
         self.list_dict_matchs = []
 
        
-        Round.serialize_round(self)
-        DataTournament.update_rounds_tournament(self)# probleme : écrase les autres données au lieu de de se sauvegarder dans la première positio de la liste : pb de dico ??
+        Round.serialize_round(self)# créer une méthode database pour round
+
+        #intégrer le tous dans table round à créer
+        
         input('\n Continuer (toucher une touche): \n')
 
 
@@ -835,6 +837,7 @@ class ControlReport:
                     plist = element['Liste_joueurs'] 
                     if plist == []:
                         print("Il n'y a pas de participants inscrits dans la liste des joueurs du tournoi.")
+                        input('\n Continuer: toucher une touche :')
                         break
                     else:
                         print('\n'f"Il y a {len(plist)} joueurs incrits dans la liste des joueurs."'\n')
