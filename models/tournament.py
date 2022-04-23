@@ -117,7 +117,7 @@ class Tournament:
         """
 
         self.ranking_sorted = sorted(self.players_list, key=lambda x:x['ranking'], reverse=True)
-        print(self.ranking_sorted, end='\n\n')
+        
         self.half_list = [tuple(
             [[element['lastname'],element['firstname'], element['ranking'],element['score']] for element in self.ranking_sorted[0:4]]), 
             tuple([[element['lastname'],element['firstname'], element['ranking'], element['score']] for element in self.ranking_sorted[4:8]])

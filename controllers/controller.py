@@ -102,19 +102,38 @@ class MainMenus:
                 """
                 
                 """Crée les rounds à venir et les enregistre dans la base."""
-                
                 ControlRound.setting_up_rounds_control(self)
                 ControlTournament.setting_up_rounds_tournament_control(self)
-                
+                                
                 """Crée les premières de paires de joueur pour le Round 1."""
-
+                ControlRound.setting_up_round1_control(self)
+                ControlMatch.setting_up_matchs_round(self)
                 
+                """TOUR 1."""
+                """Démarre le round1."""
+                self.name_round = 'Round_1'
+                self.name_tournament = 'CERISE'
+                ControlRound.start_play_round_control(self)
+
+                """Arrête le round1."""
+                ControlRound.stop_play_round_control(self)
+
+                """Permet la saisie des scores des matchs du round1."""
+
+
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
+            
+            elif self.niveau2 == '41':
+                """ligne de test"""
+                self.name_round = 'Round_1'
+                self.name_tournament = 'CERISE'
+                ControlMatch.score_matchs(self)
 
+                self.niveau2 = ViewMenu.gamemenu(self).upper()
                 
-               
-                
-                
+            
+            
+            
             elif self.niveau2 == '5' :
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
                 #à reprendre pas possible de l'intégrer dans la sauvegarde
@@ -370,7 +389,7 @@ class ControlTournament:
         """
         Tournament.get_rounds(self)
         DataTournament.update_data_rounds_tournament(self)
-        print('mise à jour round dans tournoi')
+        print('Enregistrement des rounds dans tournoi...')
         input('\n Continuer (toucher une touche): \n')
         
 
@@ -388,7 +407,7 @@ class ControlTournament:
             if result == []:
                 print("\n Le tournoi recherché n'est pas dans la base de données. Faites une nouvelle recherche.\n")
                 input('\n Continuer: toucher une touche :')
-                return ControlTournament.search_list_players_tournament_control(self)
+                break
             else :
                 
                 for element in result:
@@ -521,13 +540,20 @@ class ControlRound:
                 self.round_serialized = Round.serialize_round(self)
                 DataRound.saving_data_round(self)
                 break
+            
         input('\n Continuer (toucher une touche): \n')
 
-
-    def return_id_rounds_control(self):
-        """Affiche la liste des identifiants des rounds créés."""
+    def setting_up_round1_control(self):
+        """Recherche le round1,
+        et lui attribut les paires de joueurs générées automatiquement.
+        """
+        ControlRound.search_name_round1(self)
+        ControlRound.return_pairs_players_round1_control(self)
         
-
+    def search_name_round1(self):
+        """Recherche le nom du round1."""
+        self.name_round = list(self.rounds_tournament[0].keys())[0]
+        return self.name_round
 
     def return_pairs_players_round1_control(self):
         """Retourne la liste de paires des joueurs du round1."""
@@ -535,10 +561,34 @@ class ControlRound:
         DataRound.update_pairs_players_round(self)
         input('\n Continuer (toucher une touche): \n')
     
-    def get_matchs_control(self):#pass ?
-        """Crée le nombre des matches à venir dans le round en cours."""
+    
+    """Méthodes de modification."""
 
-        pass
+    def start_play_round_control(self):
+        """Crée la date et l'heure du démarrage du round concerné,
+        enregistre les données dans la base au niveau du round.
+        """
+        Round.start_round(self)
+        DataRound.update_start_round(self)
+        print(self.startdatetime)
+        input('\n Continuer (toucher une touche): \n')
+   
+    def stop_play_round_control(self):
+        """Crée la date et l'heure de jeu du round concerné,
+        enregistre les données dans la base au niveau du round.
+        """
+        output = ViewRound.end_play_round_view(self).upper()
+        while True:
+            if output == 'O':
+                Round.end_round(self)
+                DataRound.update_end_round(self)
+                print(self.enddatetime)
+                input('\n Continuer (toucher une touche): \n')
+                break
+            else:
+                output = ViewRound.end_play_round_view(self).upper()
+            
+
 
     """Méthode de suppression."""
     
@@ -566,25 +616,59 @@ class ControlMatch:
 
     def setting_up_matchs_round(self):
         """Créer les premières données des matchs à venir, 
-        les enregistre dans la base.
+        les enregistre dans la base,
+        et affiche les paires de joueurs qui vont s'affrontter au round concerné.
         """
 
-        ControlMatch.create_name_matchs(self)
+        ControlMatch.create_matchs_control(self)
+        ViewMatch.pairs_players_matchs_view(self)
+        
+        for element in self.pairs_players:
+            print(element)
+                  
+                   
+
+               
+        input('\n Continuer (toucher une touche): \n')
 
     
-    def create_name_matchs(self):
+    def create_matchs_control(self):
+        """Crée automatiquement le nombre et le nom des matchs à venir pour un round donné."""
         i = 1
         for i in range (1,len(self.pairs_players)+1):
             while True:
                 self.name_match = f'Match_{i}'
                 print(self.name_match)
-                self.pair_players = []
+                self.pair_players = self.pairs_players[i-1]
                 self.data_match = tuple()
                 self.match_serialized = Match.serialize_match(self)
                 DataMatch.saving_data_match(self)
                 break
         input('\n Continuer (toucher une touche): \n')
-                
+
+    def score_matchs(self):
+        """Attribut un nom à chaque joueur de la paire du match concerné,
+        et affiche le cadre pour la saisie des scores de chaque match.
+        """
+        i = 1
+        for i in range (1,5):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+            while True:
+                self.name_match = f'Match_{i}'
+                resultat = DataMatch.search_match(self)
+                for element in resultat:
+                    self.pair_players = element['Match_participants']
+                    Match.designate_players_match(self)
+                    Match.enter_score_match(self)
+              
+                    Match.show_data_match(self)
+                    DataMatch.update_data_match(self)
+                    
+                break
+        input('\n Continuer (toucher une touche): \n')
+      
+
+        
+        
     
     """Méthode de suppression."""
     
@@ -988,6 +1072,7 @@ class ControlReport:
 
         self.name_tournament = ControlTournament.name_tournament_control(self)
         result = DataRound.search_by_nametournament_round(self)
+        print(f'Il y a {len(result)} rounds inscrits pour le tournoi {self.name_tournament}')
         while True:
             for element in result:
                 print(f"\n {element.doc_id} : {element['Nom_tournoi']} - {element['Round_nom']}")
@@ -1006,7 +1091,7 @@ class ControlReport:
         while True:
             if result == []:
                 print("Je ne trouve pas d'informations, veuillez recommencer")
-                input('\n Continuer: toucher une touche :')
+                
 
             else:  
                 

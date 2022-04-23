@@ -141,6 +141,17 @@ class DataRound:
         User = Query()
         return rounds_table.update({'Round_paires': self.pairs_players}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
     
+    def update_start_round(self):
+        """Met à jour la date et heure de démarrage du round concerné."""
+        User = Query()
+        return rounds_table.update({'Round_debut': self.startdatetime}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
+
+    def update_end_round(self):
+        """Met à jour la date et l'heure de l'arrêt de jeu du round concerné."""
+        User = Query()
+        return rounds_table.update({'Round_fin': self.enddatetime}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
+
+
     def truncate_rounds_table(self):
         """Efface toutes les données de la table 'Rounds'(mise à zéro)."""
         return rounds_table.truncate()
@@ -162,12 +173,32 @@ class DataMatch:
     
     def search_by_nametournament_matchs(self):
         return matchs_table.search(where("Nom_Tournoi") == self.name_tournament)
+
+    def search_match(self):
+        User = Query()
+        return matchs_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
+        
+        
     
     def search_all_matchs(self):
         """Affiche tous les matchs inscrits dans la base."""
         print('\n'f"Il y a {len(matchs_table)} matchs incrits dans la base."'\n')
-        
+    
+    def update_pair_players_match(self):
+        """Met à jour la paire de joueur pour un match donné."""
+        User = Query()
+        return matchs_table.update(
+            {'Match_participants': self.pair_players},
+            ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
+        )
        
+    def update_data_match(self):
+        """Met à jour les scores du match donné."""
+        User = Query()
+        return matchs_table.update({'Match_resultats': self.data_match},
+         ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
+         )
+
     def truncate_matchs_table(self):
         """Efface toutes les données de la table 'Matchs'(mise à zéro)."""
         return matchs_table.truncate()
