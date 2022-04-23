@@ -43,12 +43,16 @@ class Tournament:
         self.comment = None
             
     def get_rounds(self):
-        """Créer la liste des dictionnaire de rounds à venir"""
-
-        self.rounds_tournament = [{}] 
+        """Créer la liste des dictionnaires de rounds à venir,
+        et créer chaque clé (nom du round).
+        """
+        self.rounds_tournament = [] 
         i = 1
         for i in range (1,NUMBER_ROUNDS+1):
-            self.rounds_tournament.append(f"Round_{i}")
+            while True :
+                dico = {f"Round_{i}" :{}}
+                self.rounds_tournament.append(dico)
+                break
         return self.rounds_tournament    
     
     def serialize_tournament(self):

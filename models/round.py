@@ -12,9 +12,10 @@ NUMBER_ROUNDS = 4
 class Round:
     """Tour d'un tournoi."""
 
-    def __init__(self, name_round, pairs_players=[], startdatetime = None, matchs_round=[], data_round=[], values_list=[], list_dict_matchs=[]):
+    def __init__(self, name_tournament, name_round, pairs_players=[], startdatetime = None, matchs_round=[], data_round=[], values_list=[], list_dict_matchs=[]):
         """Initialise le nom du tournoi, la date, les paires de joueurs et les matchs."""
 
+        self.name_tournament = name_tournament
         self.name_round = name_round
         self.pairs_players = pairs_players
         self.startdatetime  = startdatetime
@@ -29,6 +30,7 @@ class Round:
         
         self.round_serialized = {}
         self.round_serialized = {
+            "Nom_tournoi": self.name_tournament,
             "Round_nom": self.name_round,
             "Round_paires": self.pairs_players,
             "Round_debut": self.startdatetime,
@@ -42,10 +44,12 @@ class Round:
     
     def get_matches(self):
         """Crée le nombre de matchs contenus dans un round."""
-        self.match = []
+        self.matchs_round = []
         i = 1
         for i in range (1,len(self.pairs_players)+1):
-            self.match.append(f"Match{i}")
+            while True:
+                match = {f'Match_{i}':{}}
+                self.match.append(match)
         print(self.match)
         return self.match     
             

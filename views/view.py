@@ -38,7 +38,7 @@ class ViewMenu :
             "----------------------------------- \n"  
             "\033[4m Gérer un tournoi \033[0m: \n"
             "1/ Reprendre un tournoi suspendu : Taper \033[1m 1 \033[0m \n"
-            "2/ Créer un tournoi : Taper \033[1m 2 \033[0m \n"
+            "2/ Préparer un nouveau tournoi : Taper \033[1m 2 \033[0m \n"
             "3/ Inscrire les joueurs au tournoi : Taper \033[1m 3 \033[0m \n"
             "4/ Démarrer le tournoi : Taper \033[1m 4 \033[0m \n"
             "5/ Ajouter un commentaire sur un tournoi : Taper \033[1m 5 \033[0m \n"
@@ -151,9 +151,43 @@ class ViewTournament:
 class ViewRound:
     """Affiche les différents 'inputs' ou annonces nécessaires à la gestion de données sur un round."""
 
+    def create_rounds_view(self):
+        """Annonce la création des éléments des rounds du tournoi sélectionné à venir."""
+        print("\n \033[4m Données des rounds à venir: \033[0m \n")
+    
     def round1_view(self):
         """Annonce les éléments du round1 à venir."""
-        print("\n \033[4m Eléments du Round 1 à venir: \033[0m \n")
+        print("\n \033[4m Données du Round 1 à venir: \033[0m \n")
+
+    def prompt_name_round_view(self):
+        return input("\n Nom du tour à créer : ")
+
+    def truncate_rounds_table_view(self):
+        """Message de vigilance avant suppression de la table 'Rounds' dans sa totalité."""
+        return input(
+            "\n------------ATTENTION------------\n"
+            "\n\n \033[4m Si vous continuez, la table 'rounds_table' sera définitevement effacée.\033[0m \n\n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m"
+            "\n ----------------------------------- \n" 
+            "\nPour continuer : Taper 'O'\033[0m \n\n"
+            "Votre choix: "
+        )
+
+class ViewMatch:
+     """Affiche les différents 'inputs' ou annonces nécessaires à la gestion de données sur un match."""
+
+     def truncate_matchs_table_view(self):
+        """Message de vigilance avant suppression de la table 'Matchs' dans sa totalité."""
+        return input(
+            "\n------------ATTENTION------------\n"
+            "\n\n \033[4m Si vous continuez, la table 'matchs_table' sera définitevement effacée.\033[0m \n\n"
+            "----------------------------------- \n" 
+            "Revenir au menu précédent : Taper \033[1m R \033[0m"
+            "\n ----------------------------------- \n" 
+            "\n Pour continuer : Taper 'O'\033[0m \n\n"
+            "Votre choix: "
+        )
 
 class ViewParticipant:
     """Affiche les différents 'inputs' nécessaires à la gestion d'un participant."""

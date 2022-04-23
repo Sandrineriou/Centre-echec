@@ -1,11 +1,14 @@
 """Base de données Tinydb  -  Gestion des données."""
 
+
 from pprint import pprint
 from tinydb import TinyDB, Query, where
 
 
 from models.player import Player
 from models.tournament import Tournament
+from models.round import Round
+from models.match import Match
 
 
 
@@ -13,6 +16,8 @@ from models.tournament import Tournament
 db = TinyDB('db.json')
 players_table = db.table('players')
 tournaments_table = db.table('tournaments')
+rounds_table = db.table('rounds')
+matchs_table = db.table('matchs')
 
 
 class DataPlayer:
@@ -99,17 +104,70 @@ class DataTournament:
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
-    def search_list_players_tournament(self):
-        """Affiche la liste des joueurs enregistrée dans le tournoi sélectionné."""
+    
+
+    def update_data_rounds_tournament(self):
+        """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
+        User = Query()
+        return (tournaments_table.update({'Detail_tours': self.rounds_tournament}, User.Nom_tournoi == self.name_tournament))
 
     def update_players_list_tournament(self):
         User = Query()
         print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
     
-    def update_rounds_tournament(self):
-        User = Query()
-        print(tournaments_table.update({'Detail_tours': self.round_serialized}, User.Nom_tournoi == self.name_tournament))
-
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
         return tournaments_table.truncate()
+
+
+class DataRound:
+    """Classe qui gère les opérations de la base en lien avec un round d'un tournoi :
+    toutes requêtes nécessaires et disponibles pour 
+    créer, éditer, modifier, supprimer
+    les données d'un round.
+    """
+    db = TinyDB('db.json')
+    rounds_table = db.table('rounds')
+
+    def saving_data_round(self):
+        """Sauvegarde les instances créées dans la base tinydb."""
+        rounds_table.insert(self.round_serialized)
+
+    def search_by_nametournament_round(self):
+        return rounds_table.search(where("Nom_tournoi") == self.name_tournament)
+
+    def update_pairs_players_round(self):
+        """Met à jour la liste des paires de participants dans un round donné."""
+        User = Query()
+        return rounds_table.update({'Round_paires': self.pairs_players}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
+    
+    def truncate_rounds_table(self):
+        """Efface toutes les données de la table 'Rounds'(mise à zéro)."""
+        return rounds_table.truncate()
+
+
+class DataMatch:
+    """Classe qui gère les opérations de la base en lien avec un match d'un round d'un tournoi :
+    toutes requêtes nécessaires et disponibles pour 
+    créer, éditer, modifier, supprimer
+    les données d'un match.
+    """
+
+    db = TinyDB('db.json')
+    matchs_table = db.table('matchs')
+
+    def saving_data_match(self):
+        """Sauvegarde les instances créées dans la base tinydb."""
+        matchs_table.insert(self.match_serialized)
+    
+    def search_by_nametournament_matchs(self):
+        return matchs_table.search(where("Nom_Tournoi") == self.name_tournament)
+    
+    def search_all_matchs(self):
+        """Affiche tous les matchs inscrits dans la base."""
+        print('\n'f"Il y a {len(matchs_table)} matchs incrits dans la base."'\n')
+        
+       
+    def truncate_matchs_table(self):
+        """Efface toutes les données de la table 'Matchs'(mise à zéro)."""
+        return matchs_table.truncate()

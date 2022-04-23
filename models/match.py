@@ -10,13 +10,27 @@ NULL_POINT = 0.50
 class Match ():
     """Déroulement d'un match dans un tour."""
     
-    def __init__(self,round, name_match, pair_players=[], data_match=tuple(), list_matchs=[]):
+    def __init__(self,name_tournament, name_round, name_match, pair_players=[], data_match=tuple()):
         """Initialise le nom du match, la paire de joueurs."""
-        self.round = round
+        self.name_tournament = name_tournament
+        self.name_round = name_round
         self.name_match = name_match
         self.pair_players = pair_players
         self.data_match = data_match
-        self.list_matchs = list_matchs
+        
+
+    def serialize_match(self):
+        """Sérialize les instances match une fois saisie à la création d'un round."""
+        self.match_serialized = {}
+        self.match_serialized = {
+            'Nom_Tournoi': self.name_tournament,
+            'Nom_Round': self.name_round,
+            'Match_nom': self.name_match,
+            'Match_participant': self.pair_players,
+            'Match_resultat': self.data_match
+           }
+        return self.match_serialized
+
 
         
     def create_match(self): 
@@ -56,7 +70,7 @@ class Match ():
         self.data_match = (self.player1, self.player2)
         return print(tuple(self.data_match), end='\n\n')
 
-    def list_data_match(self):
+    def list_data_match(self):# à priori traiter differemment par tinidb
         """Retourne une liste des résultats par match."""
         
         self.list_match = [element for element in self.data_match]
