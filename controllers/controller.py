@@ -79,7 +79,11 @@ class MainMenus:
                 return self.openmainscreen()
             elif self.niveau2 == '1':
                 """Redémarre un tournoi suspendu."""
-                pass
+                print("niveau en cours de construction")
+                print("\n Appuyer sur la touche 'Entrée' pour continuer")
+                self.niveau2 = ViewMenu.gamemenu(self).upper()
+
+
             elif self.niveau2 == '2':
                 """Enregistre les données du nouveau tournoi."""
                 ViewTournament.tournament_view(self)
@@ -111,23 +115,27 @@ class MainMenus:
                 
                 """TOUR 1."""
                 """Démarre le round1."""
-                self.name_round = 'Round_1'
-                self.name_tournament = 'CERISE'
                 ControlRound.start_play_round_control(self)
 
                 """Arrête le round1."""
                 ControlRound.stop_play_round_control(self)
 
                 """Permet la saisie des scores des matchs du round1."""
+                ControlMatch.score_matchs(self)
 
-
+                """stock les informations des matchs dans rounds_table, et les infos du round dans tournaments_table."""
+                ControlRound.store_matchs_round_control(self)
+                ControlTournament.store_rounds_tournament_control(self)
+                
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
             
             elif self.niveau2 == '41':
                 """ligne de test"""
                 self.name_round = 'Round_1'
                 self.name_tournament = 'CERISE'
-                ControlMatch.score_matchs(self)
+               
+               
+               
 
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
                 
@@ -383,14 +391,17 @@ class ControlTournament:
     def add_comment_tournament_control(self):
         """Permet au gestionnaire de saisir un commentaire sur un tournoi"""
         pass
-    def setting_up_rounds_tournament_control(self):# sans doute à supprimer .??
+    
+    def setting_up_rounds_tournament_control(self):# sans doute à supprimer .?? oui je crois
         """Contrôle la création des dictionnaires comprenant pour clé le nom des rounds,
         dictionnaires inclus dans la liste 'rounds_tournament' d'un tournoi sélectionné.
         """
+        
         Tournament.get_rounds(self)
         DataTournament.update_data_rounds_tournament(self)
-        print('Enregistrement des rounds dans tournoi...')
+        print('... Enregistrement des rounds dans tournoi...')
         input('\n Continuer (toucher une touche): \n')
+    
         
 
 
@@ -444,7 +455,7 @@ class ControlTournament:
         self.players_list = ControlTournament.return_list_players_tournament_control(self)
         Tournament.sorted_ranking_list(self)
         self.pairs_players = Tournament.create_first_pairs_players(self)
-        print("\n Liste des premières rencontres pour le Round 1:\n")
+        print("\n \033[4m Liste des premières rencontres pour le Round 1:\033[0m\n")
         for element in self.pairs_players:
             print(element)
         return self.pairs_players
@@ -485,7 +496,17 @@ class ControlTournament:
             print('\n')
             input('\n Continuer: toucher une touche :')          
             break  
-        
+
+    """Méthodes de modification."""
+
+    def store_rounds_tournament_control(self):
+        """Met à jour l'attribut 'Détails tour' du tournoi sélectionné, à la fin du tour."""
+        self.dict_round = Round.dict_data_round(self)
+        self.rounds_tournament = Tournament.store_rounds_tournament(self)
+        DataTournament.update_data_rounds_tournament(self)
+        Tournament.show_rounds_tournament(self)
+        input('\n Continuer (toucher une touche): \n')
+
     
     """Méthode de suppression."""
     def truncate_tournaments_table_control(self):
@@ -588,6 +609,29 @@ class ControlRound:
             else:
                 output = ViewRound.end_play_round_view(self).upper()
             
+    def store_matchs_round_control(self):
+        """Crée une liste et y stocke les données des matches,
+        recherche l'attribut 'Round_matchs' pour le round concerné,
+        met à jour la base avec les données des matchs joués.
+        """
+
+        self.matchs_round = Round.create_new_list_matchs(self)
+        i = 1
+        for i in range (1,5):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+            while True:
+                self.name_match = f'Match_{i}'
+                resultat = DataMatch.search_match(self)
+                for element in resultat:
+                    self.data_match = element['Match_resultats'] 
+                    self.dict_match = Match.dict_data_match(self)
+                    Round.store_matchs_round(self)
+                break
+        
+            DataRound.update_matchs_round(self)
+        print('\033[4m Scores des matches :\033[0m \n')
+        Round.show_matchs_round(self)
+        input('\n Continuer (toucher une touche): \n')
+
 
 
     """Méthode de suppression."""
@@ -622,15 +666,9 @@ class ControlMatch:
 
         ControlMatch.create_matchs_control(self)
         ViewMatch.pairs_players_matchs_view(self)
-        
         for element in self.pairs_players:
             print(element)
-                  
-                   
-
-               
         input('\n Continuer (toucher une touche): \n')
-
     
     def create_matchs_control(self):
         """Crée automatiquement le nombre et le nom des matchs à venir pour un round donné."""
@@ -648,8 +686,9 @@ class ControlMatch:
 
     def score_matchs(self):
         """Attribut un nom à chaque joueur de la paire du match concerné,
-        et affiche le cadre pour la saisie des scores de chaque match.
+           et affiche le cadre pour la saisie des scores de chaque match.
         """
+        ViewMatch.score_entry_view(self)
         i = 1
         for i in range (1,5):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
             while True:
@@ -659,17 +698,13 @@ class ControlMatch:
                     self.pair_players = element['Match_participants']
                     Match.designate_players_match(self)
                     Match.enter_score_match(self)
-              
                     Match.show_data_match(self)
                     DataMatch.update_data_match(self)
-                    
                 break
         input('\n Continuer (toucher une touche): \n')
-      
 
-        
-        
-    
+   
+  
     """Méthode de suppression."""
     
     def truncate_matchs_table_control(self):
@@ -686,8 +721,7 @@ class ControlMatch:
             else:
                 break
 
-        
-
+ 
 
 
 class ControlParticipant:
@@ -1062,7 +1096,6 @@ class ControlReport:
                 print(f"{element.doc_id} : {element}")
                 for key, value in element.items():
                     print(f"\033[4m{key} :\033[0m", value)
-                    
                 print('\n')
                 input('\n Continuer: toucher une touche :')
             break
@@ -1091,17 +1124,12 @@ class ControlReport:
         while True:
             if result == []:
                 print("Je ne trouve pas d'informations, veuillez recommencer")
-                
-
-            else:  
-                
+            else:
                 for element in result:
                     print(f"\n {element.doc_id} : {element['Nom_Round']}-{element['Match_nom']}")
                     for key, value in element.items() :
                         print(f"\033[4m{key} :\033[0m", value)
-                        
             break       
-   
         print('\n')
         input('\n Continuer: toucher une touche :')
             

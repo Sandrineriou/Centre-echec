@@ -119,8 +119,8 @@ class Tournament:
         self.ranking_sorted = sorted(self.players_list, key=lambda x:x['ranking'], reverse=True)
         
         self.half_list = [tuple(
-            [[element['lastname'],element['firstname'], element['ranking'],element['score']] for element in self.ranking_sorted[0:4]]), 
-            tuple([[element['lastname'],element['firstname'], element['ranking'], element['score']] for element in self.ranking_sorted[4:8]])
+            [[element['lastname'], element['firstname'], element['score']] for element in self.ranking_sorted[0:4]]), 
+            tuple([[element['lastname'], element['firstname'], element['score']] for element in self.ranking_sorted[4:8]])
         ]
         return self.half_list
      
@@ -135,10 +135,10 @@ class Tournament:
             j += 1
         return self.pairs_players
     
-    def store_rounds_tournament(self, data_round):
+    def store_rounds_tournament(self):
         """Ajoute les instances d'un round au tournoi concerné."""
 
-        self.rounds_tournament.append(data_round)
+        self.rounds_tournament.append(self.dict_round)
         return self.rounds_tournament
 
     def show_rounds_tournament(self):

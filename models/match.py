@@ -42,24 +42,24 @@ class Match ():
     def enter_score_match(self):
         """Saisie du score de chaque joueur de la paire, par match."""
         
-        print(f"\n {self.name_match} : {self.player1},{self.player2}\n")
+        print(f"\n \033[4m {self.name_match} : {self.player1},{self.player2}\033[0m \n")
         draw = input("Match Nul ? (o/n) :")
         while draw not in ["o", "n"]:
             draw = input("Match Nul ? (o/n) :")
         if draw == 'o':
-            self.player1[3] = self.player2[3] = float(NULL_POINT)
+            self.player1[2] = self.player2[2] = float(NULL_POINT)
         elif draw =='n':
             print(f"\n {self.player1}")
             while True :
                 try:
-                    self.player1[3] = int(input("score joueur_1 : "))
+                    self.player1[2] = int(input("score joueur_1 : "))
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_1 : ")
             print(f"\n{self.player2}")
             while True :
                 try:
-                    self.player2[3] = int(input("score joueur_2 : "))
+                    self.player2[2] = int(input("score joueur_2 : "))
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_2 : ")
@@ -67,14 +67,15 @@ class Match ():
     def show_data_match(self):
         """Affiche les données du match fini sous forme de tuple."""
         self.data_match = (self.player1, self.player2)
-        print(tuple(self.data_match), end='\n\n')
-        return self.data_match
+        print(self.data_match, end='\n\n')
+        
+        return tuple(self.data_match)
 
-    def list_data_match(self):# à priori traiter differemment par tinidb
+    def dict_data_match(self):# à priori traiter differemment par tinidb voir méthode à supprimer car pas utilisée
         """Retourne une liste des résultats par match."""
         
-        self.list_match = [element for element in self.data_match]
-        return tuple(self.list_match)
+        self.dict_match = {self.name_match : tuple(self.data_match)}
+        return self.dict_match
 
    
 

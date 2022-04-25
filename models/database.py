@@ -104,8 +104,6 @@ class DataTournament:
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
-    
-
     def update_data_rounds_tournament(self):
         """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
         User = Query()
@@ -136,6 +134,10 @@ class DataRound:
     def search_by_nametournament_round(self):
         return rounds_table.search(where("Nom_tournoi") == self.name_tournament)
 
+    def search_specific_round(self):
+        User = Query()
+        return rounds_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round))
+    
     def update_pairs_players_round(self):
         """Met à jour la liste des paires de participants dans un round donné."""
         User = Query()
@@ -151,6 +153,10 @@ class DataRound:
         User = Query()
         return rounds_table.update({'Round_fin': self.enddatetime}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
 
+    def update_matchs_round(self):
+        """Met à jour l'attribut 'Round_matches' après un tour de jeu."""
+        User = Query()
+        return rounds_table.update({'Round_matches': self.matchs_round}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
 
     def truncate_rounds_table(self):
         """Efface toutes les données de la table 'Rounds'(mise à zéro)."""
@@ -182,7 +188,7 @@ class DataMatch:
     
     def search_all_matchs(self):
         """Affiche tous les matchs inscrits dans la base."""
-        print('\n'f"Il y a {len(matchs_table)} matchs incrits dans la base."'\n')
+        print('\n'f"Il y a {len(matchs_table)} matchs incrits dans la base.")
     
     def update_pair_players_match(self):
         """Met à jour la paire de joueur pour un match donné."""
@@ -195,7 +201,7 @@ class DataMatch:
     def update_data_match(self):
         """Met à jour les scores du match donné."""
         User = Query()
-        return matchs_table.update({'Match_resultats': self.data_match},
+        return matchs_table.update({'Match_resultats': tuple(self.data_match)},
          ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
          )
 

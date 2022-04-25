@@ -153,7 +153,7 @@ class ViewRound:
 
     def create_rounds_view(self):
         """Annonce la création des éléments des rounds du tournoi sélectionné à venir."""
-        print("\n \033[4mCréation des rounds à venir.... \033[0m \n")
+        print("...Création des rounds à venir....")
     
     def round1_view(self):
         """Annonce les éléments du round1 à venir."""
@@ -165,9 +165,9 @@ class ViewRound:
     def end_play_round_view(self):
         """Demande confirmation de finir le jeu du round."""
         return input(
-            "Souhaitez-vous réellement arrêter le jeu ?"
+            "Souhaitez-vous réellement arrêter le jeu ?\n"
             " Si les matchs sont terminés  : Taper \033[1m O pour oui \033[0m"
-            "sinon patientez la fin jusqu'à la fin des matchs...."
+            "....sinon patientez la fin jusqu'à la fin des matchs....\n"
             "\n\033[1mPour continuer : Taper 'O'\033[0m"
             
 
@@ -193,6 +193,8 @@ class ViewMatch:
         """Message qui annonce les paires qui vont s'affronter pour les matchs d'un round donné."""
         print("\n \033[4m Noms des joueurs qui vont d'affrontés par match:\033[0m \n")
     
+    def score_entry_view(self):
+        print("\n\033[1m Veuillez entrer les scores des matches joués : \033[0m\n")
     
     def truncate_matchs_table_view(self):
         """Message de vigilance avant suppression de la table 'Matchs' dans sa totalité."""

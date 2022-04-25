@@ -12,7 +12,7 @@ NUMBER_ROUNDS = 4
 class Round:
     """Tour d'un tournoi."""
 
-    def __init__(self, name_tournament, name_round, pairs_players=[], startdatetime = None, matchs_round=[], data_round=[], values_list=[], list_dict_matchs=[]):
+    def __init__(self, name_tournament, name_round, pairs_players=[], startdatetime = None, matchs_round=[], data_round={}, values_list=[], list_dict_matchs=[]):
         """Initialise le nom du tournoi, la date, les paires de joueurs et les matchs."""
 
         self.name_tournament = name_tournament
@@ -71,24 +71,35 @@ class Round:
         self.enddatetime = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
         return print(f"Date et heure de fin du tour {self.name_round}: {self.enddatetime}", end='\n\n')
 
-    def create_new_list_matchs(self):
+    def create_new_list_matchs(self):# à supprimer existe déjà via tinydb serialized rounds
         """Crée une liste vide pour recevoir les matchs d'un round."""
         self.matchs_round = []
         return self.matchs_round
     
-    def store_matchs_round(self, matchs):
+    def store_matchs_round(self):
         """Ajoute les résultats des matchs d'un round dans une liste."""
-        return self.matchs_round.append(matchs)
+        return self.matchs_round.append(self.dict_match)
 
     def show_matchs_round(self):
         """Affiche tous les matchs d'un round : données de joueurs et score."""
-        return print(self.matchs_round)
+        for element in self.matchs_round:
+            
+            print(element)
+        return self.matchs_round
        
         
-    def list_data_round(self):# ne faut_il pas mettre cela dans un dico ?
+    def dict_data_round(self):# ne faut_il pas mettre cela dans un dico ?OUI
         """Rassemble les informations d'un round dans une liste.""" 
-        self.data_round = [self.name_round, self.startdatetime, self.enddatetime, self.matchs_round]
-        return self.data_round
+        
+        self.dict_round = {}
+        self.dict_round [self.name_round] = {
+            "Round_paires": self.pairs_players,
+            "Round_debut": self.startdatetime,
+            "Round_fin": self.enddatetime,
+            "Round_matches": self.matchs_round
+            }
+        print(self.dict_round)
+        return self.dict_round
 
     def create_new_list_scores(self):
         """Crée une liste pour recevoir les données des paires avec le score additionné"""
