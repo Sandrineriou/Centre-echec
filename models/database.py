@@ -104,6 +104,9 @@ class DataTournament:
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
+    def search_rounds_tournamant(self):
+        pass
+
     def update_data_rounds_tournament(self):
         """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
         User = Query()

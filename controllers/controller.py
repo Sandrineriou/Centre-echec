@@ -109,11 +109,13 @@ class MainMenus:
                 ControlRound.setting_up_rounds_control(self)
                 ControlTournament.setting_up_rounds_tournament_control(self)
                                 
-                """Crée les premières de paires de joueur pour le Round 1."""
+                """Crée les premières de paires de joueur pour le Round 1, selon le modéle Suisse."""
                 ControlRound.setting_up_round1_control(self)
-                ControlMatch.setting_up_matchs_round(self)
+                
                 
                 """TOUR 1."""
+                """Met en place les matches à venir dans Round 1."""
+                ControlMatch.setting_up_matchs_round(self)
                 """Démarre le round1."""
                 ControlRound.start_play_round_control(self)
 
@@ -123,18 +125,27 @@ class MainMenus:
                 """Permet la saisie des scores des matchs du round1."""
                 ControlMatch.score_matchs(self)
 
-                """stock les informations des matchs dans rounds_table, et les infos du round dans tournaments_table."""
+                """stock les informations des matchs du Round 1 dans rounds_table, et les infos du round dans tournaments_table."""
                 ControlRound.store_matchs_round_control(self)
                 ControlTournament.store_rounds_tournament_control(self)
+
+                """Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round 2."""
+                # à traiter
+                pass
+
+                """TOUR 2."""
+
                 
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
             
             elif self.niveau2 == '41':
                 """ligne de test"""
-                self.name_round = 'Round_1'
-                self.name_tournament = 'CERISE'
+                pass
+                
                
-               
+
+                  
+                
                
 
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
@@ -499,13 +510,28 @@ class ControlTournament:
 
     """Méthodes de modification."""
 
-    def store_rounds_tournament_control(self):
+    def store_rounds_tournament_control(self): 
         """Met à jour l'attribut 'Détails tour' du tournoi sélectionné, à la fin du tour."""
-        self.dict_round = Round.dict_data_round(self)
-        self.rounds_tournament = Tournament.store_rounds_tournament(self)
-        DataTournament.update_data_rounds_tournament(self)
-        Tournament.show_rounds_tournament(self)
-        input('\n Continuer (toucher une touche): \n')
+        
+        tournament = DataTournament.search_by_name_tournament(self)
+        for element in tournament:
+            self.rounds_tournament = element['Detail_tours']
+            for data in self.rounds_tournament:
+                self.dict_round = data
+                for key in self.dict_round:
+                    if key == self.name_round:
+                        x = self.rounds_tournament.index(self.dict_round)
+                        self.rounds_tournament.remove(self.dict_round)
+                        self.dict_round = Round.dict_data_round(self)
+                        self.rounds_tournament.insert(x, self.dict_round)
+                        DataTournament.update_data_rounds_tournament(self)
+                        Tournament.show_rounds_tournament(self)
+                    else:
+                        break
+        input('\n Continuer (toucher une touche): \n')               
+
+        
+                       
 
     
     """Méthode de suppression."""

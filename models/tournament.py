@@ -100,6 +100,7 @@ class Tournament:
             list_dict_matchs = list_dict_matchs,
             comment = comment
         )
+        print(tournament)
         return tournament
  
  
@@ -135,7 +136,7 @@ class Tournament:
             j += 1
         return self.pairs_players
     
-    def store_rounds_tournament(self):
+    def store_rounds_tournament(self): # à supprimer ???
         """Ajoute les instances d'un round au tournoi concerné."""
 
         self.rounds_tournament.append(self.dict_round)

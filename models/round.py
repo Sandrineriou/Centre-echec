@@ -98,7 +98,7 @@ class Round:
             "Round_fin": self.enddatetime,
             "Round_matches": self.matchs_round
             }
-        print(self.dict_round)
+        
         return self.dict_round
 
     def create_new_list_scores(self):
