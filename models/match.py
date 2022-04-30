@@ -71,10 +71,10 @@ class Match ():
         
         return tuple(self.data_match)
 
-    def dict_data_match(self):# à priori traiter differemment par tinidb voir méthode à supprimer car pas utilisée
+    def dict_data_match(self):# j'ai enlevé {self.name_match :tuple(self.data_match)} pour ne laisser que tuple car pb d'extraction pour total score
         """Retourne une liste des résultats par match."""
         
-        self.dict_match = {self.name_match : tuple(self.data_match)}
+        self.dict_match = tuple(self.data_match)
         return self.dict_match
 
    

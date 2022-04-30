@@ -148,12 +148,12 @@ class Tournament:
         """
         return print(self.rounds_tournament, end='\n\n')
     
-    def total_score_dict_players(self, other): 
+    def total_score_dict_players(self): 
         """Remplace le score initial du joueur par le score cumulé des matchs et créer une nouvelle liste de joueurs pour le tour suivant."""
         self.increased_score_players = []
         i = 0
         while i < MAX_PLAYERS:
-            c = {**self.players_list[i], **other[i]}
+            c = {**self.players_list[i], **self.identifier_sorted[i]}
             self.increased_score_players.append(c)
             i += 1
         return print(self.increased_score_players, end='\n\n')
@@ -171,13 +171,15 @@ class Tournament:
         self.pairs_players_next = []
         i = 0
         j = i+1
-        pair = (self.return_score_list[i], self.return_score_list[j])
+        pair = [self.return_score_list[i], self.return_score_list[j]]
         self.pairs_players_next.append(pair)
         while i+2 < (MAX_PLAYERS-1):
             i = i+2
             j = i+1
-            pair = (self.return_score_list[i], self.return_score_list[j])
+            pair = [self.return_score_list[i], self.return_score_list[j]]
             self.pairs_players_next.append(pair)
+        print("c'est la self pairs players next:")
+        print(self.pairs_players_next)
         return self.pairs_players_next
     
     def end_tournament(self, enddate, endtime):

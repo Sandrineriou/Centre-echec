@@ -39,7 +39,7 @@ class DataPlayer:
         return players_table.search((where('lastname') == self.lastname)and(where('firstname') == self.firstname))
     
     def get_id_player(self):
-        """Retourne le numéro d'identifiant du joueur rehcerché."""
+        """Retourne le numéro d'identifiant du joueur recherché."""
        
         
         for element in DataPlayer.search_player(self):
@@ -66,6 +66,16 @@ class DataPlayer:
             print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
                 element['gender'], "classement: ", element['ranking']
             )
+
+    def sorted_all_players_ranking(self):
+        """Affiche tous les joueurs dena la base par ordre de classement (rang)."""
+        self.alpha_sorted = sorted(self.all, key=lambda x: x['ranking'])
+        for element in self.alpha_sorted:
+            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
+                element['gender'], "classement: ", element['ranking']
+            )
+
+    
 
     def delete_player(self):
         """Supprime 1 joueur recherché"""
@@ -104,8 +114,27 @@ class DataTournament:
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
-    def search_rounds_tournamant(self):
-        pass
+    def search_players_list_tournament(self):
+        """Retournel la liste de participants au tournoi."""
+        
+        User = Query()
+        print(tournaments_table.search({'Liste_joueurs': self.players_list} and User.Nom_tournoi == self.name_tournament))
+
+    def sorted_participants_alpha(self):
+        """Affiche tous les participants du tournoi par ordre alphabétique."""
+
+        self.alpha_sorted = sorted(self.players_list, key=lambda x: x['lastname'])
+        for element in self.alpha_sorted:
+            print(element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
+                element['gender'], "classement: ", element['ranking'])
+
+    def sorted_participants_rank(self):
+        """Affiche tous les participants du tournoi par ordre de classement (rang)."""
+
+        self.alpha_sorted = sorted(self.players_list, key=lambda x: x['ranking'])
+        for element in self.alpha_sorted:
+            print(element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
+                element['gender'], "classement: ", element['ranking'])
 
     def update_data_rounds_tournament(self):
         """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
@@ -140,6 +169,7 @@ class DataRound:
     def search_specific_round(self):
         User = Query()
         return rounds_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round))
+    
     
     def update_pairs_players_round(self):
         """Met à jour la liste des paires de participants dans un round donné."""

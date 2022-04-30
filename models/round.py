@@ -128,19 +128,29 @@ class Round:
         for j in range (0,len(self.pairs_players)):
             players2.append(self.matchs_round[j][1])
         self.values_list = players1 + players2
-        return print(self.values_list)
+        print("self values list :")
+        print(self.values_list)
+        return self.values_list
 
     def build_list_dict_matchs(self):
-        """Affiche une liste de dictionnaires contenant les 8 joueurs avec le score du match fini, trié par identifiant."""
+        """Affiche une liste de dictionnaires contenant les 8 joueurs avec le score du match fini."""
         
-        key_list = ['id_person', 'lastname', 'score']
+        key_list = ['lastname', 'firstname', 'score', 'id_person']# le controlleur doit traiter la recherche de l'identifiant
         self.list_dict_matchs = []
         
         for l in range (0, len(self.values_list)):
 
             dict_from_list = {k: v for k, v in zip(key_list, self.values_list[l])}
             self.list_dict_matchs.append(dict_from_list)
+        print("self list dict matchs:")
+        print(self.list_dict_matchs)
+        return self.list_dict_matchs
+
+    def build_id_sorted_list_dict_matchs(self):
+        """Trie la liste de dictionnaires des 8 joueurs par leur ID. """
         self.identifier_sorted = sorted(self.list_dict_matchs, key=lambda x: x['id_person'])
+        print('self identifier sorted:')
+        print(self.identifier_sorted)
         return self.identifier_sorted
         
    
