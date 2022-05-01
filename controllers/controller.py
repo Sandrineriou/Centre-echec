@@ -137,6 +137,7 @@ class MainMenus:
                 """Cumule les scores totaux de chaque joueur et crée les nouvelles paires de joueurs pour le round suivant."""
                 ControlTournament.cumulated_scores_rounds_tournament(self)
                 ControlTournament.create_new_pairs_players(self)
+                print(self.name_round)
 
                 """TOUR 2."""
 
@@ -147,8 +148,70 @@ class MainMenus:
                 """ligne de test"""
                 self.name_tournament = 'CERISE'
                 self.name_round = 'ROUND_1'
-                pass
+                self.rounds_tournament = [{'ROUND_1': {'Round_paires': [[['VINDIU', 'SHIVA', 0], ['PAPOU', 'DOUDOU', 0]], [['MARTIN', 'ERIC', 0], ['DUPONT', 'PAUL', 0]], [['ZING', 'EDOUARD', 0], ['DUPONT', 'PIERRE', 0]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 0]]], 'Round_debut': '01/05/2022 à 06:02', 'Round_fin': '01/05/2022 à 06:02', 'Round_matches': [[['VINDIU', 'SHIVA', 0.5], ['PAPOU', 'DOUDOU', 0.5]], [['MARTIN', 'ERIC', 1], ['DUPONT', 'PAUL', 0]],
+                                        [['ZING', 'EDOUARD', 0.5], ['DUPONT', 'PIERRE', 0.5]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 1]]]}},
+                                        {'ROUND_2': {}},
+                                        {'ROUND_3': {}},
+                                        {'ROUND_4': {}}
+                                    ]
+                
+                
+                
+                
+                
+                
+                for dict in self.rounds_tournament:
+                    for key in dict:
+                        if key == self.name_round:
+                            print('esais avec print dict')
+                            print(dict)
+                            
+
+                            index = [i for i in range (len(self.rounds_tournament)) if self.rounds_tournament[i] == dict]
+                            print('test index')
+                            print(index)
+                    
+                
+
+                    
+                    
+                    
+
                
+
+               
+
+                
+
+
+               
+               
+               
+               
+
+                
+                   
+                    
+                    
+                input('\n Continuer (toucher une touche): \n')
+                
+                """i = 0
+                
+                if self.name_round == list(self.rounds_tournament[i].keys())[0]:
+                    index = list.index(self.rounds_tournament[i])
+                    print('index en cours')
+                    print(index)
+                    
+                    self.name_round = list(self.rounds_tournament[index+y].keys())[0]
+                    print("le nouveau nom de round:")
+                    print(self.name_round)
+"
+                else:
+                    print("\nLE TOURNOI EST TERMINE \n")
+                    input('\n Continuer (toucher une touche): \n')
+                    break"""
+               
+
                
                   
                 
@@ -627,6 +690,7 @@ class ControlRound:
         
     def search_name_round1(self):
         """Recherche le nom du round1."""
+        
         self.name_round = list(self.rounds_tournament[0].keys())[0]
         return self.name_round
 

@@ -50,7 +50,7 @@ class Tournament:
         i = 1
         for i in range (1,NUMBER_ROUNDS+1):
             while True :
-                dico = {f"Round_{i}" :{}}
+                dico = {f"ROUND_{i}" :{}}
                 self.rounds_tournament.append(dico)
                 break
         return self.rounds_tournament    

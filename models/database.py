@@ -115,10 +115,15 @@ class DataTournament:
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
     def search_players_list_tournament(self):
-        """Retournel la liste de participants au tournoi."""
+        """Retourne la liste de participants au tournoi."""
         
         User = Query()
         print(tournaments_table.search({'Liste_joueurs': self.players_list} and User.Nom_tournoi == self.name_tournament))
+
+    def search_list_rounds_tournament(self):
+        """Retourne la liste des rounds stockés au niveau du tournoi."""
+        User = Query()
+        print(tournaments_table.search({'Detail_tours': self.rounds_tournament} and User.Nom_tournoi == self.name_tournament))
 
     def sorted_participants_alpha(self):
         """Affiche tous les participants du tournoi par ordre alphabétique."""
