@@ -6,6 +6,7 @@ from pprint import pprint
 
 
 
+
 from tinydb import TinyDB, Query, where
 db = TinyDB('db.json')
 players_table = db.table('players')
@@ -106,6 +107,7 @@ class MainMenus:
                 """
                 
                 """Crée les rounds à venir et les enregistre dans la base."""
+               
                 ControlRound.setting_up_rounds_control(self)
                 ControlTournament.setting_up_rounds_tournament_control(self)
                                 
@@ -134,12 +136,20 @@ class MainMenus:
                 """Retourne la liste des scores du Tour 1."""
                 ControlRound.return_scores_matchs_round(self)
                 
-                """Cumule les scores totaux de chaque joueur et crée les nouvelles paires de joueurs pour le round suivant."""
+                """Cumule les scores totaux de chaque joueur."""
                 ControlTournament.cumulated_scores_rounds_tournament(self)
+                
+                """Crée les nouvelles paires de joueurs pour le round suivant."""
                 ControlTournament.create_new_pairs_players(self)
                 print(self.name_round)
 
                 """TOUR 2."""
+                
+                """Enregistre les nouvelles paires de joueurs sur le round suivant."""
+                ControlRound.setting_up_next_round_control(self)
+                
+                
+                input('\n Continuer (toucher une touche): \n')
 
                 
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
@@ -147,7 +157,7 @@ class MainMenus:
             elif self.niveau2 == '41':
                 """ligne de test"""
                 self.name_tournament = 'CERISE'
-                self.name_round = 'ROUND_1'
+                self.name_round = 'ROUND_2'
                 self.rounds_tournament = [{'ROUND_1': {'Round_paires': [[['VINDIU', 'SHIVA', 0], ['PAPOU', 'DOUDOU', 0]], [['MARTIN', 'ERIC', 0], ['DUPONT', 'PAUL', 0]], [['ZING', 'EDOUARD', 0], ['DUPONT', 'PIERRE', 0]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 0]]], 'Round_debut': '01/05/2022 à 06:02', 'Round_fin': '01/05/2022 à 06:02', 'Round_matches': [[['VINDIU', 'SHIVA', 0.5], ['PAPOU', 'DOUDOU', 0.5]], [['MARTIN', 'ERIC', 1], ['DUPONT', 'PAUL', 0]],
                                         [['ZING', 'EDOUARD', 0.5], ['DUPONT', 'PIERRE', 0.5]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 1]]]}},
                                         {'ROUND_2': {}},
@@ -155,44 +165,9 @@ class MainMenus:
                                         {'ROUND_4': {}}
                                     ]
                 
+                ControlRound.search_name_next_round(self)
                 
                 
-                
-                
-                
-                for dict in self.rounds_tournament:
-                    for key in dict:
-                        if key == self.name_round:
-                            print('esais avec print dict')
-                            print(dict)
-                            
-
-                            index = [i for i in range (len(self.rounds_tournament)) if self.rounds_tournament[i] == dict]
-                            print('test index')
-                            print(index)
-                    
-                
-
-                    
-                    
-                    
-
-               
-
-               
-
-                
-
-
-               
-               
-               
-               
-
-                
-                   
-                    
-                    
                 input('\n Continuer (toucher une touche): \n')
                 
                 """i = 0
@@ -484,8 +459,8 @@ class ControlTournament:
         
         Tournament.get_rounds(self)
         DataTournament.update_data_rounds_tournament(self)
-        print('... Enregistrement des rounds dans tournoi...')
-        input('\n Continuer (toucher une touche): \n')
+        print('...Enregistrement des rounds dans tournoi...')
+        
     
      
 
@@ -497,7 +472,7 @@ class ControlTournament:
     """   
     
     def search_list_players_tournament_control(self):
-        self.name_tounament = ControlTournament.name_tournament_control(self)
+        self.name_tournament = ControlTournament.name_tournament_control(self)
         result = DataTournament.search_by_name_tournament(self)
         while True :
             if result == []:
@@ -546,9 +521,7 @@ class ControlTournament:
         self.players_list = ControlTournament.return_list_players_tournament_control(self)
         Tournament.sorted_ranking_list(self)
         self.pairs_players = Tournament.create_first_pairs_players(self)
-        print("\n \033[4m Liste des premières rencontres pour le Round 1:\033[0m\n")
-        for element in self.pairs_players:
-            print(element)
+        
         return self.pairs_players
         
     """Méthodes pour totaliser les scores au fur et à mesure des matchs joués, et préparation des paires de joueurs suivantes pour le prochain round."""
@@ -564,6 +537,23 @@ class ControlTournament:
         input('\n Continuer (toucher une touche): \n')
    
     """Méthodes de recherche."""
+    
+    def check_name_tournament_control(self):
+        """Vérifie l'existence du tournoi recherché."""
+        
+        self.name_tournament = input("\n Nom du tournoi recherché: ").upper()
+        
+        result = DataTournament.search_by_name_tournament(self)
+        while True:
+            if result == []:
+                
+                ViewTournament.None_tournament(self)
+                self.name_tournament = input("\n Nom du tournoi recherché: ").upper()
+                
+            else:
+                for element in result :
+                    self.name_tournament = element['Nom_tournoi']
+                    return self.name_tournament
     
     def show_tournament_control(self):
         """Recherche d'un tournoi par son nom."""
@@ -593,10 +583,8 @@ class ControlTournament:
                         print("Il n'y a pas de participants inscrits dans la liste des joueurs du tournoi.")
                         break
                     else:
-                        print(plist)
                         return(plist)
-            print('\n')
-            input('\n Continuer: toucher une touche :')          
+                   
             break  
 
     """Méthodes de modification."""
@@ -660,13 +648,14 @@ class ControlRound:
         enregistre ces élements dans une liste de tours, 
         et sauvegarde ces élements dans la table 'round' de tinydb.
         """
-        self.name_tournament = ControlTournament.name_tournament_control(self)
+        self.name_tournament = ControlTournament.check_name_tournament_control(self)
+       
         ViewRound.create_rounds_view(self)
         i = 1
         for i in range(1, NUMBER_ROUNDS+1):
             while True:
                 self.name_tournament = self.name_tournament
-                self.name_round = f'Round_{i}'
+                self.name_round = f'ROUND_{i}'
                 self.pairs_players = []
                 self.startdatetime = None
                 self.enddatetime = None
@@ -678,8 +667,7 @@ class ControlRound:
                 self.round_serialized = Round.serialize_round(self)
                 DataRound.saving_data_round(self)
                 break
-            
-        input('\n Continuer (toucher une touche): \n')
+       
 
     def setting_up_round1_control(self):
         """Recherche le round1,
@@ -690,7 +678,6 @@ class ControlRound:
         
     def search_name_round1(self):
         """Recherche le nom du round1."""
-        
         self.name_round = list(self.rounds_tournament[0].keys())[0]
         return self.name_round
 
@@ -698,7 +685,27 @@ class ControlRound:
         """Retourne la liste de paires des joueurs du round1."""
         self.pairs_players = ControlTournament.build_first_pairs_players_control(self)
         DataRound.update_pairs_players_round(self)
+        
+
+    def setting_up_next_round_control(self):
+        """Recherche le nom du Round suivant,
+        et lui attribut les paires de joueurs générées automatiquement.
+        """
+        self.name_round = ControlRound.search_name_next_round(self)
+        DataRound.update_pairs_players_round(self)
         input('\n Continuer (toucher une touche): \n')
+    
+    def search_name_next_round(self):
+        """Recherche le nom du round suivant."""
+        for dict in self.rounds_tournament:
+                for key in dict:
+                    if key == self.name_round:
+                        index= [i for i in range (len(self.rounds_tournament)) if self.rounds_tournament[i] == dict]
+                        self.name_round = list(self.rounds_tournament[index[0]+1].keys())[0]
+                        print(self.name_round)
+                        return self.name_round
+                    else:
+                        break 
     
     def return_scores_matchs_round(self): # à revoir
         """Retourne une liste de dictionnaires contenant les 8 joueurs avec le score du match fini, trié par identifiant."""
@@ -720,11 +727,7 @@ class ControlRound:
     def search_pairs_players_round(self):# à revoir
         """Affiche les paires de joueurs généré du round."""
         pass
-           
-               
-       
-        
-            
+    
 
     """Méthodes de modification."""
 
@@ -734,8 +737,8 @@ class ControlRound:
         """
         Round.start_round(self)
         DataRound.update_start_round(self)
-        print(self.startdatetime)
-        input('\n Continuer (toucher une touche): \n')
+        
+        input("\nAppuyer sur la touche 'Entrée' quand le tour est terminé\n")
    
     def stop_play_round_control(self):
         """Crée la date et l'heure de jeu du round concerné,
@@ -746,7 +749,6 @@ class ControlRound:
             if output == 'O':
                 Round.end_round(self)
                 DataRound.update_end_round(self)
-                print(self.enddatetime)
                 input('\n Continuer (toucher une touche): \n')
                 break
             else:
@@ -819,13 +821,12 @@ class ControlMatch:
         for i in range (1,len(self.pairs_players)+1):
             while True:
                 self.name_match = f'Match_{i}'
-                print(self.name_match)
                 self.pair_players = self.pairs_players[i-1]
                 self.data_match = tuple()
                 self.match_serialized = Match.serialize_match(self)
                 DataMatch.saving_data_match(self)
                 break
-        input('\n Continuer (toucher une touche): \n')
+        input('\n\n Appuyer sur "entrée" pour voir les adversaires des matches:')
 
     def score_matchs(self):
         """Attribut un nom à chaque joueur de la paire du match concerné,
@@ -833,7 +834,7 @@ class ControlMatch:
         """
         ViewMatch.score_entry_view(self)
         i = 1
-        for i in range (1,5):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+        for i in range (1,len(self.pairs_players)+1):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
             while True:
                 self.name_match = f'Match_{i}'
                 resultat = DataMatch.search_match(self)

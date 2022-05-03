@@ -63,13 +63,13 @@ class Round:
         """Affiche date et heure de début du tour."""
         
         self.startdatetime = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
-        return print(f"Date et heure de début du tour {self.name_round} : {self.startdatetime}")
+        return print(f"\033[4m Date et heure de début du tour {self.name_round} \033[0m: {self.startdatetime}")
        
     def end_round(self):
         """Affiche date et heure de fin du tour."""
-        print(input("Appuyer sur la touche 'Entrée' quand le tour est terminé"))
+        
         self.enddatetime = datetime.datetime.now().strftime("%d/%m/%Y à %H:%M")
-        return print(f"Date et heure de fin du tour {self.name_round}: {self.enddatetime}", end='\n\n')
+        return print(f"\033[4m Date et heure de fin du tour {self.name_round}\033[0m: {self.enddatetime}", end='\n\n')
 
     def create_new_list_matchs(self):# à supprimer existe déjà via tinydb serialized rounds
         """Crée une liste vide pour recevoir les matchs d'un round."""

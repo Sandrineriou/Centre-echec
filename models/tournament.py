@@ -168,19 +168,19 @@ class Tournament:
     
     def create_pairs_players_next(self):
         """Crée les paires de joueurs pour les tours suivants."""
-        self.pairs_players_next = []
+        self.pairs_players = []
         i = 0
         j = i+1
         pair = [self.return_score_list[i], self.return_score_list[j]]
-        self.pairs_players_next.append(pair)
+        self.pairs_players.append(pair)
         while i+2 < (MAX_PLAYERS-1):
             i = i+2
             j = i+1
             pair = [self.return_score_list[i], self.return_score_list[j]]
-            self.pairs_players_next.append(pair)
+            self.pairs_players.append(pair)
         print("c'est la self pairs players next:")
-        print(self.pairs_players_next)
-        return self.pairs_players_next
+        print(self.pairs_players)
+        return self.pairs_players
     
     def end_tournament(self, enddate, endtime):
         """Termine le tournoi"""

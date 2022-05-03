@@ -2,8 +2,10 @@
 
 
 
+
 WIN_POINT = 1
 LOSE_POINT = 0
+POINTS = [LOSE_POINT, WIN_POINT]
 NULL_POINT = 0.50
 
 
@@ -43,16 +45,19 @@ class Match ():
         """Saisie du score de chaque joueur de la paire, par match."""
         
         print(f"\n \033[4m {self.name_match} : {self.player1},{self.player2}\033[0m \n")
-        draw = input("Match Nul ? (o/n) :")
-        while draw not in ["o", "n"]:
-            draw = input("Match Nul ? (o/n) :")
-        if draw == 'o':
+        draw = input("Match Nul ? (O/N) :").upper()
+        while draw not in ["O", "N"]:
+            draw = input("Match Nul ? (O/N) :")
+        if draw == 'O':
             self.player1[2] = self.player2[2] = float(NULL_POINT)
-        elif draw =='n':
+        elif draw =='N':
             print(f"\n {self.player1}")
             while True :
                 try:
                     self.player1[2] = int(input("score joueur_1 : "))
+                    while self.player1[2] not in POINTS:
+                        print('Le score saisit ne correspond pas au point attendu.')
+                        self.player1[2] = int(input("score joueur_1 : "))
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_1 : ")
@@ -60,6 +65,9 @@ class Match ():
             while True :
                 try:
                     self.player2[2] = int(input("score joueur_2 : "))
+                    while self.player2[2] not in POINTS:
+                        print('Le score saisit ne correspond pas au point attendu.')
+                        self.player2[2] = int(input("score joueur_1 : "))
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_2 : ")
