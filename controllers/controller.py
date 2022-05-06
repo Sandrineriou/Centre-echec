@@ -141,13 +141,32 @@ class MainMenus:
                 
                 """Crée les nouvelles paires de joueurs pour le round suivant."""
                 ControlTournament.create_new_pairs_players(self)
-                print(self.name_round)
+                
 
-                """TOUR 2."""
+                """TOUR 2 et suivants."""
                 
                 """Enregistre les nouvelles paires de joueurs sur le round suivant."""
                 ControlRound.setting_up_next_round_control(self)
+
+                """TEST"""
+                """Met en place les matches à venir dans Round ."""
+                ControlMatch.setting_up_matchs_round(self)
+                """Démarre le round."""
+                ControlRound.start_play_round_control(self)
+
+                """Arrête le round."""
+                ControlRound.stop_play_round_control(self)
                 
+                """Permet la saisie des scores des matchs du round."""
+                ControlMatch.score_matchs(self)
+
+                """stock les informations des matchs du Round  dans rounds_table, et les infos du round dans tournaments_table."""
+                ControlRound.store_matchs_round_control(self)
+                ControlTournament.store_rounds_tournament_control(self)
+
+                """ Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round SUIVANT."""
+
+               
                 
                 input('\n Continuer (toucher une touche): \n')
 
@@ -156,16 +175,10 @@ class MainMenus:
             
             elif self.niveau2 == '41':
                 """ligne de test"""
-                self.name_tournament = 'CERISE'
-                self.name_round = 'ROUND_2'
-                self.rounds_tournament = [{'ROUND_1': {'Round_paires': [[['VINDIU', 'SHIVA', 0], ['PAPOU', 'DOUDOU', 0]], [['MARTIN', 'ERIC', 0], ['DUPONT', 'PAUL', 0]], [['ZING', 'EDOUARD', 0], ['DUPONT', 'PIERRE', 0]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 0]]], 'Round_debut': '01/05/2022 à 06:02', 'Round_fin': '01/05/2022 à 06:02', 'Round_matches': [[['VINDIU', 'SHIVA', 0.5], ['PAPOU', 'DOUDOU', 0.5]], [['MARTIN', 'ERIC', 1], ['DUPONT', 'PAUL', 0]],
-                                        [['ZING', 'EDOUARD', 0.5], ['DUPONT', 'PIERRE', 0.5]], [['WAOU', 'ELISE', 0], ['BOUDOU', 'AMELIE', 1]]]}},
-                                        {'ROUND_2': {}},
-                                        {'ROUND_3': {}},
-                                        {'ROUND_4': {}}
-                                    ]
                 
-                ControlRound.search_name_next_round(self)
+               
+                
+                
                 
                 
                 input('\n Continuer (toucher une touche): \n')
@@ -693,6 +706,7 @@ class ControlRound:
         """
         self.name_round = ControlRound.search_name_next_round(self)
         DataRound.update_pairs_players_round(self)
+        print(self.pairs_players)
         input('\n Continuer (toucher une touche): \n')
     
     def search_name_next_round(self):
@@ -702,6 +716,7 @@ class ControlRound:
                     if key == self.name_round:
                         index= [i for i in range (len(self.rounds_tournament)) if self.rounds_tournament[i] == dict]
                         self.name_round = list(self.rounds_tournament[index[0]+1].keys())[0]
+                        print("c'est le nom du round suivant")
                         print(self.name_round)
                         return self.name_round
                     else:
@@ -762,10 +777,10 @@ class ControlRound:
 
         self.matchs_round = Round.create_new_list_matchs(self)
         i = 1
-        for i in range (1,5):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+        for i in range (1,len(self.pairs_players)+1):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
             while True:
                 self.name_match = f'Match_{i}'
-                resultat = DataMatch.search_match(self)
+                resultat = DataMatch.search_fragment_match(self)
                 for element in resultat:
                     self.data_match = element['Match_resultats'] 
                     self.dict_match = Match.dict_data_match(self)
@@ -806,7 +821,7 @@ class ControlMatch:
     def setting_up_matchs_round(self):
         """Créer les premières données des matchs à venir, 
         les enregistre dans la base,
-        et affiche les paires de joueurs qui vont s'affrontter au round concerné.
+        et affiche les paires de joueurs qui vont s'affronter au round concerné.
         """
 
         ControlMatch.create_matchs_control(self)
@@ -828,23 +843,26 @@ class ControlMatch:
                 break
         input('\n\n Appuyer sur "entrée" pour voir les adversaires des matches:')
 
-    def score_matchs(self):
+    def score_matchs(self):# c'est à partir de là que ça déconne
         """Attribut un nom à chaque joueur de la paire du match concerné,
            et affiche le cadre pour la saisie des scores de chaque match.
         """
         ViewMatch.score_entry_view(self)
         i = 1
-        for i in range (1,len(self.pairs_players)+1):#au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+        for i in range (1,len(self.pairs_players)+1):
             while True:
                 self.name_match = f'Match_{i}'
-                resultat = DataMatch.search_match(self)
+                resultat = DataMatch.search_fragment_match(self)
+                print(resultat)
                 for element in resultat:
                     self.pair_players = element['Match_participants']
                     Match.designate_players_match(self)
                     Match.enter_score_match(self)
                     Match.show_data_match(self)
-                    DataMatch.update_data_match(self)
+                    DataMatch.update_data_fragment_match(self)
                 break
+        
+        
         input('\n Continuer (toucher une touche): \n')
 
     

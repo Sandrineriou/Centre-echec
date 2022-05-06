@@ -73,35 +73,7 @@ class Tournament:
         }
         return (self.tournament_serialized)
 
-    def deserialize_tournament(self):
-        """Déserialize les instances sérialisées et les transforme en instances utilisables."""
-
-        name_tournament = self.tournament_serialized['Nom_tournoi']
-        place = self.tournament_serialized['Lieu']
-        startdate = self.tournament_serialized['Date_debut']
-        enddate = self.tournament_serialized['Date_fin']
-        controller_time = self.tournament_serialized['Type']
-        number_rounds = self.tournament_serialized['Nombre_tours']
-        players_list = self.tournament_serialized['Liste_joueurs']
-        rounds_tournament = self.tournament_serialized['Detail_tours']
-        list_dict_matchs = self.tournament_serialized['Detail_matchs']
-        comment = self.tournament_serialized['Commentaires']
-        
-              
-        tournament = Tournament(
-            name_tournament = name_tournament,
-            place = place,
-            stardate = startdate,
-            enddate = enddate,
-            controller_time = controller_time,
-            number_rounds = number_rounds,
-            players_list = players_list,
-            rounds_tournament = rounds_tournament,
-            list_dict_matchs = list_dict_matchs,
-            comment = comment
-        )
-        print(tournament)
-        return tournament
+   
  
  
     def build_list_players(self):
@@ -172,12 +144,12 @@ class Tournament:
         i = 0
         j = i+1
         pair = [self.return_score_list[i], self.return_score_list[j]]
-        self.pairs_players.append(pair)
+        self.pairs_players.append(tuple(pair))
         while i+2 < (MAX_PLAYERS-1):
             i = i+2
             j = i+1
             pair = [self.return_score_list[i], self.return_score_list[j]]
-            self.pairs_players.append(pair)
+            self.pairs_players.append(tuple(pair))
         print("c'est la self pairs players next:")
         print(self.pairs_players)
         return self.pairs_players

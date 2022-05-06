@@ -217,12 +217,16 @@ class DataMatch:
     
     def search_by_nametournament_matchs(self):
         return matchs_table.search(where("Nom_Tournoi") == self.name_tournament)
-
-    def search_match(self):
-        User = Query()
-        return matchs_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
+   
+    def search_fragment_match(self):
+        """recherche les documents en lien avec le champ dans un dictionnaire."""
         
+        return matchs_table.search(Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))
+    
+    def search_field_fragment_match(self):# à priori pas utilisé : à supprimer si inutile
+        """recherche les documents en lien avec le champ dans un dictionnaire."""
         
+        return matchs_table.search(Query().field.fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))
     
     def search_all_matchs(self):
         """Affiche tous les matchs inscrits dans la base."""
@@ -236,12 +240,19 @@ class DataMatch:
             ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
         )
        
-    def update_data_match(self):
+    def update_data_match(self):# si def update data fragment match fonctionne alors à supprimer
         """Met à jour les scores du match donné."""
         User = Query()
         return matchs_table.update({'Match_resultats': tuple(self.data_match)},
          ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
          )
+
+    def update_data_fragment_match(self):# pb avec le recherche 2eme args
+        """Met à jour les scores du match donné, selon la recherche par fragment"""
+        
+        return matchs_table.update({'Match_resultats': tuple(self.data_match)}, ((Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))))
+         
+    
 
     def truncate_matchs_table(self):
         """Efface toutes les données de la table 'Matchs'(mise à zéro)."""
