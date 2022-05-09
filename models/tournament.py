@@ -7,9 +7,11 @@ from pprint import pprint
 
 
 
+
 from models.player import Player
 from models.round import Round
 from models.match import Match
+
 
 MAX_PLAYERS = 8
 NUMBER_ROUNDS = 4
@@ -107,6 +109,13 @@ class Tournament:
             self.pairs_players.append(tuple(element))
             j += 1
         return self.pairs_players
+
+    def create_list_played_pairs(self):
+        """Crée une liste vide qui va cumuler toutes les paires jouées."""
+        self.played_pairs = []
+        return self.played_pairs
+    
+    
     
     def store_rounds_tournament(self): # à supprimer ???
         """Ajoute les instances d'un round au tournoi concerné."""
@@ -118,7 +127,9 @@ class Tournament:
         """Affiche tous les rounds d'un tournoi données,
         et les instances attachées à chaque round.
         """
-        return print(self.rounds_tournament, end='\n\n')
+        print(" c'est le rounds_tournament list avec toutes les infos des orunds d'une tournoi")
+        print(self.rounds_tournament, end='\n\n')
+        return self.rounds_tournament
     
     def total_score_dict_players(self): 
         """Remplace le score initial du joueur par le score cumulé des matchs et créer une nouvelle liste de joueurs pour le tour suivant."""
@@ -128,13 +139,106 @@ class Tournament:
             c = {**self.players_list[i], **self.identifier_sorted[i]}
             self.increased_score_players.append(c)
             i += 1
-        return print(self.increased_score_players, end='\n\n')
-        
+        print("C'est la inscreased_score_players list")
+        print(self.increased_score_players, end='\n\n')
+        return self.increased_score_players
+
     def sorted_score_list(self):
         """Trie la liste des joueurs par leur score total, si égalité de score par leur rang"""
         a = sorted(self.increased_score_players, key=lambda y: y['ranking'], reverse=True)
         self.score_list = sorted(a, key=lambda x: x['score'], reverse=True)
+        print("c'est la score_list trié par le score et le rang")
         print(self.score_list)
+        return self.score_list
+
+    def return_id_score_list(self):
+        """Retourne une liste de l'attribut ID_person des joueurs."""
+        self.id_score_list = [element['id_person'] for element in self.score_list]
+        print("c'est la id score list")
+        print(self.id_score_list)
+        return self.id_score_list
+
+    def test_new_pairs(self):
+        """Sélectionne une paire,
+        compare avec les paires déjà jouées,
+        et en fonction applique une des méthode de créaiton de paires.
+        """
+
+        self.new_pairs = []
+        while True :  
+            try :
+                j = 1
+                pair = [self.id_score_list[0], self.id_score_list[j]]
+                if pair not in self.played_pairs:
+                    self.new_pairs.append(pair)
+                    self.id_score_list.pop(j)
+                    self.id_score_list.pop(0)
+                else :  
+                    if j+1 < len(self.id_score_list):
+                        j += 1
+                        pair = [self.id_score_list[0], self.id_score_list[j]]
+                        if pair not in self.played_pairs:
+                            self.new_pairs.append(pair)
+                            self.id_score_list.pop(j)
+                            self.id_score_list.pop(0)
+                        else:            
+                            j += 1
+                            pair = [self.id_score_list[0], self.id_score_list[j]]
+                            if pair not in self.played_pairs:
+                                self.new_pairs.append(pair)
+                                self.id_score_list.pop(j)
+                                self.id_score_list.pop(0)
+            except IndexError:
+                break
+                                
+        print("cest la id_score_list qui doit être vide")
+        print(self.id_score_list)
+        print("c'est la new-pairs qui doit être au nombre de 4 paires avec les ID")
+        print(self.new_pairs)
+        return self.new_pairs
+
+    def return_pairs_players_next(self):
+        """Retourne la liste des paires à joueur avec les attributs nom, prénom et score.""" 
+        self.pairs_players = []
+        i = 0
+        j = 0
+        while True:
+            pp = []
+            for element in self.score_list :
+                if element['id_person'] == self.new_pairs[i][j]:
+                    p1 = [element['lastname'], element['firstname'], element['score']]
+                    pp.append(p1)
+                    break
+            for element in self.score_list :
+                if element['id_person'] == self.new_pairs[i][j+1]:
+                    p2 = [element['lastname'], element['firstname'], element['score']]
+                    pp.append(p2)
+                    break
+            self.pairs_players.append(pp)
+            
+            while i+1 < len(self.new_pairs):
+                pp = []
+                i += 1
+                for element in self.score_list :
+                    if element['id_person'] == self.new_pairs[i][j]:
+                        p1 = [element['lastname'], element['firstname'], element['score']]
+                        pp.append(p1)
+                        break
+                for element in self.score_list :
+                    if element['id_person'] == self.new_pairs[i][j+1]:
+                        p2 = [element['lastname'], element['firstname'], element['score']]
+                        pp.append(p2)
+                        break
+                self.pairs_players.append(pp)
+            break
+
+        print("c'est la nouvelle pairs players list next")
+        print(self.pairs_players)
+        return self.pairs_players
+
+    
+    def return_sorted_score_list(self):
+        """Retourne certains éléments de la score_list."""
         self.return_score_list = [[element['lastname'],element['firstname'], element['score']] for element in self.score_list]
         return print(self.return_score_list, end='\n\n')
     
@@ -153,11 +257,17 @@ class Tournament:
         print("c'est la self pairs players next:")
         print(self.pairs_players)
         return self.pairs_players
+
+    
+
     
     def end_tournament(self, enddate, endtime):
         """Termine le tournoi"""
         self.enddate = datetime.datetime.now().strftime("%d/%m/%Y")
         
-        
+    
+    
+
+    
   
 

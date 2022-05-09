@@ -113,6 +113,8 @@ class MainMenus:
                                 
                 """Crée les premières de paires de joueur pour le Round 1, selon le modéle Suisse."""
                 ControlRound.setting_up_round1_control(self)
+                Tournament.create_list_played_pairs(self)
+                ControlTournament.store_all_pairs_played(self)
                 
                 
                 """TOUR 1."""
@@ -147,6 +149,7 @@ class MainMenus:
                 
                 """Enregistre les nouvelles paires de joueurs sur le round suivant."""
                 ControlRound.setting_up_next_round_control(self)
+                ControlTournament.store_all_pairs_played(self)
 
                 """TEST"""
                 """Met en place les matches à venir dans Round ."""
@@ -165,7 +168,13 @@ class MainMenus:
                 ControlTournament.store_rounds_tournament_control(self)
 
                 """ Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round SUIVANT."""
-
+                ControlRound.return_scores_matchs_round(self)
+                
+                """Cumule les scores totaux de chaque joueur."""
+                ControlTournament.cumulated_scores_rounds_tournament(self)
+                
+                """Crée les nouvelles paires de joueurs pour le round suivant."""
+                ControlTournament.create_new_pairs_players(self)
                
                 
                 input('\n Continuer (toucher une touche): \n')
@@ -175,12 +184,8 @@ class MainMenus:
             
             elif self.niveau2 == '41':
                 """ligne de test"""
-                
                
-                
-                
-                
-                
+            
                 input('\n Continuer (toucher une touche): \n')
                 
                 """i = 0
@@ -536,6 +541,22 @@ class ControlTournament:
         self.pairs_players = Tournament.create_first_pairs_players(self)
         
         return self.pairs_players
+
+    def store_all_pairs_played(self):
+        """Cumule toutes les paires jouées pour faire un contrôle de dédoublonnage lors de la prochaine création de paires."""
+        for pair in self.pairs_players:
+            while True:
+                idpair = []
+                for player in pair:
+                    self.lastname = player[0]
+                    self.firstname = player[1]
+                    idp = DataPlayer.get_id_player(self)
+                    idpair.append(idp)
+                self.played_pairs.append(idpair)
+                break
+        print("c'est la playerd pairs cumulé")
+        print(self.played_pairs)
+        return self.played_pairs    
         
     """Méthodes pour totaliser les scores au fur et à mesure des matchs joués, et préparation des paires de joueurs suivantes pour le prochain round."""
 
@@ -544,11 +565,48 @@ class ControlTournament:
         input('\n Continuer (toucher une touche): \n')
 
     def create_new_pairs_players(self):
-        """Crée les paires de joueur pour le round suivant, selon le modèle Suisse."""
+        """Crée les paires de joueurs pour le round suivant, selon le modèle Suisse."""
         Tournament.sorted_score_list(self)
-        Tournament.create_pairs_players_next(self)
+        Tournament.return_id_score_list(self)
+        Tournament.test_new_pairs(self)
+        Tournament.return_pairs_players_next(self)
         input('\n Continuer (toucher une touche): \n')
    
+    """TEST PAIRES CONTROLE DOUBLON"""
+    
+  
+        
+    def get_list_id_pairs(self):
+        """Retourne une liste avec uniquement les identifiant des joueurs sélectionnés dans les paires créées."""
+        self.control_pairs = []
+        for pair in self.pairs_players:
+            print(pair)
+            while True:
+                idpair = []
+                for player in pair:
+                    self.lastname = player[0]
+                    self.firstname = player[1]
+                    print(self.lastname, self.firstname)
+                    idp = DataPlayer.get_id_player(self)
+                    print(idp)
+                    idpair.append(idp)
+                    print(idpair)
+                self.control_pairs.append(idpair)
+                break
+        print("c'est la liste control_pairs avec les id")
+        print(self.control_pairs)
+        return self.control_pairs   
+    
+    def check_duplicate_pair(self):
+        """recherche si paire déjà jouée."""
+        for element in self.control_pairs:
+            if element not in self.played_pairs:
+                pass
+            else :# je dois créer la méthode dans tournament pour choisir le joueur 1 avec le 3
+                
+                return Tournament.apply_other_create_players_next(self)
+    
+    
     """Méthodes de recherche."""
     
     def check_name_tournament_control(self):
@@ -706,6 +764,7 @@ class ControlRound:
         """
         self.name_round = ControlRound.search_name_next_round(self)
         DataRound.update_pairs_players_round(self)
+        print("c'est le self pairs players encregistré au niveau du round")
         print(self.pairs_players)
         input('\n Continuer (toucher une touche): \n')
     

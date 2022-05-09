@@ -176,6 +176,7 @@ class DataRound:
         return rounds_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round))
     
     
+       
     def update_pairs_players_round(self):
         """Met à jour la liste des paires de participants dans un round donné."""
         User = Query()
@@ -247,7 +248,7 @@ class DataMatch:
          ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
          )
 
-    def update_data_fragment_match(self):# pb avec le recherche 2eme args
+    def update_data_fragment_match(self):
         """Met à jour les scores du match donné, selon la recherche par fragment"""
         
         return matchs_table.update({'Match_resultats': tuple(self.data_match)}, ((Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))))
