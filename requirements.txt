@@ -1,5 +1,4 @@
 DateTime==4.4
-pprint36==3.9.0.2
 pytz==2022.1
 tinydb==4.7.0
 zope.interface==5.4.0

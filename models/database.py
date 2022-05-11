@@ -1,16 +1,7 @@
 """Base de données Tinydb  -  Gestion des données."""
 
 
-from pprint import pprint
 from tinydb import TinyDB, Query, where
-
-
-from models.player import Player
-from models.tournament import Tournament
-from models.round import Round
-from models.match import Match
-
-
 
 
 db = TinyDB('db.json')
@@ -22,60 +13,51 @@ matchs_table = db.table('matchs')
 
 class DataPlayer:
     """Classe qui gère les opérations de la base en lien avec le joueur :
-    toutes requêtes nécessaires et disponibles pour 
+    toutes requêtes nécessaires et disponibles pour
     créer, éditer, modifier, supprimer
     les données d'un joueur.
     """
     db = TinyDB('db.json')
     players_table = db.table('players')
-    
-    
+
     def saving_data_player(self):
         """Sauvegarde les instances créées du joueur dans la base tinydb."""
         players_table.insert(self.player_serialized)
-    
+
     def search_player(self):
         """Affiche le joueur de la base portant le nom et prénom saisie"""
-        return players_table.search((where('lastname') == self.lastname)and(where('firstname') == self.firstname))
-    
+        return players_table.search((where('lastname') == self.lastname) and (where('firstname') == self.firstname))
+
     def get_id_player(self):
         """Retourne le numéro d'identifiant du joueur recherché."""
-       
-        
+
         for element in DataPlayer.search_player(self):
             self.num_id = element.doc_id
             return self.num_id
-        
 
     def search_lastname_player(self):
         """Affiche les joueurs de la base portant le nom saisie."""
         return players_table.search(where('lastname') == self.lastname)
 
-    
     def search_all_players(self):
         """Affiche tous les joueurs de la base."""
         print('\n'f"Il y a {len(players_table)} joueurs incrits dans la base."'\n')
         self.all = players_table.all()
         return self.all
-        
 
     def sorted_all_players_alpha(self):
         """Affiche tous les joueurs de la base par ordre alphabétique(nom)"""
         self.alpha_sorted = sorted(self.all, key=lambda x: x['lastname'])
         for element in self.alpha_sorted:
-            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
-                element['gender'], "classement: ", element['ranking']
-            )
+            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'], "Né le :", element['birthdate'],
+                  element['gender'], "classement: ", element['ranking'])
 
     def sorted_all_players_ranking(self):
         """Affiche tous les joueurs dena la base par ordre de classement (rang)."""
         self.alpha_sorted = sorted(self.all, key=lambda x: x['ranking'])
         for element in self.alpha_sorted:
-            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
-                element['gender'], "classement: ", element['ranking']
-            )
-
-    
+            print("Joueur: ID "f'{element.doc_id}', element['lastname'], element['firstname'], "Né le :", element['birthdate'],
+                  element['gender'], "classement: ", element['ranking'])
 
     def delete_player(self):
         """Supprime 1 joueur recherché"""
@@ -85,38 +67,38 @@ class DataPlayer:
     def truncate_players_table(self):
         """Efface toutes les données de la table 'Player(mise à zéro)."""
         return players_table.truncate()
-    
-    def update_ranking_player(self):# modifier pour mettre l'ID en recherche plutot que le nom ou sinon rajouter le prénom
-        
-        return players_table.update({'ranking':self.new_ranking}, doc_ids=[DataPlayer.get_id_player(self)])
+
+    def update_ranking_player(self):  # modifier pour mettre l'ID en recherche plutot que le nom ou sinon rajouter le prénom
+
+        return players_table.update({'ranking': self.new_ranking}, doc_ids=[DataPlayer.get_id_player(self)])
 
 
 class DataTournament:
     """Classe qui gère les opérations de la base en lien avec le tournoi :
-    toutes requêtes nécessaires et disponibles pour 
+    toutes requêtes nécessaires et disponibles pour
     créer, éditer, modifier, supprimer
     les données d'un tournoi.
-    """    
+    """
     db = TinyDB('db.json')
     tournaments_table = db.table('tournaments')
 
     def saving_data_tournament(self):
         """Sauvegarde les instances créées dans la base tinydb."""
         tournaments_table.insert(self.tournament_serialized)
- 
+
     def search_all_tournaments(self):
         """Affiche tous les tournois inscrits dans la base."""
         print('\n'f"Il y a {len(tournaments_table)} tournois incrits dans la base."'\n')
         self.all = tournaments_table.all()
         return self.all
-    
+
     def search_by_name_tournament(self):
         """Affiche les informations en lien avec le nom du tournoi."""
         return tournaments_table.search(where("Nom_tournoi") == self.name_tournament)
 
     def search_players_list_tournament(self):
         """Retourne la liste de participants au tournoi."""
-        
+
         User = Query()
         print(tournaments_table.search({'Liste_joueurs': self.players_list} and User.Nom_tournoi == self.name_tournament))
 
@@ -130,16 +112,16 @@ class DataTournament:
 
         self.alpha_sorted = sorted(self.players_list, key=lambda x: x['lastname'])
         for element in self.alpha_sorted:
-            print(element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
-                element['gender'], "classement: ", element['ranking'])
+            print(element['lastname'], element['firstname'], "Né le :", element['birthdate'],
+                  element['gender'], "classement: ", element['ranking'])
 
     def sorted_participants_rank(self):
         """Affiche tous les participants du tournoi par ordre de classement (rang)."""
 
         self.alpha_sorted = sorted(self.players_list, key=lambda x: x['ranking'])
         for element in self.alpha_sorted:
-            print(element['lastname'], element['firstname'],"Né le :" , element['birthdate'],
-                element['gender'], "classement: ", element['ranking'])
+            print(element['lastname'], element['firstname'], "Né le :", element['birthdate'],
+                  element['gender'], "classement: ", element['ranking'])
 
     def update_data_rounds_tournament(self):
         """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
@@ -149,7 +131,7 @@ class DataTournament:
     def update_players_list_tournament(self):
         User = Query()
         print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
-    
+
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""
         return tournaments_table.truncate()
@@ -157,7 +139,7 @@ class DataTournament:
 
 class DataRound:
     """Classe qui gère les opérations de la base en lien avec un round d'un tournoi :
-    toutes requêtes nécessaires et disponibles pour 
+    toutes requêtes nécessaires et disponibles pour
     créer, éditer, modifier, supprimer
     les données d'un round.
     """
@@ -174,14 +156,12 @@ class DataRound:
     def search_specific_round(self):
         User = Query()
         return rounds_table.search((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round))
-    
-    
-       
+
     def update_pairs_players_round(self):
         """Met à jour la liste des paires de participants dans un round donné."""
         User = Query()
         return rounds_table.update({'Round_paires': self.pairs_players}, ((User.Nom_tournoi == self.name_tournament) and (User.Round_nom == self.name_round)))
-    
+
     def update_start_round(self):
         """Met à jour la date et heure de démarrage du round concerné."""
         User = Query()
@@ -204,7 +184,7 @@ class DataRound:
 
 class DataMatch:
     """Classe qui gère les opérations de la base en lien avec un match d'un round d'un tournoi :
-    toutes requêtes nécessaires et disponibles pour 
+    toutes requêtes nécessaires et disponibles pour
     créer, éditer, modifier, supprimer
     les données d'un match.
     """
@@ -215,45 +195,46 @@ class DataMatch:
     def saving_data_match(self):
         """Sauvegarde les instances créées dans la base tinydb."""
         matchs_table.insert(self.match_serialized)
-    
+
     def search_by_nametournament_matchs(self):
         return matchs_table.search(where("Nom_Tournoi") == self.name_tournament)
-   
+
     def search_fragment_match(self):
         """recherche les documents en lien avec le champ dans un dictionnaire."""
-        
-        return matchs_table.search(Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))
-    
-    def search_field_fragment_match(self):# à priori pas utilisé : à supprimer si inutile
+
+        return matchs_table.search(Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round': self.name_round, 'Match_nom': self.name_match}))
+
+    def search_field_fragment_match(self):  # à priori pas utilisé : à supprimer si inutile
         """recherche les documents en lien avec le champ dans un dictionnaire."""
-        
-        return matchs_table.search(Query().field.fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))
-    
+
+        return matchs_table.search(Query().field.fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round': self.name_round, 'Match_nom': self.name_match}))
+
     def search_all_matchs(self):
         """Affiche tous les matchs inscrits dans la base."""
         print('\n'f"Il y a {len(matchs_table)} matchs incrits dans la base.")
-    
+
     def update_pair_players_match(self):
         """Met à jour la paire de joueur pour un match donné."""
         User = Query()
         return matchs_table.update(
             {'Match_participants': self.pair_players},
             ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
-        )
-       
-    def update_data_match(self):# si def update data fragment match fonctionne alors à supprimer
+            )
+
+    def update_data_match(self):  # si def update data fragment match fonctionne alors à supprimer
         """Met à jour les scores du match donné."""
         User = Query()
-        return matchs_table.update({'Match_resultats': tuple(self.data_match)},
-         ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
-         )
+        return matchs_table.update(
+            {'Match_resultats': tuple(self.data_match)},
+            ((User.Nom_tournoi == self.name_tournament) and (User.Nom_Round == self.name_round) and (User.Match_nom == self.name_match))
+            )
 
     def update_data_fragment_match(self):
         """Met à jour les scores du match donné, selon la recherche par fragment"""
-        
-        return matchs_table.update({'Match_resultats': tuple(self.data_match)}, ((Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round' : self.name_round, 'Match_nom': self.name_match}))))
-         
-    
+        return matchs_table.update(
+            {'Match_resultats': tuple(self.data_match)},
+            ((Query().fragment({'Nom_Tournoi': self.name_tournament, 'Nom_Round': self.name_round, 'Match_nom': self.name_match})))
+            )
 
     def truncate_matchs_table(self):
         """Efface toutes les données de la table 'Matchs'(mise à zéro)."""
