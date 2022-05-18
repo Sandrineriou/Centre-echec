@@ -10,7 +10,7 @@ NUMBER_ROUNDS = 4
 class Round:
     """Tour d'un tournoi."""
 
-    def __init__(self, name_tournament, name_round, pairs_players=[], startdatetime=None, matchs_round=[], data_round={}, values_list=[], list_dict_matchs=[]):
+    def __init__(self, name_tournament, name_round, pairs_players=[], startdatetime=None, matchs_round=[], values_list=[]):
         """Initialise le nom du tournoi, la date, les paires de joueurs et les matchs."""
 
         self.name_tournament = name_tournament
@@ -19,7 +19,7 @@ class Round:
         self.startdatetime = startdatetime
         self.enddatetime = None
         self.matchs_round = matchs_round
-        self.data_round = data_round
+        
         self.values_list = values_list
         self.list_dict_matchs = list_dict_matchs
 
@@ -34,9 +34,7 @@ class Round:
             "Round_debut": self.startdatetime,
             "Round_fin": self.enddatetime,
             "Round_matches": self.matchs_round,
-            "Round_info": self.data_round,
-            "Round_scores": self.values_list,
-            "Round_par_match:": self.list_dict_matchs,
+            "Round_scores": self.values_list
         }
         return self.round_serialized
 
@@ -122,8 +120,6 @@ class Round:
         for j in range(0, len(self.pairs_players)):
             players2.append(self.matchs_round[j][1])
         self.values_list = players1 + players2
-        print("self values list :")
-        print(self.values_list)
         return self.values_list
 
     def build_list_dict_matchs(self):
@@ -131,18 +127,12 @@ class Round:
 
         key_list = ['lastname', 'firstname', 'score', 'id_person']  # le controlleur doit traiter la recherche de l'identifiant
         self.list_dict_matchs = []
-
         for l in range(0, len(self.values_list)):
-
             dict_from_list = {k: v for k, v in zip(key_list, self.values_list[l])}
             self.list_dict_matchs.append(dict_from_list)
-        print("self list dict matchs:")
-        print(self.list_dict_matchs)
         return self.list_dict_matchs
 
     def build_id_sorted_list_dict_matchs(self):
         """Trie la liste de dictionnaires des 8 joueurs par leur ID. """
         self.identifier_sorted = sorted(self.list_dict_matchs, key=lambda x: x['id_person'])
-        print('self identifier sorted:')
-        print(self.identifier_sorted)
         return self.identifier_sorted

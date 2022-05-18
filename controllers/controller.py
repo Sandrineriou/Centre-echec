@@ -2,6 +2,7 @@
 
 
 from datetime import datetime
+from itertools import combinations
 
 from views.view import ViewMenu, ViewRound, ViewTournament, ViewPlayer, ViewParticipant, ViewMatch
 from models.tournament import Tournament
@@ -83,123 +84,117 @@ class MainMenus:
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '3':
-                """Ajoute les joueurs dans la 'player_list'."""
+                """Ajoute les participants dans la 'player_list'."""
                 ControlTournament.build_list_players_control(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '4':
-                """Démarre le tournoi ou prépare au démarrage :????
-                Génère les premières paires de joueurs, selon, le modèle Suisse qui s'affronteront au Tour1,
-                à partir de la liste joueurs du tournoi sélectionné
-                et les affiche.
+                """Démarre le tournoi choisi."""
 
-                XXXXXXX
+                output = ViewTournament.start_tournament_view(self).upper()
+                if output == 'N':
+                    self.niveau2 = ViewMenu.gamemenu(self).upper()
+                elif output == 'O':
+                    """Crée les rounds à venir et les enregistre dans la base."""
+                    ControlRound.setting_up_rounds_control(self)
+                    ControlTournament.setting_up_rounds_tournament_control(self)
 
-                """
+                    """Crée les premières de paires de joueur pour le Round 1, selon le modéle Suisse."""
+                    ControlRound.setting_up_round1_control(self)
+                    Tournament.create_list_played_pairs(self)
+                    ControlTournament.store_all_pairs_played(self)
 
-                """Crée les rounds à venir et les enregistre dans la base."""
-                ControlRound.setting_up_rounds_control(self)
-                ControlTournament.setting_up_rounds_tournament_control(self)
+                    """TOUR 1."""
+                    """Met en place les matches à venir dans Round 1."""
+                    ControlMatch.setting_up_matchs_round(self)
+                    """Démarre le round1."""
+                    ControlRound.start_play_round_control(self)
 
-                """Crée les premières de paires de joueur pour le Round 1, selon le modéle Suisse."""
-                ControlRound.setting_up_round1_control(self)
-                Tournament.create_list_played_pairs(self)
-                ControlTournament.store_all_pairs_played(self)
+                    """Arrête le round1."""
+                    ControlRound.stop_play_round_control(self)
 
-                """TOUR 1."""
-                """Met en place les matches à venir dans Round 1."""
-                ControlMatch.setting_up_matchs_round(self)
-                """Démarre le round1."""
-                ControlRound.start_play_round_control(self)
+                    """Permet la saisie des scores des matchs du round1."""
+                    ControlMatch.score_matchs(self)
 
-                """Arrête le round1."""
-                ControlRound.stop_play_round_control(self)
+                    """stock les informations des matchs du Round 1 dans rounds_table, et les infos du round dans tournaments_table."""
+                    ControlRound.store_matchs_round_control(self)
+                    ControlTournament.store_rounds_tournament_control(self)
 
-                """Permet la saisie des scores des matchs du round1."""
-                ControlMatch.score_matchs(self)
+                    """Retourne la liste des scores du Tour 1."""
+                    ControlRound.return_scores_matchs_round(self)
 
-                """stock les informations des matchs du Round 1 dans rounds_table, et les infos du round dans tournaments_table."""
-                ControlRound.store_matchs_round_control(self)
-                ControlTournament.store_rounds_tournament_control(self)
+                    """Cumule les scores totaux de chaque joueur."""
+                    ControlTournament.cumulated_scores_rounds_tournament(self)
 
-                """Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round 2."""
+                    x = 2
+                    while True:
+                        try:
+                            for x in range(2, NUMBER_ROUNDS+1):
+                                print(f'Préparation du ROUND_{x}:')
+                                """Crée les nouvelles paires de joueurs pour le round suivant."""
+                                ControlTournament.create_new_pairs_players(self)
 
-                """Retourne la liste des scores du Tour 1."""
-                ControlRound.return_scores_matchs_round(self)
+                                """TOUR 2 et suivants."""
 
-                """Cumule les scores totaux de chaque joueur."""
-                ControlTournament.cumulated_scores_rounds_tournament(self)
+                                """Enregistre les nouvelles paires de joueurs sur le round suivant."""
+                                ControlRound.setting_up_next_round_control(self)
+                                ControlTournament.store_all_pairs_played(self)
 
-                while True:
-                    try:
-                        """Crée les nouvelles paires de joueurs pour le round suivant."""
-                        ControlTournament.create_new_pairs_players(self)
+                                """TEST"""
+                                """Met en place les matches à venir dans Round ."""
+                                ControlMatch.setting_up_matchs_round(self)
+                                """Démarre le round."""
+                                ControlRound.start_play_round_control(self)
 
-                        """TOUR 2 et suivants."""
+                                """Arrête le round."""
+                                ControlRound.stop_play_round_control(self)
 
-                        """Enregistre les nouvelles paires de joueurs sur le round suivant."""
-                        ControlRound.setting_up_next_round_control(self)
-                        ControlTournament.store_all_pairs_played(self)
+                                """Permet la saisie des scores des matchs du round."""
+                                ControlMatch.score_matchs(self)
 
-                        """TEST"""
-                        """Met en place les matches à venir dans Round ."""
-                        ControlMatch.setting_up_matchs_round(self)
-                        """Démarre le round."""
-                        ControlRound.start_play_round_control(self)
+                                """stock les informations des matchs du Round  dans rounds_table, et les infos du round dans tournaments_table."""
+                                ControlRound.store_matchs_round_control(self)
+                                ControlTournament.store_rounds_tournament_control(self)
 
-                        """Arrête le round."""
-                        ControlRound.stop_play_round_control(self)
+                                """ Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round SUIVANT."""
+                                ControlRound.return_scores_matchs_round(self)
 
-                        """Permet la saisie des scores des matchs du round."""
-                        ControlMatch.score_matchs(self)
+                                """Cumule les scores totaux de chaque joueur."""
+                                ControlTournament.cumulated_scores_rounds_tournament(self)
+                            break
+                        except IndexError:
+                            break
 
-                        """stock les informations des matchs du Round  dans rounds_table, et les infos du round dans tournaments_table."""
-                        ControlRound.store_matchs_round_control(self)
-                        ControlTournament.store_rounds_tournament_control(self)
+                    ControlTournament.enddate_tournament_control(self)
+                    print(f"LE TOURNOI {self.name_tournament} EST TERMINE.")
+                    
+                    input('\n Continuer (toucher une touche): \n')
 
-                        """ Ordinateur génère des paires de joueurs selon le modèle Suisse, pour le Round SUIVANT."""
-                        ControlRound.return_scores_matchs_round(self)
+                    Tournament.total_score_dict_players(self)
+                    self.score_list = Tournament.sorted_score_list(self)
+                    DataTournament.update_final_score_tournament(self)
+                    print("Liste des joueurs triés par leur score:")
+                    for element in self.score_list:
+                        print(element['lastname'], element['firstname'], element['score'])
+                    
+                    input('\n Continuer (toucher une touche): \n')
 
-                        """Cumule les scores totaux de chaque joueur."""
-                        ControlTournament.cumulated_scores_rounds_tournament(self)
-
-                    except ValueError:
-                        break
-
-                print(self.increased_score_players)
-
-                input('\n Continuer (toucher une touche): \n')
-                self.niveau2 = ViewMenu.gamemenu(self).upper()
+                    self.niveau2 = ViewMenu.gamemenu(self).upper()
+                else:
+                    self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '41':
-                """ligne de test"""
+                """Permet de mettre à jour la base."""
 
-                input('\n Continuer (toucher une touche): \n')
-
-                """i = 0
-                if self.name_round == list(self.rounds_tournament[i].keys())[0]:
-                    index = list.index(self.rounds_tournament[i])
-                    print('index en cours')
-                    print(index)
-
-                    self.name_round = list(self.rounds_tournament[index+y].keys())[0]
-                    print("le nouveau nom de round:")
-                    print(self.name_round)
-
-                else:
-                    print("\nLE TOURNOI EST TERMINE \n")
-                    input('\n Continuer (toucher une touche): \n')
-                    break"""
-
-                self.niveau2 = ViewMenu.gamemenu(self).upper()
-
+            
             elif self.niveau2 == '5':
                 """Propose d'ajouter un commentaire au tournoi, à tout moment."""
-                # à reprendre pas possible de l'intégrer dans la sauvegarde
+                ControlTournament.add_comment_tournament_control(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '6':
-                ControlTournament.show_tournament_control(self)
+                """Propose de lire les commentaires laissés pour un tournoi donné."""
+                ControlTournament.show_comment_tournament_control(self)
                 self.niveau2 = ViewMenu.gamemenu(self).upper()
 
             elif self.niveau2 == '100':
@@ -383,8 +378,8 @@ class ControlTournament:
         self.enddate = None
         self.n_rounds = NUMBER_ROUNDS
         self.players_list = []
-        self.rounds_tournament = []  # voir si possible de modifier et mettre à jour via la table round à créer / créer une méthode pour cela
-        self.list_dict_matchs = []  # voir si nécessaire de garder cela ??
+        self.rounds_tournament = []
+        self.score_list = []
         self.comment = None
 
         Tournament.serialize_tournament(self)
@@ -430,12 +425,27 @@ class ControlTournament:
                 self.controller_time = ViewTournament.prompt_controller_time_view(self)
 
     def startdate_tournament_control(self):
-        """Contrôle la cohérence de saisie de la date de début du tournoi."""
+        """Affiche automatiquement la date de début du tournoi."""
         self.startdate = datetime.now().strftime("%d/%m/%Y")
 
-    def add_comment_tournament_control(self):
-        """Permet au gestionnaire de saisir un commentaire sur un tournoi"""
-        pass
+    def enddate_tournament_control(self):
+        """Calcule la date du moment et enregistre la date de fin du tournoi dans la base."""
+        self.enddate = datetime.now().strftime("%d/%m/%Y")
+        DataTournament.update_enddate_tournament(self)
+
+    def add_comment_tournament_control(self):  # à traiter
+        """Permet au gestionnaire de saisir un commentaire sur un tournoi."""
+        self.name_tournament = ControlTournament.name_tournament_control(self)
+        self.comment = ViewTournament.add_comment_view(self)
+        DataTournament.update_comment_tournament(self)
+
+    def show_comment_tournament_control(self):
+        """Affiche les commantaires saisies pour un tournoi choisi."""
+        self.name_tournament = ControlTournament.name_tournament_control(self)
+        result = DataTournament.search_by_name_tournament(self)
+        for element in result :
+            print(element['Commentaires'])
+            input('\n Continuer (toucher une touche): ')
 
     def setting_up_rounds_tournament_control(self):  # sans doute à supprimer .?? oui je crois
         """Contrôle la création des dictionnaires comprenant pour clé le nom des rounds,
@@ -472,14 +482,12 @@ class ControlTournament:
         while True:
             if len(self.players_list) == MAX_PLAYERS:
                 print('\n La liste de joueurs est COMPLETE - Le Tournoi peut démarrer \n')
-                input('Continuer (toucher une touche): ')
                 break
             elif len(self.players_list) < MAX_PLAYERS:
                 player = ControlParticipant.search_participant_control(self)
                 while True:
                     if player is None:
                         print("\n Veuillez vérifier les données à saisir\n")
-                        input('Continuer (toucher une touche): ')
                         break
                     else:
                         player['id_person'] = f'{player.doc_id}'
@@ -487,7 +495,6 @@ class ControlTournament:
                         print(self.players_list)
                         self.players_list = sorted(self.players_list, key=lambda x: x['id_person'])
                         break
-        print(self.players_list)
         DataTournament.update_players_list_tournament(self)
         input('\n Continuer (toucher une touche): ')
 
@@ -508,63 +515,36 @@ class ControlTournament:
                     self.firstname = player[1]
                     idp = DataPlayer.get_id_player(self)
                     idpair.append(idp)
-                self.played_pairs.append(idpair)
+                self.played_pairs.append(tuple(idpair))
                 break
-        print("c'est la playerd pairs cumulé")
-        print(self.played_pairs)
         return self.played_pairs
 
     """Méthodes pour totaliser les scores au fur et à mesure des matchs joués, et préparation des paires de joueurs suivantes pour le prochain round."""
 
     def cumulated_scores_rounds_tournament(self):
         Tournament.total_score_dict_players(self)
-        input('\n Continuer (toucher une touche): \n')
-
+        
     def create_new_pairs_players(self):
         """Crée les paires de joueurs pour le round suivant, selon le modèle Suisse."""
         Tournament.sorted_score_list(self)
         Tournament.return_id_score_list(self)
-        Tournament.test_new_pairs(self)
-        Tournament.return_pairs_players_next(self)
+        self.id_score_list = Tournament.new_associate_pairs(self)
+        while True:
+            if self.id_score_list == []:
+                Tournament.return_pairs_players_next(self)
+            elif self.id_score_list != []:
+                Tournament.combinations_pairs(self)
+                Tournament.new_pairs_next(self)
+                Tournament.return_pairs_players_next(self)
+            break
         input('\n Continuer (toucher une touche): \n')
-
-    """TEST PAIRES CONTROLE DOUBLON"""
-
-    def get_list_id_pairs(self):
-        """Retourne une liste avec uniquement les identifiant des joueurs sélectionnés dans les paires créées."""
-        self.control_pairs = []
-        for pair in self.pairs_players:
-            print(pair)
-            while True:
-                idpair = []
-                for player in pair:
-                    self.lastname = player[0]
-                    self.firstname = player[1]
-                    print(self.lastname, self.firstname)
-                    idp = DataPlayer.get_id_player(self)
-                    print(idp)
-                    idpair.append(idp)
-                    print(idpair)
-                self.control_pairs.append(idpair)
-                break
-        print("c'est la liste control_pairs avec les id")
-        print(self.control_pairs)
-        return self.control_pairs
-
-    def check_duplicate_pair(self):
-        """recherche si paire déjà jouée."""
-        for element in self.control_pairs:
-            if element not in self.played_pairs:
-                pass
-            else:  # je dois créer la méthode dans tournament pour choisir le joueur 1 avec le 3
-                return Tournament.apply_other_create_players_next(self)
 
     """Méthodes de recherche."""
 
     def check_name_tournament_control(self):
         """Vérifie l'existence du tournoi recherché."""
 
-        self.name_tournament = input("\n Nom du tournoi recherché: ").upper()
+        self.name_tournament = input("\n Nom du tournoi: ").upper()
         result = DataTournament.search_by_name_tournament(self)
         while True:
             if result == []:
@@ -623,7 +603,7 @@ class ControlTournament:
                         self.dict_round = Round.dict_data_round(self)
                         self.rounds_tournament.insert(x, self.dict_round)
                         DataTournament.update_data_rounds_tournament(self)
-                        Tournament.show_rounds_tournament(self)
+                        return self.rounds_tournament
                     else:
                         break
         input('\n Continuer (toucher une touche): \n')
@@ -643,7 +623,7 @@ class ControlTournament:
             else:
                 break
 
-    def remove_rounds_tournament(self):  # A SUPPRIMER QUAND LE DEBUT D'UN ROUND SERA CALE : utiliser pour éviter de recréer un tournoi à chaque erreur de code
+    def remove_rounds_tournament(self):  # pas utilisé : A SUPPRIMER QUAND LE DEBUT D'UN ROUND SERA CALE : utiliser pour éviter de recréer un tournoi à chaque erreur de code
         """Efface le contenu de rounds_tournament A SUPPRIMER QUAND TOUT SERA CALER"""
         self.name_tournament = ControlTournament.name_tournament_control(self)
         result = DataTournament.search_by_name_tournament(self)
@@ -672,11 +652,8 @@ class ControlRound:
                 self.pairs_players = []
                 self.startdatetime = None
                 self.enddatetime = None
-                self.matchs_round = []  # créer une méthode qui retourne les élément d'une table à créer
-                self.data_round = []  # suppression possible ? redondant avec l'utilisation de la table 'round'?
+                self.matchs_round = []
                 self.values_list = []
-                self.list_dict_matchs = []
-
                 self.round_serialized = Round.serialize_round(self)
                 DataRound.saving_data_round(self)
                 break
@@ -698,16 +675,13 @@ class ControlRound:
         self.pairs_players = ControlTournament.build_first_pairs_players_control(self)
         DataRound.update_pairs_players_round(self)
 
-    def setting_up_next_round_control(self):
+    def setting_up_next_round_control(self):  # je supprime print self pairsplayers 
         """Recherche le nom du Round suivant,
         et lui attribut les paires de joueurs générées automatiquement.
         """
         self.name_round = ControlRound.search_name_next_round(self)
         DataRound.update_pairs_players_round(self)
-        print("c'est le self pairs players encregistré au niveau du round")
-        print(self.pairs_players)
-        input('\n Continuer (toucher une touche): \n')
-
+        
     def search_name_next_round(self):
         """Recherche le nom du round suivant."""
         for dict in self.rounds_tournament:
@@ -715,8 +689,6 @@ class ControlRound:
                 if key == self.name_round:
                     index = [i for i in range(len(self.rounds_tournament)) if self.rounds_tournament[i] == dict]
                     self.name_round = list(self.rounds_tournament[index[0]+1].keys())[0]
-                    print("c'est le nom du round suivant")
-                    print(self.name_round)
                     return self.name_round
                 else:
                     break
@@ -724,7 +696,6 @@ class ControlRound:
     def return_scores_matchs_round(self):  # à revoir
         """Retourne une liste de dictionnaires contenant les 8 joueurs avec le score du match fini, trié par identifiant."""
         Round.create_new_list_scores(self)
-        """ControlRound.search_pairs_players_round(self)"""  # à priori sans utilité
         Round.add_scores_matchs_round(self)
         self.values_list = Round.build_values_dict_match(self)
         for participant in self.values_list:
@@ -732,15 +703,8 @@ class ControlRound:
             self.firstname = participant[1]
             DataPlayer.search_player(self)
             participant.append(DataPlayer.get_id_player(self))
-
-        print('self value lsit avec ID normalement ')
-        print(self.values_list)
         Round.build_list_dict_matchs(self)
         Round.build_id_sorted_list_dict_matchs(self)
-
-    def search_pairs_players_round(self):  # à revoir
-        """Affiche les paires de joueurs généré du round."""
-        pass
 
     """Méthodes de modification."""
 
@@ -750,7 +714,6 @@ class ControlRound:
         """
         Round.start_round(self)
         DataRound.update_start_round(self)
-
         input("\nAppuyer sur la touche 'Entrée' quand le tour est terminé\n")
 
     def stop_play_round_control(self):
@@ -775,7 +738,7 @@ class ControlRound:
 
         self.matchs_round = Round.create_new_list_matchs(self)
         i = 1
-        for i in range(1, len(self.pairs_players)+1):  # au lieu de 5 mettre 'len(self.pairs_players)+1' quand la méthode sera ok
+        for i in range(1, len(self.pairs_players)+1):
             while True:
                 self.name_match = f'Match_{i}'
                 resultat = DataMatch.search_fragment_match(self)
@@ -848,7 +811,7 @@ class ControlMatch:
             while True:
                 self.name_match = f'Match_{i}'
                 resultat = DataMatch.search_fragment_match(self)
-                print(resultat)
+                
                 for element in resultat:
                     self.pair_players = element['Match_participants']
                     Match.designate_players_match(self)
@@ -856,7 +819,6 @@ class ControlMatch:
                     Match.show_data_match(self)
                     DataMatch.update_data_fragment_match(self)
                 break
-
         input('\n Continuer (toucher une touche): \n')
 
     """Méthode de suppression."""
@@ -903,18 +865,6 @@ class ControlParticipant:
                     else:
                         break
             input('\n Continuer (toucher une touche): \n')
-            break
-
-    def next_participant_tournament(self):
-        """Choix entre continuer à intégrer un participant dans la liste des joueurs d'un tournoi ou revenir au menu précédent."""
-
-        output = ViewTournament.prompt_next_participant_view(self).upper()
-        while True:
-            if output == 'O':
-                ControlTournament.build_list_players_control(self)
-                output = ViewPlayer.prompt_next_add_player(self).upper()
-            else:
-                pass
             break
 
     def show_participant_control(self):  # utiliser avec modif rang participant
@@ -1210,7 +1160,7 @@ class ControlReport:
             input('\n Continuer: toucher une touche :')
             break
 
-    def show_all_sorted_alpha_participants(self):  # la liste n'est pas trié par nom alpha
+    def show_all_sorted_alpha_participants(self):
         """Affiche tous les participants au tournoi, par ordre alphabétique, inscrits dans la liste des joueurs du tournoi concerné."""
 
         self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()
@@ -1233,7 +1183,7 @@ class ControlReport:
                     input('\n Continuer: toucher une touche :')
             break
 
-    def show_all_sorted_rank_participants(self):  # la liste n''st pas trié par le rang
+    def show_all_sorted_rank_participants(self):
         """Affche tous les participants au tournoi, par ordre de classement (rang), inscrits dans la liste des joueurs du tournoi concerné."""
 
         self.name_tournament = ViewTournament.prompt_name_tournament_view(self).upper()

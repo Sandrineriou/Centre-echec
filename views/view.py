@@ -39,13 +39,13 @@ class ViewMenu:
             "\n"
             "2/ Préparer un nouveau tournoi : Taper \033[1m 2 \033[0m \n"
             "\n"
-            "3/ Inscrire les joueurs au tournoi : Taper \033[1m 3 \033[0m \n"
+            "3/ Inscrire les participants au tournoi : Taper \033[1m 3 \033[0m \n"
             "\n"
             "4/ Démarrer le tournoi : Taper \033[1m 4 \033[0m \n"
             "\n"
             "5/ Ajouter un commentaire sur un tournoi : Taper \033[1m 5 \033[0m \n"
             "\n"
-            "6/ Afficher les données d'un tournoi choisi : Taper \033[1m 6 \033[0m \n"
+            "6/ Afficher les commentaires d'un tournoi choisi : Taper \033[1m 6 \033[0m \n"
             "\n"
             "\033[4m Taper votre choix \033[0m: "
         )
@@ -126,6 +126,10 @@ class ViewMenu:
 class ViewTournament:
     """Affiche les différents 'inputs' nécessaire à la gestion de données sur un tournoi."""
 
+    def start_tournament_view(self):
+        """Affiche un choix pour démarrer un tournoi ou abandonné."""
+        return input("\n \033[4m Souhaitez_vous réellement démarrer un tournoi ? (O/N) \033[0m")
+
     def tournament_view(self):
         """Annonce la saisie des données du Tournoi."""
         print("\033[4m Création d'un nouveau tournoi \033[0m")
@@ -154,6 +158,10 @@ class ViewTournament:
     def None_tournament(self):
         """Affiche l'absence dans les données du tournoi recherché. """
         print("\n \033[4m Le tournoi recherché n'existe pas dans la base' \033[0m : Veuillez vérifier votre saisie et recommencer. \n\n")
+
+    def add_comment_view(self):
+        """Annonce la saisie d'un commentaire"""
+        return input("Veuillez saisir votre commentaire:\n. (Appuyer sur 'entrée' quand vous avez fini.)\n")
 
     def truncate_tournaments_table_view(self):
         """Message de vigilance avant suppression de la table 'Tournaments' dans sa totalité."""

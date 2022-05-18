@@ -126,11 +126,24 @@ class DataTournament:
     def update_data_rounds_tournament(self):
         """Met à jour le contenu de l'attibut 'détails-tours'de tournament."""
         User = Query()
-        return (tournaments_table.update({'Detail_tours': self.rounds_tournament}, User.Nom_tournoi == self.name_tournament))
+        return tournaments_table.update({'Detail_tours': self.rounds_tournament}, User.Nom_tournoi == self.name_tournament)
 
     def update_players_list_tournament(self):
         User = Query()
-        print(tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament))
+        return tournaments_table.update({'Liste_joueurs': self.players_list}, User.Nom_tournoi == self.name_tournament)
+
+    def update_enddate_tournament(self):
+        User = Query()
+        return tournaments_table.update({'Date_fin': self.enddate}, User.Nom_tournoi == self.name_tournament)
+
+    def update_final_score_tournament(self):
+        """Met à jour les scores finaux du tournoi."""
+        User = Query()
+        return tournaments_table.update({'Scores_finaux': self.score_list}, User.Nom_tournoi == self.name_tournament)
+    
+    def update_comment_tournament(self):
+        User = Query()
+        print(tournaments_table.update({'Commentaires': self.comment}, User.Nom_tournoi == self.name_tournament))
 
     def truncate_tournaments_table(self):
         """Efface toutes les données de la table 'Tournaments'(mise à zéro)."""

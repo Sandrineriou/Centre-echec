@@ -41,7 +41,7 @@ class Match ():
         print(f"\n \033[4m {self.name_match} : {self.player1},{self.player2}\033[0m \n")
         draw = input("Match Nul ? (O/N) :").upper()
         while draw not in ["O", "N"]:
-            draw = input("Match Nul ? (O/N) :")
+            draw = input("Match Nul ? (O/N) :").upper()
         if draw == 'O':
             self.player1[2] = self.player2[2] = float(NULL_POINT)
         elif draw == 'N':
@@ -61,7 +61,7 @@ class Match ():
                     self.player2[2] = int(input("score joueur_2 : "))
                     while self.player2[2] not in POINTS:
                         print('Le score saisit ne correspond pas au point attendu.')
-                        self.player2[2] = int(input("score joueur_1 : "))
+                        self.player2[2] = int(input("score joueur_2 : "))
                     break
                 except ValueError:
                     print("OOPS ! On attend un chiffre pour le score joueur_2 : ")

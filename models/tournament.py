@@ -1,7 +1,8 @@
 """ Déroulement d'un Tournoi."""
 
 import datetime
-
+from itertools import combinations
+from re import I
 
 MAX_PLAYERS = 8
 NUMBER_ROUNDS = 4
@@ -12,7 +13,7 @@ class Tournament:
     """Tournoi."""
 
     def __init__(self, name_tournament, place, controller_time, startdate=datetime.datetime.now().strftime("%d/%m/%Y"),
-                 n_rounds=NUMBER_ROUNDS, players_list=[], rounds_tournament=[], list_dict_matchs=[]):
+                 n_rounds=NUMBER_ROUNDS, players_list=[], rounds_tournament=[], score_list=[]):
 
         """Initialise le nom du tournoi, le lieu, le tye de temps de jeu, la date de début, le nombre de tour,
 
@@ -30,7 +31,7 @@ class Tournament:
         self.enddate = None
         self.n_rounds = n_rounds
         self.rounds_tournament = rounds_tournament
-        self.list_dict_matchs = list_dict_matchs
+        self.score_list= score_list
         self.comment = None
 
     def get_rounds(self):
@@ -59,7 +60,7 @@ class Tournament:
             "Nombre_tours": self.n_rounds,
             "Liste_joueurs": self.players_list,
             "Detail_tours": self.rounds_tournament,
-            "Detail_matchs": self.list_dict_matchs,
+            "Scores_finaux": self.score_list,
             "Commentaires": self.comment
         }
         return (self.tournament_serialized)
@@ -107,7 +108,7 @@ class Tournament:
         self.rounds_tournament.append(self.dict_round)
         return self.rounds_tournament
 
-    def show_rounds_tournament(self):
+    def show_rounds_tournament(self):  # utilité ? effacé de store rouinds tournament à voir
         """Affiche tous les rounds d'un tournoi données,
         et les instances attachées à chaque round.
         """
@@ -123,62 +124,59 @@ class Tournament:
             c = {**self.players_list[i], **self.identifier_sorted[i]}
             self.increased_score_players.append(c)
             i += 1
-        print("C'est la inscreased_score_players list")
-        print(self.increased_score_players, end='\n\n')
         return self.increased_score_players
 
     def sorted_score_list(self):
         """Trie la liste des joueurs par leur score total, si égalité de score par leur rang"""
         a = sorted(self.increased_score_players, key=lambda y: y['ranking'], reverse=True)
         self.score_list = sorted(a, key=lambda x: x['score'], reverse=True)
-        print("c'est la score_list trié par le score et le rang")
-        print(self.score_list)
         return self.score_list
 
     def return_id_score_list(self):
         """Retourne une liste de l'attribut ID_person des joueurs."""
         self.id_score_list = [element['id_person'] for element in self.score_list]
-        print("c'est la id score list")
-        print(self.id_score_list)
         return self.id_score_list
 
-    def test_new_pairs(self):
-        """Sélectionne une paire,
-        compare avec les paires déjà jouées,
-        et en fonction applique une des méthode de créaiton de paires.
-        """
-
+    def new_associate_pairs(self):
+        """Associe le joueur 1 avec le 2 tant que c'est possible, cesse une fois qu la conditions n'est plus bonne."""
+        
         self.new_pairs = []
         while True:
             try:
-                j = 1
-                pair = [self.id_score_list[0], self.id_score_list[j]]
-                if pair not in self.played_pairs:
-                    self.new_pairs.append(pair)
-                    self.id_score_list.pop(j)
+                pair = [self.id_score_list[0], self.id_score_list[1]]
+                if tuple(pair) not in self.played_pairs:
+                    self.new_pairs.append(tuple(pair))
+                    self.id_score_list.pop(1)
                     self.id_score_list.pop(0)
-                else:
-                    if j+1 < len(self.id_score_list):
-                        j += 1
-                        pair = [self.id_score_list[0], self.id_score_list[j]]
-                        if pair not in self.played_pairs:
-                            self.new_pairs.append(pair)
-                            self.id_score_list.pop(j)
-                            self.id_score_list.pop(0)
-                        else:
-                            j += 1
-                            pair = [self.id_score_list[0], self.id_score_list[j]]
-                            if pair not in self.played_pairs:
-                                self.new_pairs.append(pair)
-                                self.id_score_list.pop(j)
-                                self.id_score_list.pop(0)
+                else :
+                    break
             except IndexError:
                 break
+        return self.id_score_list
 
-        print("cest la id_score_list qui doit être vide")
-        print(self.id_score_list)
-        print("c'est la new-pairs qui doit être au nombre de 4 paires avec les ID")
-        print(self.new_pairs)
+    def combinations_pairs(self):
+        """Propose toutes les combinations possibles avec les paires non jouées restantes."""
+
+        self.no_played_pairs = []
+        for element in list(combinations(self.id_score_list, 2)):
+            while True:
+                if element not in self.played_pairs:
+                    self.no_played_pairs.append(element)
+                break
+        return self.no_played_pairs
+      
+    def new_pairs_next(self):
+        """Crée de nouvelles paires à l'aide des combinaisons possibles non jouées."""
+        while True:
+            while self.id_score_list != []:
+                self.new_pairs.append(self.no_played_pairs[0])
+                
+                for element in self.no_played_pairs[0]:
+                    
+                    self.id_score_list.remove(element)
+                Tournament.combinations_pairs(self)
+            break
+      
         return self.new_pairs
 
     def return_pairs_players_next(self):
@@ -215,32 +213,10 @@ class Tournament:
                         break
                 self.pairs_players.append(pp)
             break
-
-        print("c'est la nouvelle pairs players list next")
-        print(self.pairs_players)
         return self.pairs_players
 
-    def return_sorted_score_list(self):
-        """Retourne certains éléments de la score_list."""
-        self.return_score_list = [[element['lastname'], element['firstname'], element['score']] for element in self.score_list]
-        return print(self.return_score_list, end='\n\n')
+    
 
-    def create_pairs_players_next(self):
-        """Crée les paires de joueurs pour les tours suivants."""
-        self.pairs_players = []
-        i = 0
-        j = i+1
-        pair = [self.return_score_list[i], self.return_score_list[j]]
-        self.pairs_players.append(tuple(pair))
-        while i+2 < (MAX_PLAYERS-1):
-            i = i+2
-            j = i+1
-            pair = [self.return_score_list[i], self.return_score_list[j]]
-            self.pairs_players.append(tuple(pair))
-        print("c'est la self pairs players next:")
-        print(self.pairs_players)
-        return self.pairs_players
-
-    def end_tournament(self, enddate, endtime):
+    def end_tournament(self):
         """Termine le tournoi"""
         self.enddate = datetime.datetime.now().strftime("%d/%m/%Y")
